@@ -105,6 +105,67 @@ export default function Canvas() {
         );
         if (element.isFilled) ctx.fill();
         else ctx.stroke();
+      } else if (element.type === 'triangle') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        ctx.beginPath();
+        // Equilateral-ish triangle fitting in the bounding box
+        ctx.moveTo(element.x + element.width / 2, element.y);
+        ctx.lineTo(element.x + element.width, element.y + element.height);
+        ctx.lineTo(element.x, element.y + element.height);
+        ctx.closePath();
+        if (element.isFilled) ctx.fill();
+        else ctx.stroke();
+      } else if (element.type === 'diamond') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        ctx.beginPath();
+        ctx.moveTo(element.x + element.width / 2, element.y);
+        ctx.lineTo(element.x + element.width, element.y + element.height / 2);
+        ctx.lineTo(element.x + element.width / 2, element.y + element.height);
+        ctx.lineTo(element.x, element.y + element.height / 2);
+        ctx.closePath();
+        if (element.isFilled) ctx.fill();
+        else ctx.stroke();
+      } else if (element.type === 'hexagon') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        ctx.beginPath();
+        const w = element.width;
+        const h = element.height;
+        ctx.moveTo(element.x + w * 0.25, element.y);
+        ctx.lineTo(element.x + w * 0.75, element.y);
+        ctx.lineTo(element.x + w, element.y + h * 0.5);
+        ctx.lineTo(element.x + w * 0.75, element.y + h);
+        ctx.lineTo(element.x + w * 0.25, element.y + h);
+        ctx.lineTo(element.x, element.y + h * 0.5);
+        ctx.closePath();
+        if (element.isFilled) ctx.fill();
+        else ctx.stroke();
+      } else if (element.type === 'star') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        ctx.beginPath();
+        const cx = element.x + element.width / 2;
+        const cy = element.y + element.height / 2;
+        const outerRadius = Math.min(Math.abs(element.width), Math.abs(element.height)) / 2;
+        const innerRadius = outerRadius / 2;
+        const points = 5;
+        for (let i = 0; i < points * 2; i++) {
+          const radius = i % 2 === 0 ? outerRadius : innerRadius;
+          const angle = (i * Math.PI) / points - Math.PI / 2;
+          const px = cx + Math.cos(angle) * radius;
+          const py = cy + Math.sin(angle) * radius;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        if (element.isFilled) ctx.fill();
+        else ctx.stroke();
       }
     }
 
@@ -164,7 +225,7 @@ export default function Canvas() {
       };
       
       addElement(newStroke);
-    } else if (currentTool === 'rect' || currentTool === 'ellipse') {
+    } else if (['rect', 'ellipse', 'triangle', 'star', 'diamond', 'hexagon'].includes(currentTool)) {
       setIsDrawing(true);
       const id = Date.now().toString();
       setCurrentStrokeId(id);
@@ -172,7 +233,7 @@ export default function Canvas() {
       const { x, y } = screenToWorld(e.clientX, e.clientY);
       const newShape: ShapeElement = {
         id,
-        type: currentTool,
+        type: currentTool as any,
         x,
         y,
         width: 0,
@@ -217,11 +278,11 @@ export default function Canvas() {
           points: [...el.points, [x, y, e.pressure || 0.5]]
         };
       });
-    } else if (isDrawing && currentStrokeId && (currentTool === 'rect' || currentTool === 'ellipse')) {
+    } else if (isDrawing && currentStrokeId && ['rect', 'ellipse', 'triangle', 'star', 'diamond', 'hexagon'].includes(currentTool)) {
       const { x, y } = screenToWorld(e.clientX, e.clientY);
       
       updateElement(currentStrokeId, (el) => {
-        if (el.type !== 'rect' && el.type !== 'ellipse') return el;
+        if (el.type === 'stroke') return el;
         return {
           ...el,
           width: x - el.x,
@@ -246,7 +307,7 @@ export default function Canvas() {
             break;
           }
         }
-      } else if (el.type === 'rect' || el.type === 'ellipse') {
+      } else if (['rect', 'ellipse', 'triangle', 'star', 'diamond', 'hexagon'].includes(el.type)) {
         // Basic bounding box check for shapes
         const xMin = Math.min(el.x, el.x + el.width);
         const xMax = Math.max(el.x, el.x + el.width);
