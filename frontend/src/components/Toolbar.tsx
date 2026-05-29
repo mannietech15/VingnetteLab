@@ -8,7 +8,7 @@ const COLORS = ['#1a1a1a', '#e03131', '#2f9e44', '#1971c2', '#f08c00', '#9c36b5'
 const SIZES = [2, 4, 8, 12, 16];
 
 export default function Toolbar() {
-  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, theme, setTheme } = useCanvasStore();
+  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, theme, setTheme, undo, redo } = useCanvasStore();
 
   useEffect(() => {
     // Set data-theme on html element
@@ -124,10 +124,10 @@ export default function Toolbar() {
 
         <div style={{ width: '1px', height: '32px', margin: '4px', background: 'var(--border-color)' }} />
 
-        <button className="icon-btn" title="Undo">
+        <button className="icon-btn" title="Undo" onClick={undo}>
           <Undo2 size={20} />
         </button>
-        <button className="icon-btn" title="Redo">
+        <button className="icon-btn" title="Redo" onClick={redo}>
           <Redo2 size={20} />
         </button>
       </div>

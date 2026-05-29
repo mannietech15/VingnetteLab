@@ -42,6 +42,10 @@ let provider: SupabaseProvider | null = null;
 if (supabase) {
   provider = new SupabaseProvider(ydoc, supabase, 'global-canvas-room');
 }
+export const supabaseProvider = provider;
+
+// Yjs Undo Manager
+export const undoManager = new Y.UndoManager(yElements);
 
 interface CanvasState {
   elements: CanvasElement[];
@@ -61,6 +65,9 @@ interface CanvasState {
   addElement: (element: CanvasElement) => void;
   updateElement: (id: string, updater: (el: CanvasElement) => CanvasElement) => void;
   removeElement: (id: string) => void;
+
+  undo: () => void;
+  redo: () => void;
 }
 
 export const useCanvasStore = create<CanvasState>((set) => {
@@ -100,6 +107,9 @@ export const useCanvasStore = create<CanvasState>((set) => {
     
     removeElement: (id) => {
       yElements.delete(id);
-    }
+    },
+
+    undo: () => undoManager.undo(),
+    redo: () => undoManager.redo()
   };
 });

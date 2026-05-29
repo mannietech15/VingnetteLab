@@ -1,0 +1,10 @@
+{
+  "users": [
+    {
+      "id": "usr_1",
+      "email": "test@vignettelab.com",
+      "name": "Test User"
+    }
+  ],
+  "workspaces": []
+}

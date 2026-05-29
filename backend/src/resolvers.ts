@@ -1,73 +1,26 @@
-// Mock data for development
-const workspaces = [
-  {
-    id: 'ws_1',
-    name: 'Personal Space',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    ownerId: 'usr_1',
-    canvases: [
-      {
-        id: 'cv_1',
-        title: 'Q2 Roadmap',
-        workspaceId: 'ws_1',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }
-    ]
-  }
-];
+import { WorkspaceService } from './services/WorkspaceService';
+import { UserService } from './services/UserService';
+
+const workspaceService = new WorkspaceService();
+const userService = new UserService();
 
 export const resolvers = {
   Query: {
-    me: () => ({ id: 'usr_1', email: 'test@vignettelab.com', name: 'Test User' }),
-    workspaces: () => workspaces,
-    workspace: (_: any, { id }: { id: string }) => workspaces.find(w => w.id === id),
-    canvas: (_: any, { id }: { id: string }) => {
-      for (const w of workspaces) {
-        const c = w.canvases.find(c => c.id === id);
-        if (c) return c;
-      }
-      return null;
-    }
+    me: () => userService.getUserById('usr_1'),
+    workspaces: () => workspaceService.getWorkspaces(),
+    workspace: (_: any, { id }: { id: string }) => workspaceService.getWorkspaceById(id),
+    canvas: (_: any, { id }: { id: string }) => workspaceService.getCanvasById(id)
   },
   Mutation: {
     createWorkspace: (_: any, { name }: { name: string }) => {
-      const newWs = {
-        id: `ws_${Date.now()}`,
-        name,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        ownerId: 'usr_1',
-        canvases: []
-      };
-      workspaces.push(newWs);
-      return newWs;
+      // Hardcoding 'usr_1' for now since we don't have true auth context
+      return workspaceService.createWorkspace(name, 'usr_1');
     },
     createCanvas: (_: any, { workspaceId, title }: { workspaceId: string, title: string }) => {
-      const ws = workspaces.find(w => w.id === workspaceId);
-      if (!ws) throw new Error('Workspace not found');
-      
-      const newCanvas = {
-        id: `cv_${Date.now()}`,
-        title,
-        workspaceId,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      ws.canvases.push(newCanvas);
-      return newCanvas;
+      return workspaceService.createCanvas(workspaceId, title);
     },
     updateCanvasThumbnail: (_: any, { id, thumbnailUrl }: { id: string, thumbnailUrl: string }) => {
-      for (const w of workspaces) {
-        const c = w.canvases.find(c => c.id === id);
-        if (c) {
-          (c as any).thumbnailUrl = thumbnailUrl;
-          c.updatedAt = new Date().toISOString();
-          return c;
-        }
-      }
-      throw new Error('Canvas not found');
+      return workspaceService.updateCanvasThumbnail(id, thumbnailUrl);
     }
   }
 };
