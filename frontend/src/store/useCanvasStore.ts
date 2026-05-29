@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 import { supabase } from '@/lib/supabase';
 import { SupabaseProvider } from '@/lib/yjsSupabaseProvider';
 
-export type Tool = 'select' | 'pen' | 'eraser' | 'rect' | 'ellipse' | 'triangle' | 'star' | 'diamond' | 'hexagon';
+export type Tool = 'select' | 'pen' | 'eraser' | 'line' | 'rect' | 'rounded_rect' | 'ellipse' | 'triangle' | 'right_triangle' | 'diamond' | 'pentagon' | 'hexagon' | 'arrow_right' | 'arrow_left' | 'arrow_up' | 'arrow_down' | 'star_4' | 'star_5' | 'star_6' | 'heart' | 'lightning';
 export type Point = [number, number, number];
 
 export interface StrokeElement {
@@ -16,7 +16,7 @@ export interface StrokeElement {
 
 export interface ShapeElement {
   id: string;
-  type: 'rect' | 'ellipse' | 'triangle' | 'star' | 'diamond' | 'hexagon';
+  type: 'line' | 'rect' | 'rounded_rect' | 'ellipse' | 'triangle' | 'right_triangle' | 'diamond' | 'pentagon' | 'hexagon' | 'arrow_right' | 'arrow_left' | 'arrow_up' | 'arrow_down' | 'star_4' | 'star_5' | 'star_6' | 'heart' | 'lightning';
   x: number;
   y: number;
   width: number;

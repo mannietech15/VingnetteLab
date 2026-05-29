@@ -21,6 +21,8 @@ function getSvgPathFromStroke(stroke: number[][]) {
   return d.join(' ');
 }
 
+export const SHAPE_TOOLS = ['line', 'rect', 'rounded_rect', 'ellipse', 'triangle', 'right_triangle', 'diamond', 'pentagon', 'hexagon', 'arrow_right', 'arrow_left', 'arrow_up', 'arrow_down', 'star_4', 'star_5', 'star_6', 'heart', 'lightning'];
+
 export default function Canvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
@@ -145,27 +147,135 @@ export default function Canvas() {
         ctx.closePath();
         if (element.isFilled) ctx.fill();
         else ctx.stroke();
-      } else if (element.type === 'star') {
+      } else if (element.type === 'line') {
         ctx.strokeStyle = element.color;
         ctx.fillStyle = element.color;
         ctx.lineWidth = 2 / camera.z;
         ctx.beginPath();
+        ctx.moveTo(element.x, element.y);
+        ctx.lineTo(element.x + element.width, element.y + element.height);
+        ctx.stroke();
+      } else if (element.type === 'rounded_rect') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        ctx.beginPath();
+        ctx.roundRect(
+          Math.min(element.x, element.x + element.width),
+          Math.min(element.y, element.y + element.height),
+          Math.abs(element.width),
+          Math.abs(element.height),
+          10 / camera.z
+        );
+        if (element.isFilled) ctx.fill(); else ctx.stroke();
+      } else if (element.type === 'right_triangle') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        ctx.beginPath();
+        ctx.moveTo(element.x, element.y);
+        ctx.lineTo(element.x, element.y + element.height);
+        ctx.lineTo(element.x + element.width, element.y + element.height);
+        ctx.closePath();
+        if (element.isFilled) ctx.fill(); else ctx.stroke();
+      } else if (element.type === 'pentagon') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+          const angle = (i * 2 * Math.PI) / 5 - Math.PI / 2;
+          const px = element.x + element.width/2 + Math.cos(angle) * element.width/2;
+          const py = element.y + element.height/2 + Math.sin(angle) * element.height/2;
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        if (element.isFilled) ctx.fill(); else ctx.stroke();
+      } else if (element.type.startsWith('arrow_')) {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        const dir = element.type.split('_')[1];
+        ctx.beginPath();
+        const xMin = Math.min(element.x, element.x + element.width);
+        const xMax = Math.max(element.x, element.x + element.width);
+        const yMin = Math.min(element.y, element.y + element.height);
+        const yMax = Math.max(element.y, element.y + element.height);
+        const w = Math.abs(element.width);
+        const h = Math.abs(element.height);
+
+        if (dir === 'right') {
+          ctx.moveTo(xMin, yMin + h*0.25); ctx.lineTo(xMin + w*0.5, yMin + h*0.25); ctx.lineTo(xMin + w*0.5, yMin);
+          ctx.lineTo(xMax, yMin + h*0.5); ctx.lineTo(xMin + w*0.5, yMax); ctx.lineTo(xMin + w*0.5, yMax - h*0.25);
+          ctx.lineTo(xMin, yMax - h*0.25);
+        } else if (dir === 'left') {
+          ctx.moveTo(xMax, yMin + h*0.25); ctx.lineTo(xMin + w*0.5, yMin + h*0.25); ctx.lineTo(xMin + w*0.5, yMin);
+          ctx.lineTo(xMin, yMin + h*0.5); ctx.lineTo(xMin + w*0.5, yMax); ctx.lineTo(xMin + w*0.5, yMax - h*0.25);
+          ctx.lineTo(xMax, yMax - h*0.25);
+        } else if (dir === 'up') {
+          ctx.moveTo(xMin + w*0.25, yMax); ctx.lineTo(xMin + w*0.25, yMin + h*0.5); ctx.lineTo(xMin, yMin + h*0.5);
+          ctx.lineTo(xMin + w*0.5, yMin); ctx.lineTo(xMax, yMin + h*0.5); ctx.lineTo(xMax - w*0.25, yMin + h*0.5);
+          ctx.lineTo(xMax - w*0.25, yMax);
+        } else if (dir === 'down') {
+          ctx.moveTo(xMin + w*0.25, yMin); ctx.lineTo(xMin + w*0.25, yMax - h*0.5); ctx.lineTo(xMin, yMax - h*0.5);
+          ctx.lineTo(xMin + w*0.5, yMax); ctx.lineTo(xMax, yMax - h*0.5); ctx.lineTo(xMax - w*0.25, yMax - h*0.5);
+          ctx.lineTo(xMax - w*0.25, yMin);
+        }
+        ctx.closePath();
+        if (element.isFilled) ctx.fill(); else ctx.stroke();
+      } else if (element.type.startsWith('star_')) {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        const points = parseInt(element.type.split('_')[1] || '5');
+        ctx.beginPath();
         const cx = element.x + element.width / 2;
         const cy = element.y + element.height / 2;
         const outerRadius = Math.min(Math.abs(element.width), Math.abs(element.height)) / 2;
-        const innerRadius = outerRadius / 2;
-        const points = 5;
+        const innerRadius = points === 4 ? outerRadius * 0.3 : (points === 5 ? outerRadius * 0.5 : outerRadius * 0.6);
         for (let i = 0; i < points * 2; i++) {
           const radius = i % 2 === 0 ? outerRadius : innerRadius;
           const angle = (i * Math.PI) / points - Math.PI / 2;
           const px = cx + Math.cos(angle) * radius;
           const py = cy + Math.sin(angle) * radius;
-          if (i === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
         }
         ctx.closePath();
-        if (element.isFilled) ctx.fill();
-        else ctx.stroke();
+        if (element.isFilled) ctx.fill(); else ctx.stroke();
+      } else if (element.type === 'heart') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        ctx.beginPath();
+        const x = Math.min(element.x, element.x + element.width);
+        const y = Math.min(element.y, element.y + element.height);
+        const w = Math.abs(element.width);
+        const h = Math.abs(element.height);
+        const topCurveHeight = h * 0.3;
+        ctx.moveTo(x + w / 2, y + topCurveHeight);
+        ctx.bezierCurveTo(x, y, x - w / 2, y + h * 0.5, x + w / 2, y + h);
+        ctx.bezierCurveTo(x + w * 1.5, y + h * 0.5, x + w, y, x + w / 2, y + topCurveHeight);
+        ctx.closePath();
+        if (element.isFilled) ctx.fill(); else ctx.stroke();
+      } else if (element.type === 'lightning') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        ctx.beginPath();
+        const xMin = Math.min(element.x, element.x + element.width);
+        const xMax = Math.max(element.x, element.x + element.width);
+        const yMin = Math.min(element.y, element.y + element.height);
+        const yMax = Math.max(element.y, element.y + element.height);
+        const w = Math.abs(element.width);
+        const h = Math.abs(element.height);
+        ctx.moveTo(xMin + w*0.6, yMin);
+        ctx.lineTo(xMin + w*0.1, yMin + h*0.55);
+        ctx.lineTo(xMin + w*0.5, yMin + h*0.55);
+        ctx.lineTo(xMin + w*0.3, yMax);
+        ctx.lineTo(xMax, yMin + h*0.45);
+        ctx.lineTo(xMin + w*0.5, yMin + h*0.45);
+        ctx.closePath();
+        if (element.isFilled) ctx.fill(); else ctx.stroke();
       }
     }
 
@@ -225,7 +335,7 @@ export default function Canvas() {
       };
       
       addElement(newStroke);
-    } else if (['rect', 'ellipse', 'triangle', 'star', 'diamond', 'hexagon'].includes(currentTool)) {
+    } else if (SHAPE_TOOLS.includes(currentTool)) {
       setIsDrawing(true);
       const id = Date.now().toString();
       setCurrentStrokeId(id);
@@ -278,7 +388,7 @@ export default function Canvas() {
           points: [...el.points, [x, y, e.pressure || 0.5]]
         };
       });
-    } else if (isDrawing && currentStrokeId && ['rect', 'ellipse', 'triangle', 'star', 'diamond', 'hexagon'].includes(currentTool)) {
+    } else if (isDrawing && currentStrokeId && SHAPE_TOOLS.includes(currentTool)) {
       const { x, y } = screenToWorld(e.clientX, e.clientY);
       
       updateElement(currentStrokeId, (el) => {
@@ -307,7 +417,7 @@ export default function Canvas() {
             break;
           }
         }
-      } else if (['rect', 'ellipse', 'triangle', 'star', 'diamond', 'hexagon'].includes(el.type)) {
+      } else if (SHAPE_TOOLS.includes(el.type)) {
         // Basic bounding box check for shapes
         const xMin = Math.min(el.x, el.x + el.width);
         const xMax = Math.max(el.x, el.x + el.width);
