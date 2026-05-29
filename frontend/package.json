@@ -9,7 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@apollo/client": "^4.2.0",
     "@supabase/supabase-js": "^2.106.2",
+    "graphql": "^16.14.0",
     "lucide-react": "^1.17.0",
     "next": "16.2.6",
     "perfect-freehand": "^1.2.3",
