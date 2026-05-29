@@ -1,8 +1,10 @@
 import { create } from 'zustand';
+import * as Y from 'yjs';
+import { supabase } from '@/lib/supabase';
+import { SupabaseProvider } from '@/lib/yjsSupabaseProvider';
 
 export type Tool = 'select' | 'pen' | 'eraser' | 'rect' | 'ellipse';
-
-export type Point = [number, number, number]; // [x, y, pressure]
+export type Point = [number, number, number];
 
 export interface StrokeElement {
   id: string;
@@ -28,7 +30,17 @@ export type CanvasElement = StrokeElement | ShapeElement;
 interface Camera {
   x: number;
   y: number;
-  z: number; // zoom level
+  z: number;
+}
+
+// Global Yjs Document
+const ydoc = new Y.Doc();
+const yElements = ydoc.getMap<CanvasElement>('elements');
+
+// Optional: Initialize Supabase provider if supabase is available
+let provider: SupabaseProvider | null = null;
+if (supabase) {
+  provider = new SupabaseProvider(ydoc, supabase, 'global-canvas-room');
 }
 
 interface CanvasState {
@@ -51,30 +63,43 @@ interface CanvasState {
   removeElement: (id: string) => void;
 }
 
-export const useCanvasStore = create<CanvasState>((set) => ({
-  elements: [],
-  camera: { x: 0, y: 0, z: 1 },
-  currentTool: 'pen',
-  currentColor: '#1a1a1a', // defaults to dark, will adapt based on theme if needed
-  currentSize: 4,
-  theme: 'system',
+export const useCanvasStore = create<CanvasState>((set) => {
+  
+  // Listen to Yjs changes and sync back to Zustand
+  yElements.observe(() => {
+    const elementsArray = Array.from(yElements.values());
+    set({ elements: elementsArray });
+  });
 
-  setTool: (tool) => set({ currentTool: tool }),
-  setColor: (color) => set({ currentColor: color }),
-  setSize: (size) => set({ currentSize: size }),
-  setTheme: (theme) => set({ theme }),
-  
-  setCamera: (updater) => set((state) => ({ camera: updater(state.camera) })),
-  
-  addElement: (element) => set((state) => ({ 
-    elements: [...state.elements, element] 
-  })),
-  
-  updateElement: (id, updater) => set((state) => ({
-    elements: state.elements.map(el => el.id === id ? updater(el) : el)
-  })),
-  
-  removeElement: (id) => set((state) => ({
-    elements: state.elements.filter(el => el.id !== id)
-  }))
-}));
+  return {
+    elements: Array.from(yElements.values()),
+    camera: { x: 0, y: 0, z: 1 },
+    currentTool: 'pen',
+    currentColor: '#1a1a1a',
+    currentSize: 4,
+    theme: 'system',
+
+    setTool: (tool) => set({ currentTool: tool }),
+    setColor: (color) => set({ currentColor: color }),
+    setSize: (size) => set({ currentSize: size }),
+    setTheme: (theme) => set({ theme }),
+    
+    setCamera: (updater) => set((state) => ({ camera: updater(state.camera) })),
+    
+    addElement: (element) => {
+      // Mutate Yjs directly; the observer will update Zustand
+      yElements.set(element.id, element);
+    },
+    
+    updateElement: (id, updater) => {
+      const el = yElements.get(id);
+      if (el) {
+        yElements.set(id, updater(el as CanvasElement));
+      }
+    },
+    
+    removeElement: (id) => {
+      yElements.delete(id);
+    }
+  };
+});
