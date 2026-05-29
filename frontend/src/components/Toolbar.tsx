@@ -155,7 +155,7 @@ export default function Toolbar() {
           
           {/* Popover Menu: 6 columns like MS Paint */}
           {showShapes && (
-            <div className="glass-panel" style={{
+            <div style={{
               position: 'absolute',
               bottom: 'calc(100% + 12px)',
               left: '50%',
@@ -164,7 +164,11 @@ export default function Toolbar() {
               display: 'grid',
               gridTemplateColumns: 'repeat(6, 1fr)',
               gap: '4px',
-              animation: 'fadeIn 0.2s ease-out'
+              animation: 'fadeIn 0.2s ease-out',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              boxShadow: 'var(--shadow-lg)',
+              borderRadius: '12px'
             }}>
               {SHAPES.map(shape => (
                 <button
