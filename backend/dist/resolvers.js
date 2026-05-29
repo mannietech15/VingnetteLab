@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.resolvers = void 0;
 // Mock data for development
 const workspaces = [
     {
@@ -17,7 +20,7 @@ const workspaces = [
         ]
     }
 ];
-export const resolvers = {
+exports.resolvers = {
     Query: {
         me: () => ({ id: 'usr_1', email: 'test@vignettelab.com', name: 'Test User' }),
         workspaces: () => workspaces,

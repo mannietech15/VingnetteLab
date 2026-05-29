@@ -24,9 +24,10 @@ async function startApolloServer() {
     '/graphql',
     cors<cors.CorsRequest>(),
     json(),
+    // @ts-ignore - Bypass type conflict between Apollo and Express versions
     expressMiddleware(server, {
-      context: async ({ req }: { req: express.Request }) => ({ token: req.headers.token }),
-    }),
+      context: async ({ req }) => ({ token: req.headers.token }),
+    }) as express.RequestHandler,
   );
 
   const PORT = process.env.PORT || 4000;
