@@ -1,0 +1,45 @@
+
+> tmp_app@0.1.0 lint
+> eslint
+
+
+/home/mannietech/Mannie Tech/vignetteLab/src/components/Canvas.tsx
+   4:26  warning  'Point' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  57:9   error    Error: Cannot access variable before it is declared
+
+`draw` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/home/mannietech/Mannie Tech/vignetteLab/src/components/Canvas.tsx:57:9
+  55 |         if (ctx) ctx.scale(dpr, dpr);
+  56 |         
+> 57 |         draw();
+     |         ^^^^ `draw` accessed before it is declared
+  58 |       }
+  59 |     };
+  60 |     
+
+/home/mannietech/Mannie Tech/vignetteLab/src/components/Canvas.tsx:75:3
+   73 |
+   74 |   // Main Render Loop
+>  75 |   const draw = () => {
+      |   ^^^^^^^^^^^^^^^^^^^^
+>  76 |     const canvas = canvasRef.current;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  77 |     if (!canvas) return;
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 106 |     ctx.restore();
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 107 |   };
+      | ^^^^^ `draw` is declared here
+  108 |
+  109 |   // Re-draw when elements or camera change
+  110 |   useEffect(() => {  react-hooks/immutability
+  64:6   warning  React Hook useEffect has a missing dependency: 'draw'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react-hooks/exhaustive-deps
+  75:9   warning  The 'draw' function makes the dependencies of useEffect Hook (at line 112) change on every render. To fix this, wrap the definition of 'draw' in its own useCallback() Hook                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/exhaustive-deps
+
+/home/mannietech/Mannie Tech/vignetteLab/src/components/Toolbar.tsx
+  11:86  warning  'setTheme' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 5 problems (1 error, 4 warnings)
+

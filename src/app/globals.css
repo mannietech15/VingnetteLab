@@ -1,26 +1,128 @@
-@import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light Theme Palette */
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-panel: rgba(255, 255, 255, 0.85);
+  
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  
+  --border-color: #e0e0e0;
+  
+  --accent-primary: #4361ee;
+  --accent-hover: #3a56d4;
+  --accent-light: rgba(67, 97, 238, 0.1);
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+  --toolbar-glass: rgba(255, 255, 255, 0.7);
+  --toolbar-border: rgba(255, 255, 255, 0.5);
+  --toolbar-blur: 16px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="dark"] {
+  /* Dark Theme Palette */
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-panel: rgba(30, 30, 30, 0.85);
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  
+  --border-color: #333333;
+  
+  --accent-primary: #5c7cfa;
+  --accent-hover: #748ffc;
+  --accent-light: rgba(92, 124, 250, 0.15);
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  --toolbar-glass: rgba(40, 40, 40, 0.7);
+  --toolbar-border: rgba(255, 255, 255, 0.1);
+  --toolbar-blur: 16px;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-panel: rgba(30, 30, 30, 0.85);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    
+    --border-color: #333333;
+    
+    --accent-primary: #5c7cfa;
+    --accent-hover: #748ffc;
+    --accent-light: rgba(92, 124, 250, 0.15);
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  
+    --toolbar-glass: rgba(40, 40, 40, 0.7);
+    --toolbar-border: rgba(255, 255, 255, 0.1);
+    --toolbar-blur: 16px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Important for canvas app */
+  overscroll-behavior-y: none; /* Prevent pull-to-refresh */
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Base utility classes since we aren't using Tailwind */
+.glass-panel {
+  background: var(--toolbar-glass);
+  backdrop-filter: blur(var(--toolbar-blur));
+  -webkit-backdrop-filter: blur(var(--toolbar-blur));
+  border: 1px solid var(--toolbar-border);
+  box-shadow: var(--shadow-md);
+  border-radius: 12px;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: var(--bg-secondary);
+}
+
+.icon-btn.active {
+  background: var(--accent-light);
+  color: var(--accent-primary);
 }
