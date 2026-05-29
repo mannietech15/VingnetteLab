@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useCanvasStore, StrokeElement } from '@/store/useCanvasStore';
+import { useCanvasStore, StrokeElement, ShapeElement } from '@/store/useCanvasStore';
 import { getStroke } from 'perfect-freehand';
 
 // Helper to convert perfect-freehand stroke to SVG path
@@ -32,7 +32,8 @@ export default function Canvas() {
     currentSize,
     setCamera,
     addElement,
-    updateElement
+    updateElement,
+    removeElement
   } = useCanvasStore();
 
   const [isDrawing, setIsDrawing] = useState(false);
@@ -76,6 +77,34 @@ export default function Canvas() {
         const p = new Path2D(pathData);
         ctx.fillStyle = element.color;
         ctx.fill(p);
+      } else if (element.type === 'rect') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z; // Keep stroke width consistent regardless of zoom
+        
+        // Handle negative width/height by normalizing the coordinates
+        const x = Math.min(element.x, element.x + element.width);
+        const y = Math.min(element.y, element.y + element.height);
+        const w = Math.abs(element.width);
+        const h = Math.abs(element.height);
+
+        if (element.isFilled) ctx.fillRect(x, y, w, h);
+        else ctx.strokeRect(x, y, w, h);
+      } else if (element.type === 'ellipse') {
+        ctx.strokeStyle = element.color;
+        ctx.fillStyle = element.color;
+        ctx.lineWidth = 2 / camera.z;
+        
+        ctx.beginPath();
+        ctx.ellipse(
+          element.x + element.width / 2, 
+          element.y + element.height / 2, 
+          Math.abs(element.width / 2), 
+          Math.abs(element.height / 2), 
+          0, 0, 2 * Math.PI
+        );
+        if (element.isFilled) ctx.fill();
+        else ctx.stroke();
       }
     }
 
@@ -135,6 +164,27 @@ export default function Canvas() {
       };
       
       addElement(newStroke);
+    } else if (currentTool === 'rect' || currentTool === 'ellipse') {
+      setIsDrawing(true);
+      const id = Date.now().toString();
+      setCurrentStrokeId(id);
+      
+      const { x, y } = screenToWorld(e.clientX, e.clientY);
+      const newShape: ShapeElement = {
+        id,
+        type: currentTool,
+        x,
+        y,
+        width: 0,
+        height: 0,
+        color: currentColor,
+        isFilled: false // Could be hooked up to UI later
+      };
+      
+      addElement(newShape);
+    } else if (currentTool === 'eraser') {
+      // Trigger eraser check immediately on click
+      handleEraser(e.clientX, e.clientY);
     }
   };
 
@@ -152,6 +202,11 @@ export default function Canvas() {
       return;
     }
 
+    if (currentTool === 'eraser' && e.buttons === 1) {
+      handleEraser(e.clientX, e.clientY);
+      return;
+    }
+
     if (isDrawing && currentStrokeId && currentTool === 'pen') {
       const { x, y } = screenToWorld(e.clientX, e.clientY);
       
@@ -162,6 +217,46 @@ export default function Canvas() {
           points: [...el.points, [x, y, e.pressure || 0.5]]
         };
       });
+    } else if (isDrawing && currentStrokeId && (currentTool === 'rect' || currentTool === 'ellipse')) {
+      const { x, y } = screenToWorld(e.clientX, e.clientY);
+      
+      updateElement(currentStrokeId, (el) => {
+        if (el.type !== 'rect' && el.type !== 'ellipse') return el;
+        return {
+          ...el,
+          width: x - el.x,
+          height: y - el.y
+        };
+      });
+    }
+  };
+
+  const handleEraser = (clientX: number, clientY: number) => {
+    const { x, y } = screenToWorld(clientX, clientY);
+    const eraseRadius = (currentSize * 2) / camera.z;
+
+    for (const el of elements) {
+      if (el.type === 'stroke') {
+        // Quick distance check against stroke points
+        for (const pt of el.points) {
+          const dx = pt[0] - x;
+          const dy = pt[1] - y;
+          if (Math.sqrt(dx * dx + dy * dy) < eraseRadius * 2) {
+            removeElement(el.id);
+            break;
+          }
+        }
+      } else if (el.type === 'rect' || el.type === 'ellipse') {
+        // Basic bounding box check for shapes
+        const xMin = Math.min(el.x, el.x + el.width);
+        const xMax = Math.max(el.x, el.x + el.width);
+        const yMin = Math.min(el.y, el.y + el.height);
+        const yMax = Math.max(el.y, el.y + el.height);
+        
+        if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
+          removeElement(el.id);
+        }
+      }
     }
   };
 
