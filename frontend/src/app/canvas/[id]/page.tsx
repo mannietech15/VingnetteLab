@@ -3,7 +3,8 @@
 import dynamic from 'next/dynamic';
 import { Moon, Sun } from 'lucide-react';
 import { useCanvasStore } from '@/store/useCanvasStore';
-import { useQuery, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { use } from 'react';
 
 const GET_CANVAS = gql`
@@ -40,7 +41,7 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
   // Determine current effective theme for icon rendering
   const isCurrentlyDark = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-  const title = data?.canvas?.title || (loading ? 'Loading...' : 'Canvas Not Found');
+  const title = (data as any)?.canvas?.title || (loading ? 'Loading...' : 'Canvas Not Found');
 
   return (
     <main style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>

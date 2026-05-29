@@ -1,6 +1,7 @@
 'use client';
 
-import { useQuery, useMutation, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client/react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -101,7 +102,7 @@ export default function Dashboard() {
       </section>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-        {data.workspaces.map((ws: any) => (
+        {(data as any)?.workspaces?.map((ws: any) => (
           <div key={ws.id} className="glass-panel" style={{ padding: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h2 style={{ fontSize: '24px', fontWeight: 600 }}>{ws.name}</h2>
