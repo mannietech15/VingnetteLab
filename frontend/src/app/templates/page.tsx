@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Search, Sparkles, Users, Briefcase, Code, Palette, TrendingUp, ArrowRight, Star, Eye } from 'lucide-react';
 import { TEMPLATES, Template } from '@/data/templates';
 import TemplatePreview from '@/components/TemplatePreview';
+import TiltedCard from '@/components/TiltedCard';
 
 const CATEGORIES = [
   { id: 'all', label: 'All Templates', icon: Sparkles },
@@ -20,71 +21,128 @@ function formatCount(n: number) {
   return n.toString();
 }
 
-// Renders either a raster image or SVG preview
-function CardThumbnail({ t, hovered }: { t: Template; hovered: boolean }) {
-  if (t.image) {
-    return (
-      <div style={{ position: 'relative', width: '100%', height: '160px', overflow: 'hidden', background: '#f1f5f9' }}>
-        <Image src={t.image} alt={t.title} fill style={{ objectFit: 'cover', transition: 'transform 0.4s', transform: hovered ? 'scale(1.05)' : 'scale(1)' }} />
-        <HoverOverlay t={t} hovered={hovered} />
+function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const height = isFeatured ? '180px' : '160px';
+  const preview = t.image ? t.image : <TemplatePreview pattern={t.pattern} color={t.color} width={400} height={isFeatured ? 270 : 240} />;
+
+  return (
+    <div 
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        borderRadius: '14px',
+        border: '1px solid var(--border-color)',
+        background: 'var(--bg-secondary)',
+        cursor: 'pointer',
+        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease',
+        transform: isHovered ? 'translateY(-4px)' : 'none',
+        boxShadow: isHovered ? 'var(--shadow-lg)' : 'none',
+        borderColor: isHovered ? t.color + '66' : 'var(--border-color)',
+        // IMPORTANT: No 'overflow: hidden' here! It clips 3D transforms.
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {isFeatured && <div style={{ height: '6px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${t.color}, ${t.color}88)` }} />}
+      
+      <div style={{ padding: '12px 12px 0', zIndex: isHovered ? 20 : 1 }}>
+        <TiltedCard
+          imageSrc={preview}
+          altText={t.title}
+          captionText={`${t.title} - ${t.category}`}
+          containerHeight={height}
+          containerWidth="100%"
+          imageHeight="100%"
+          imageWidth="100%"
+          scaleOnHover={1.05}
+          rotateAmplitude={12}
+          showMobileWarning={false}
+          showTooltip={true}
+          displayOverlayContent={true}
+          overlayContent={
+            <div style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              borderRadius: '15px',
+              background: `linear-gradient(135deg, ${t.color}cc, ${t.color}77)`,
+              opacity: isHovered ? 1 : 0,
+              transition: 'opacity 0.25s ease',
+              pointerEvents: 'none' // Allow mouse movement to pass through to TiltedCard
+            }}>
+              <div style={{
+                pointerEvents: 'auto',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 20px',
+                borderRadius: '10px',
+                background: '#ffffff',
+                color: '#1a1a1a',
+                fontWeight: 700,
+                fontSize: '14px',
+                boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
+                transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
+                transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+              }}>
+                Use Template <ArrowRight size={16} />
+              </div>
+              {!isFeatured && (
+                <div style={{
+                  pointerEvents: 'auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.25)',
+                  backdropFilter: 'blur(4px)',
+                  color: '#ffffff',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                  transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
+                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s',
+                  cursor: 'pointer'
+                }}>
+                  <Eye size={18} />
+                </div>
+              )}
+            </div>
+          }
+        />
       </div>
-    );
-  }
-  return (
-    <div style={{ position: 'relative', width: '100%', height: '160px', overflow: 'hidden', transition: 'transform 0.4s', transform: hovered ? 'scale(1.02)' : 'scale(1)' }}>
-      <TemplatePreview pattern={t.pattern} color={t.color} width={400} height={240} />
-      <HoverOverlay t={t} hovered={hovered} />
-    </div>
-  );
-}
 
-function HoverOverlay({ t, hovered }: { t: Template; hovered: boolean }) {
-  return (
-    <div style={{
-      position: 'absolute', inset: 0,
-      background: `linear-gradient(135deg, ${t.color}cc, ${t.color}88)`,
-      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px',
-      opacity: hovered ? 1 : 0, transition: 'opacity 0.3s',
-    }}>
-      <button style={{
-        display: 'inline-flex', alignItems: 'center', gap: '6px',
-        padding: '8px 20px', borderRadius: '8px',
-        background: 'white', color: '#1a1a1a', border: 'none',
-        fontWeight: 600, fontSize: '13px', cursor: 'pointer',
-      }}>
-        Use Template <ArrowRight size={14} />
-      </button>
-      <button style={{
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        width: '36px', height: '36px', borderRadius: '8px',
-        background: 'rgba(255,255,255,0.2)', color: 'white', border: 'none', cursor: 'pointer',
-      }}>
-        <Eye size={16} />
-      </button>
-    </div>
-  );
-}
-
-function FeaturedThumbnail({ t, hovered }: { t: Template; hovered: boolean }) {
-  if (t.image) {
-    return (
-      <div style={{ position: 'relative', width: '100%', height: '180px', overflow: 'hidden', background: '#f1f5f9' }}>
-        <Image src={t.image} alt={t.title} fill style={{ objectFit: 'cover', transition: 'transform 0.4s', transform: hovered ? 'scale(1.05)' : 'scale(1)' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: hovered ? 1 : 0, transition: 'opacity 0.3s' }}>
-          <button style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 24px', borderRadius: '10px', background: 'white', color: '#1a1a1a', border: 'none', fontWeight: 600, fontSize: '14px', cursor: 'pointer', transform: hovered ? 'translateY(0)' : 'translateY(10px)', transition: 'transform 0.3s' }}>
-            Use Template <ArrowRight size={16} />
-          </button>
+      <div style={{ padding: isFeatured ? '16px 20px 20px' : '14px 18px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+          <span style={{ padding: '2px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 600, background: `${t.color}15`, color: t.color, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t.category}</span>
+          {t.isFeatured && <Star size={14} style={{ color: '#f59e0b' }} fill="#f59e0b" />}
+          {isFeatured && !t.isFeatured && <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {formatCount(t.usageCount)} uses</span>}
         </div>
-      </div>
-    );
-  }
-  return (
-    <div style={{ position: 'relative', width: '100%', height: '180px', overflow: 'hidden', transition: 'transform 0.4s', transform: hovered ? 'scale(1.02)' : 'scale(1)' }}>
-      <TemplatePreview pattern={t.pattern} color={t.color} width={400} height={270} />
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: hovered ? 1 : 0, transition: 'opacity 0.3s' }}>
-        <button style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 24px', borderRadius: '10px', background: 'white', color: '#1a1a1a', border: 'none', fontWeight: 600, fontSize: '14px', cursor: 'pointer', transform: hovered ? 'translateY(0)' : 'translateY(10px)', transition: 'transform 0.3s' }}>
-          Use Template <ArrowRight size={16} />
-        </button>
+        
+        <h3 style={{ fontSize: isFeatured ? '18px' : '16px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 4px' }}>{t.title}</h3>
+        
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: isFeatured ? '0' : '0 0 12px', display: isFeatured ? 'block' : '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {isFeatured ? t.description.slice(0, 100) + '...' : t.description}
+        </p>
+
+        {!isFeatured && (
+          <>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px', marginTop: 'auto' }}>
+              {t.tags.map((tag) => (
+                <span key={tag} style={{ padding: '2px 8px', borderRadius: '100px', fontSize: '11px', background: 'var(--bg-primary)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)' }}>{tag}</span>
+              ))}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-color)', paddingTop: '10px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {formatCount(t.usageCount)} uses</span>
+              <span>by {t.author}</span>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -93,7 +151,6 @@ function FeaturedThumbnail({ t, hovered }: { t: Template; hovered: boolean }) {
 export default function TemplatesPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const filtered = TEMPLATES.filter((t) => {
     const matchesCategory = activeCategory === 'all' || t.category === activeCategory;
@@ -150,19 +207,7 @@ export default function TemplatesPage() {
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
             {featured.slice(0, 3).map((t) => (
-              <div key={t.id} onMouseEnter={() => setHoveredCard(`f-${t.id}`)} onMouseLeave={() => setHoveredCard(null)}
-                style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', cursor: 'pointer', transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s', transform: hoveredCard === `f-${t.id}` ? 'translateY(-4px)' : 'none', boxShadow: hoveredCard === `f-${t.id}` ? 'var(--shadow-lg)' : 'var(--shadow-sm)' }}>
-                <div style={{ height: '6px', background: `linear-gradient(90deg, ${t.color}, ${t.color}88)` }} />
-                <FeaturedThumbnail t={t} hovered={hoveredCard === `f-${t.id}`} />
-                <div style={{ padding: '16px 20px 20px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                    <span style={{ padding: '2px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 600, background: `${t.color}18`, color: t.color, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t.category}</span>
-                    <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {formatCount(t.usageCount)} uses</span>
-                  </div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px' }}>{t.title}</h3>
-                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>{t.description.slice(0, 100)}...</p>
-                </div>
-              </div>
+              <TemplateCard key={`f-${t.id}`} t={t} isFeatured={true} />
             ))}
           </div>
         </section>
@@ -184,27 +229,7 @@ export default function TemplatesPage() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
             {filtered.map((t) => (
-              <div key={t.id} onMouseEnter={() => setHoveredCard(t.id)} onMouseLeave={() => setHoveredCard(null)}
-                style={{ borderRadius: '14px', overflow: 'hidden', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', cursor: 'pointer', transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s, border-color 0.3s', transform: hoveredCard === t.id ? 'translateY(-4px)' : 'none', boxShadow: hoveredCard === t.id ? 'var(--shadow-lg)' : 'none', borderColor: hoveredCard === t.id ? t.color + '66' : 'var(--border-color)' }}>
-                <CardThumbnail t={t} hovered={hoveredCard === t.id} />
-                <div style={{ padding: '14px 18px 18px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                    <span style={{ padding: '2px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 600, background: `${t.color}15`, color: t.color, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t.category}</span>
-                    {t.isFeatured && <Star size={14} style={{ color: '#f59e0b' }} fill="#f59e0b" />}
-                  </div>
-                  <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 4px' }}>{t.title}</h3>
-                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: '0 0 12px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{t.description}</p>
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                    {t.tags.map((tag) => (
-                      <span key={tag} style={{ padding: '2px 8px', borderRadius: '100px', fontSize: '11px', background: 'var(--bg-primary)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)' }}>{tag}</span>
-                    ))}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-color)', paddingTop: '10px', fontSize: '12px', color: 'var(--text-secondary)' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {formatCount(t.usageCount)} uses</span>
-                    <span>by {t.author}</span>
-                  </div>
-                </div>
-              </div>
+              <TemplateCard key={t.id} t={t} />
             ))}
           </div>
         )}
