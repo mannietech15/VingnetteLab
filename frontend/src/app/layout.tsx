@@ -33,9 +33,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)' }}>
+          <div className="app-container">
             <Sidebar />
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+            <div className="main-content">
               {children}
             </div>
           </div>

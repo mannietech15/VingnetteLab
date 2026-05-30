@@ -166,7 +166,7 @@ export default function TemplatesPage() {
   return (
     <main style={{ flex: 1, overflowY: 'auto', height: '100vh', background: 'var(--bg-primary)' }}>
       {/* Hero */}
-      <section style={{ padding: '48px 48px 0', maxWidth: '1200px', margin: '0 auto' }}>
+      <section className="templates-hero">
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'var(--accent-light)', color: 'var(--accent-primary)', fontSize: '13px', fontWeight: 600, marginBottom: '8px' }}>
           <Sparkles size={14} /> Curated by VignetteLab
         </span>
@@ -201,11 +201,11 @@ export default function TemplatesPage() {
 
       {/* Featured */}
       {activeCategory === 'all' && searchQuery === '' && (
-        <section style={{ padding: '40px 48px 0', maxWidth: '1200px', margin: '0 auto' }}>
+        <section className="templates-section" style={{ paddingBottom: '0' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Star size={20} style={{ color: '#f59e0b' }} /> Featured Templates
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
+          <div className="featured-grid">
             {featured.slice(0, 3).map((t) => (
               <TemplateCard key={`f-${t.id}`} t={t} isFeatured={true} />
             ))}
@@ -214,7 +214,7 @@ export default function TemplatesPage() {
       )}
 
       {/* All Templates Grid */}
-      <section style={{ padding: '40px 48px 64px', maxWidth: '1200px', margin: '0 auto' }}>
+      <section className="templates-section">
         <h2 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '20px' }}>
           {activeCategory === 'all' ? 'All Templates' : CATEGORIES.find(c => c.id === activeCategory)?.label}
           <span style={{ fontSize: '14px', fontWeight: 400, color: 'var(--text-secondary)', marginLeft: '8px' }}>({filtered.length})</span>
@@ -227,7 +227,7 @@ export default function TemplatesPage() {
             <p style={{ fontSize: '14px' }}>Try adjusting your search or filter criteria.</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+          <div className="templates-grid">
             {filtered.map((t) => (
               <TemplateCard key={t.id} t={t} />
             ))}

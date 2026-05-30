@@ -17,19 +17,9 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside style={{
-      width: '260px',
-      height: '100vh',
-      borderRight: '1px solid var(--border-color)',
-      background: 'var(--bg-secondary)',
-      display: 'flex',
-      flexDirection: 'column',
-      padding: '24px 16px',
-      position: 'sticky',
-      top: 0
-    }}>
+    <aside className="sidebar-container">
       {/* Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '0 8px', marginBottom: '32px' }}>
+      <div className="sidebar-desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '0 8px', marginBottom: '32px' }}>
         <div style={{
           width: '36px',
           height: '36px',
@@ -50,7 +40,7 @@ export default function Sidebar() {
       </div>
 
       {/* Search Bar (Mock) */}
-      <div style={{ marginBottom: '24px', position: 'relative' }}>
+      <div className="sidebar-desktop-only" style={{ marginBottom: '24px', position: 'relative' }}>
         <Search size={16} style={{ position: 'absolute', left: '24px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
         <input 
           type="text" 
@@ -69,48 +59,44 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, overflowY: 'auto' }}>
+      <nav className="sidebar-nav">
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link key={item.label} href={item.href} style={{ textDecoration: 'none' }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '10px 12px',
-                borderRadius: '8px',
-                background: isActive ? 'var(--bg-hover)' : 'transparent',
-                color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                fontWeight: isActive ? 500 : 400,
-                transition: 'all 0.2s'
-              }}
-              onMouseOver={(e) => {
-                if (!isActive) e.currentTarget.style.background = 'var(--bg-hover)';
-              }}
-              onMouseOut={(e) => {
-                if (!isActive) e.currentTarget.style.background = 'transparent';
-              }}>
+              <div 
+                className="sidebar-nav-item"
+                style={{
+                  background: isActive ? 'var(--bg-hover)' : 'transparent',
+                  color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)'
+                }}
+                onMouseOver={(e) => {
+                  if (!isActive && window.innerWidth > 768) e.currentTarget.style.background = 'var(--bg-hover)';
+                }}
+                onMouseOut={(e) => {
+                  if (!isActive) e.currentTarget.style.background = 'transparent';
+                }}
+              >
                 <item.icon size={18} style={{ color: isActive ? 'var(--accent-primary)' : 'inherit' }} />
-                {item.label}
+                <span className="sidebar-nav-label">{item.label}</span>
               </div>
             </Link>
           );
         })}
 
-        <div style={{ margin: '24px 0 8px 12px', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+        <div className="sidebar-desktop-only" style={{ margin: '24px 0 8px 12px', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
           Your Workspaces
         </div>
         
         {/* Mock Workspaces List */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', borderRadius: '8px', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'background 0.2s' }}
+        <div className="sidebar-desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', borderRadius: '8px', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'background 0.2s' }}
           onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'}
           onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
         >
           <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#e03131' }} />
           <span style={{ flex: 1, fontSize: '14px' }}>Design Team</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', borderRadius: '8px', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'background 0.2s' }}
+        <div className="sidebar-desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', borderRadius: '8px', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'background 0.2s' }}
           onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'}
           onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
         >
@@ -120,7 +106,7 @@ export default function Sidebar() {
       </nav>
 
       {/* User Profile Footer */}
-      <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: '16px' }}>
+      <div className="sidebar-desktop-only" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.2s' }}
              onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'}
              onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
