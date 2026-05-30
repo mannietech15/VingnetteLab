@@ -3,6 +3,7 @@
   --bg-primary: #f8f9fa;
   --bg-secondary: #ffffff;
   --bg-panel: rgba(255, 255, 255, 0.85);
+  --bg-hover: rgba(0, 0, 0, 0.05);
   
   --text-primary: #1a1a1a;
   --text-secondary: #666666;
@@ -27,6 +28,7 @@
   --bg-primary: #121212;
   --bg-secondary: #1e1e1e;
   --bg-panel: rgba(30, 30, 30, 0.85);
+  --bg-hover: rgba(255, 255, 255, 0.05);
   
   --text-primary: #ffffff;
   --text-secondary: #a0a0a0;
@@ -51,6 +53,7 @@
     --bg-primary: #121212;
     --bg-secondary: #1e1e1e;
     --bg-panel: rgba(30, 30, 30, 0.85);
+    --bg-hover: rgba(255, 255, 255, 0.05);
     
     --text-primary: #ffffff;
     --text-secondary: #a0a0a0;
