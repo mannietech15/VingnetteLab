@@ -32,6 +32,7 @@ export default function Canvas() {
     currentTool, 
     currentColor, 
     currentSize,
+    isFilled,
     setCamera,
     addElement,
     updateElement,
@@ -42,6 +43,46 @@ export default function Canvas() {
   const [isPanning, setIsPanning] = useState(false);
   const [currentStrokeId, setCurrentStrokeId] = useState<string | null>(null);
   const [lastPanPoint, setLastPanPoint] = useState<{x: number, y: number} | null>(null);
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isDraggingElement, setIsDraggingElement] = useState(false);
+  const [dragStartPoint, setDragStartPoint] = useState<{x: number, y: number} | null>(null);
+
+  // Keyboard shortcut for deleting selected element
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId) {
+        removeElement(selectedId);
+        setSelectedId(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedId, removeElement]);
+
+  const getElementAtPosition = useCallback((x: number, y: number) => {
+    for (let i = elements.length - 1; i >= 0; i--) {
+      const el = elements[i];
+      if (el.type === 'stroke') {
+        for (const pt of el.points) {
+          const dx = pt[0] - x;
+          const dy = pt[1] - y;
+          if (Math.sqrt(dx * dx + dy * dy) < (el.size * 2) / camera.z + 5) {
+            return el;
+          }
+        }
+      } else {
+        const xMin = Math.min(el.x, el.x + el.width);
+        const xMax = Math.max(el.x, el.x + el.width);
+        const yMin = Math.min(el.y, el.y + el.height);
+        const yMax = Math.max(el.y, el.y + el.height);
+        if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
+          return el;
+        }
+      }
+    }
+    return null;
+  }, [elements, camera.z]);
 
   // Screen to World coordinates
   const screenToWorld = (clientX: number, clientY: number) => {
@@ -279,8 +320,42 @@ export default function Canvas() {
       }
     }
 
+    // Draw Selection Bounding Box
+    if (selectedId) {
+      const el = elements.find(e => e.id === selectedId);
+      if (el) {
+        ctx.strokeStyle = '#0ea5e9';
+        ctx.lineWidth = 2 / camera.z;
+        ctx.setLineDash([5 / camera.z, 5 / camera.z]);
+        
+        let minX = 0, minY = 0, w = 0, h = 0;
+        if (el.type === 'stroke') {
+          let xMin = Infinity, yMin = Infinity, xMax = -Infinity, yMax = -Infinity;
+          for (const pt of el.points) {
+            if (pt[0] < xMin) xMin = pt[0];
+            if (pt[0] > xMax) xMax = pt[0];
+            if (pt[1] < yMin) yMin = pt[1];
+            if (pt[1] > yMax) yMax = pt[1];
+          }
+          minX = xMin - el.size;
+          minY = yMin - el.size;
+          w = xMax - xMin + el.size * 2;
+          h = yMax - yMin + el.size * 2;
+        } else {
+          minX = Math.min(el.x, el.x + el.width);
+          minY = Math.min(el.y, el.y + el.height);
+          w = Math.abs(el.width);
+          h = Math.abs(el.height);
+        }
+        
+        const pad = 4 / camera.z;
+        ctx.strokeRect(minX - pad, minY - pad, w + pad * 2, h + pad * 2);
+        ctx.setLineDash([]);
+      }
+    }
+
     ctx.restore();
-  }, [elements, camera]);
+  }, [elements, camera, selectedId]);
 
   // Handle Resize
   useEffect(() => {
@@ -313,19 +388,37 @@ export default function Canvas() {
   }, [elements, camera, draw]);
 
   const onPointerDown = (e: React.PointerEvent) => {
-    // Middle click or Space/Pan tool -> Panning
-    if (e.button === 1 || currentTool === 'select') {
+    // Middle click -> Panning
+    if (e.button === 1) {
       setIsPanning(true);
       setLastPanPoint({ x: e.clientX, y: e.clientY });
       return;
     }
+
+    const { x, y } = screenToWorld(e.clientX, e.clientY);
+
+    if (currentTool === 'select') {
+      const clickedEl = getElementAtPosition(x, y);
+      if (clickedEl) {
+        setSelectedId(clickedEl.id);
+        setDragStartPoint({x, y});
+        setIsDraggingElement(true);
+      } else {
+        setSelectedId(null);
+        setIsPanning(true);
+        setLastPanPoint({ x: e.clientX, y: e.clientY });
+      }
+      return;
+    }
+
+    // if not select, clear selection
+    setSelectedId(null);
 
     if (currentTool === 'pen') {
       setIsDrawing(true);
       const id = Date.now().toString(); // simple ID generator
       setCurrentStrokeId(id);
       
-      const { x, y } = screenToWorld(e.clientX, e.clientY);
       const newStroke: StrokeElement = {
         id,
         type: 'stroke',
@@ -343,13 +436,13 @@ export default function Canvas() {
       const { x, y } = screenToWorld(e.clientX, e.clientY);
       const newShape: ShapeElement = {
         id,
-        type: currentTool as any,
+        type: currentTool as ShapeElement['type'],
         x,
         y,
         width: 0,
         height: 0,
         color: currentColor,
-        isFilled: false // Could be hooked up to UI later
+        isFilled: isFilled
       };
       
       addElement(newShape);
@@ -373,13 +466,29 @@ export default function Canvas() {
       return;
     }
 
+    const { x, y } = screenToWorld(e.clientX, e.clientY);
+
+    if (isDraggingElement && selectedId && dragStartPoint) {
+      const dx = x - dragStartPoint.x;
+      const dy = y - dragStartPoint.y;
+      
+      updateElement(selectedId, (el) => {
+        if (el.type === 'stroke') {
+          return { ...el, points: el.points.map(p => [p[0] + dx, p[1] + dy, p[2]]) };
+        } else {
+          return { ...el, x: el.x + dx, y: el.y + dy };
+        }
+      });
+      setDragStartPoint({x, y});
+      return;
+    }
+
     if (currentTool === 'eraser' && e.buttons === 1) {
       handleEraser(e.clientX, e.clientY);
       return;
     }
 
     if (isDrawing && currentStrokeId && currentTool === 'pen') {
-      const { x, y } = screenToWorld(e.clientX, e.clientY);
       
       updateElement(currentStrokeId, (el) => {
         if (el.type !== 'stroke') return el;
@@ -389,7 +498,6 @@ export default function Canvas() {
         };
       });
     } else if (isDrawing && currentStrokeId && SHAPE_TOOLS.includes(currentTool)) {
-      const { x, y } = screenToWorld(e.clientX, e.clientY);
       
       updateElement(currentStrokeId, (el) => {
         if (el.type === 'stroke') return el;
@@ -434,8 +542,10 @@ export default function Canvas() {
   const onPointerUp = () => {
     setIsDrawing(false);
     setIsPanning(false);
+    setIsDraggingElement(false);
     setCurrentStrokeId(null);
     setLastPanPoint(null);
+    setDragStartPoint(null);
   };
 
   // Zooming

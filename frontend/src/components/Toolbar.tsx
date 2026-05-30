@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useCanvasStore } from '@/store/useCanvasStore';
-import { Pen, MousePointer2, Minus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp } from 'lucide-react';
+import { useCanvasStore, Tool } from '@/store/useCanvasStore';
+import { Pen, MousePointer2, Minus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp, PaintBucket } from 'lucide-react';
 
 const COLORS = ['#1a1a1a', '#e03131', '#2f9e44', '#1971c2', '#f08c00', '#9c36b5'];
 const SIZES = [2, 4, 8, 12, 16];
@@ -28,7 +28,7 @@ const SHAPES = [
 ] as const;
 
 export default function Toolbar() {
-  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, theme, undo, redo } = useCanvasStore();
+  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, isFilled, setIsFilled, theme, undo, redo } = useCanvasStore();
   const [showShapes, setShowShapes] = useState(false);
   const shapesMenuRef = useRef<HTMLDivElement>(null);
 
@@ -89,6 +89,19 @@ export default function Toolbar() {
           </div>
           <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }} />
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            {isShapeTool && (
+              <>
+                <button
+                  onClick={() => setIsFilled(!isFilled)}
+                  className={`icon-btn ${isFilled ? 'active' : ''}`}
+                  title="Toggle Fill"
+                  style={{ width: '28px', height: '28px', padding: '4px' }}
+                >
+                  <PaintBucket size={16} />
+                </button>
+                <div style={{ width: '1px', height: '20px', background: 'var(--border-color)', margin: '0 4px' }} />
+              </>
+            )}
             {SIZES.map(s => (
               <button
                 key={s}
@@ -175,7 +188,7 @@ export default function Toolbar() {
                   key={shape.id}
                   className={`icon-btn ${currentTool === shape.id ? 'active' : ''}`}
                   onClick={() => {
-                    setTool(shape.id as any);
+                    setTool(shape.id as Tool);
                     setShowShapes(false);
                   }}
                   title={shape.label}

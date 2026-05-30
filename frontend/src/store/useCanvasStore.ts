@@ -53,12 +53,14 @@ interface CanvasState {
   currentTool: Tool;
   currentColor: string;
   currentSize: number;
+  isFilled: boolean;
   theme: 'light' | 'dark' | 'system';
   
   // Actions
   setTool: (tool: Tool) => void;
   setColor: (color: string) => void;
   setSize: (size: number) => void;
+  setIsFilled: (isFilled: boolean) => void;
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
   setCamera: (updater: (prev: Camera) => Camera) => void;
   
@@ -84,11 +86,13 @@ export const useCanvasStore = create<CanvasState>((set) => {
     currentTool: 'pen',
     currentColor: '#1a1a1a',
     currentSize: 4,
+    isFilled: false,
     theme: 'system',
 
     setTool: (tool) => set({ currentTool: tool }),
     setColor: (color) => set({ currentColor: color }),
     setSize: (size) => set({ currentSize: size }),
+    setIsFilled: (isFilled) => set({ isFilled }),
     setTheme: (theme) => set({ theme }),
     
     setCamera: (updater) => set((state) => ({ camera: updater(state.camera) })),
