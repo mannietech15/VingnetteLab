@@ -114,6 +114,35 @@ export default function WorkspacesPage() {
                 </button>
               </div>
             </div>
+
+            {/* Quick Action 4: Active Collaborators */}
+            <div style={{ padding: '24px', borderRadius: '16px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.3s', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+                 onMouseOver={(e) => { e.currentTarget.style.borderColor = '#10b981'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                 onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}
+            >
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Users size={24} />
+                </div>
+                
+                {/* Overlapping Online Avatars */}
+                <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                  {['S', 'A', 'K'].map((u, i) => (
+                    <div key={i} style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--bg-primary)', border: '2px solid var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', marginLeft: '-12px', zIndex: i, position: 'relative' }}>
+                      {u}
+                      {/* Online dot for the active user */}
+                      {i === 2 && <div style={{ position: 'absolute', bottom: 0, right: 0, width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', border: '2px solid var(--bg-secondary)' }} />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px' }}>Active Collaborators</h3>
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+                  Sarah and 2 others are currently editing in the <strong style={{ color: 'var(--text-primary)' }}>Design Team</strong> workspace.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
