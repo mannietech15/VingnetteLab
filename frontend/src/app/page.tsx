@@ -4,6 +4,9 @@ import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { Plus, Folder, FileText, ArrowRight, Sparkles, LayoutTemplate, Settings, Clock, Users } from 'lucide-react';
+import TemplatePreview from '@/components/TemplatePreview';
+import TiltedCard from '@/components/TiltedCard';
 
 const GET_WORKSPACES = gql`
   query GetWorkspaces {
@@ -41,20 +44,50 @@ const CREATE_CANVAS = gql`
   }
 `;
 
+// Helper to dynamically assign beautiful patterns and colors to user-created canvases
+const PATTERNS = ['cards_grid', 'sticky_notes', 'timeline_h', 'hierarchy', 'flowchart', 'venn', 'columns_4', 'process_arrows'];
+const COLORS = ['#4361ee', '#e03131', '#2f9e44', '#f59e0b', '#9c36b5', '#14b8a6', '#0ea5e9', '#ec4899'];
+
+function getVisuals(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  return {
+    pattern: PATTERNS[Math.abs(hash) % PATTERNS.length] as any,
+    color: COLORS[Math.abs(hash) % COLORS.length]
+  };
+}
+
 export default function Dashboard() {
   const { data, loading, error, refetch } = useQuery(GET_WORKSPACES);
   const [createWorkspace] = useMutation(CREATE_WORKSPACE);
   const [createCanvas] = useMutation(CREATE_CANVAS);
   const [newWsName, setNewWsName] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
 
-  if (loading) return <div style={{ padding: '40px', color: 'var(--text-primary)' }}>Loading Workspaces...</div>;
-  if (error) return <div style={{ padding: '40px', color: 'red' }}>Error: {error.message}</div>;
+  if (loading) return (
+    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '3px solid var(--border-color)', borderTopColor: 'var(--accent-primary)', animation: 'spin 1s linear infinite' }} />
+      <p style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Loading Command Center...</p>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+
+  if (error) return (
+    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)' }}>
+      <div style={{ padding: '32px', background: 'var(--bg-secondary)', borderRadius: '16px', border: '1px solid #ef4444', color: '#ef4444', textAlign: 'center' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}>Connection Error</h3>
+        <p>{error.message}</p>
+      </div>
+    </div>
+  );
 
   const handleCreateWorkspace = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newWsName.trim()) return;
+    setIsCreating(true);
     await createWorkspace({ variables: { name: newWsName } });
     setNewWsName('');
+    setIsCreating(false);
     refetch();
   };
 
@@ -65,95 +98,181 @@ export default function Dashboard() {
     refetch();
   };
 
+  const workspaces = data?.workspaces || [];
+  const totalCanvases = workspaces.reduce((acc: number, ws: any) => acc + ws.canvases.length, 0);
+
   return (
-    <main style={{ flex: 1, overflowY: 'auto' }}>
-      <div style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto', color: 'var(--text-primary)' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
-            <h1 style={{ fontSize: '32px', fontWeight: 'bold' }}>Dashboard</h1>
-          </header>
-
-      <section style={{ marginBottom: '40px' }}>
-        <form onSubmit={handleCreateWorkspace} style={{ display: 'flex', gap: '12px' }}>
-          <input 
-            type="text" 
-            placeholder="New Workspace Name..." 
-            value={newWsName}
-            onChange={(e) => setNewWsName(e.target.value)}
-            style={{ 
-              padding: '10px 16px', 
-              borderRadius: '8px', 
-              border: '1px solid var(--border-color)',
-              background: 'var(--glass-bg)',
-              color: 'var(--text-primary)',
-              flex: 1
-            }}
-          />
-          <button type="submit" style={{
-            padding: '10px 24px',
-            borderRadius: '8px',
-            border: 'none',
-            background: 'var(--accent-primary)',
-            color: 'white',
-            fontWeight: 'bold',
-            cursor: 'pointer'
-          }}>
-            Create Workspace
-          </button>
-        </form>
-      </section>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-        {(data as any)?.workspaces?.map((ws: any) => (
-          <div key={ws.id} className="glass-panel" style={{ padding: '24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '24px', fontWeight: 600 }}>{ws.name}</h2>
-              <button 
-                onClick={() => handleCreateCanvas(ws.id)}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  border: '1px solid var(--border-color)',
-                  background: 'transparent',
-                  color: 'var(--text-primary)',
-                  cursor: 'pointer'
-                }}
-              >
-                + New Canvas
-              </button>
+    <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
+      {/* Hero Banner */}
+      <div style={{ padding: '48px 48px 32px', background: 'linear-gradient(135deg, var(--accent-light) 0%, var(--bg-primary) 100%)', borderBottom: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', right: '5%', top: '-20%', opacity: 0.05, transform: 'rotate(15deg)', pointerEvents: 'none' }}>
+          <LayoutTemplate size={300} />
+        </div>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 14px', borderRadius: '100px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 600, marginBottom: '16px', boxShadow: 'var(--shadow-sm)' }}>
+            <Sparkles size={14} style={{ color: 'var(--accent-primary)' }} /> Welcome to VignetteLab
+          </span>
+          <h1 style={{ fontSize: '40px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-1px', margin: '0 0 16px' }}>
+            Home
+          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', fontSize: '15px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--accent-primary)' }}>
+                <Folder size={18} />
+              </div>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{workspaces.length}</span> Workspaces
             </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
-              {ws.canvases.map((canvas: any) => (
-                <Link key={canvas.id} href={`/canvas/${canvas.id}`} style={{ textDecoration: 'none' }}>
-                  <div style={{
-                    padding: '24px',
-                    borderRadius: '8px',
-                    background: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-color)',
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s, borderColor 0.2s',
-                    height: '140px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--accent-primary)'}
-                  onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border-color)'}
-                  >
-                    <h3 style={{ margin: '0 0 8px 0', color: 'var(--text-primary)', fontSize: '18px' }}>{canvas.title}</h3>
-                    <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '14px' }}>
-                      Updated: {new Date(Number(canvas.updatedAt) || canvas.updatedAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-              {ws.canvases.length === 0 && (
-                <p style={{ color: 'var(--text-secondary)' }}>No canvases yet. Create one!</p>
-              )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', fontSize: '15px' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: '#10b981' }}>
+                <FileText size={18} />
+              </div>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalCanvases}</span> Canvases
             </div>
           </div>
-        ))}
         </div>
+      </div>
+
+      <div style={{ padding: '40px 48px 64px', maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+        
+        {/* Workspace Creation */}
+        <section>
+          <div style={{ background: 'var(--bg-secondary)', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px', boxShadow: 'var(--shadow-sm)' }}>
+            <div>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 4px' }}>Create New Workspace</h2>
+              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Organize your canvases into dedicated team or project folders.</p>
+            </div>
+            <form onSubmit={handleCreateWorkspace} style={{ display: 'flex', gap: '12px', flex: 1, minWidth: '280px', maxWidth: '400px' }}>
+              <input 
+                type="text" 
+                placeholder="E.g. Marketing Team" 
+                value={newWsName}
+                onChange={(e) => setNewWsName(e.target.value)}
+                disabled={isCreating}
+                style={{ 
+                  padding: '12px 16px', 
+                  borderRadius: '10px', 
+                  border: '1px solid var(--border-color)',
+                  background: 'var(--bg-primary)',
+                  color: 'var(--text-primary)',
+                  fontSize: '14px',
+                  outline: 'none',
+                  flex: 1,
+                  transition: 'all 0.2s'
+                }}
+                onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent-primary)'; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+              />
+              <button type="submit" disabled={isCreating || !newWsName.trim()} style={{
+                padding: '0 24px',
+                borderRadius: '10px',
+                border: 'none',
+                background: newWsName.trim() ? 'var(--accent-primary)' : 'var(--border-color)',
+                color: newWsName.trim() ? 'white' : 'var(--text-secondary)',
+                fontWeight: 600,
+                cursor: newWsName.trim() ? 'pointer' : 'not-allowed',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <Plus size={18} /> {isCreating ? 'Creating...' : 'Create'}
+              </button>
+            </form>
+          </div>
+        </section>
+
+        {/* Workspaces & Canvases List */}
+        <section style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+          {workspaces.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-secondary)', background: 'var(--bg-secondary)', borderRadius: '16px', border: '1px dashed var(--border-color)' }}>
+              <Folder size={48} style={{ margin: '0 auto 16px', opacity: 0.3 }} />
+              <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>No Workspaces Yet</h3>
+              <p style={{ fontSize: '14px', maxWidth: '400px', margin: '0 auto' }}>Create your first workspace above to start organizing your infinite canvas projects.</p>
+            </div>
+          ) : (
+            workspaces.map((ws: any) => (
+              <div key={ws.id}>
+                {/* Workspace Header */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px solid var(--border-color)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--accent-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Folder size={16} />
+                    </div>
+                    <h2 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{ws.name}</h2>
+                    <span style={{ padding: '2px 8px', borderRadius: '100px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                      {ws.canvases.length} Canvas{ws.canvases.length !== 1 ? 'es' : ''}
+                    </span>
+                  </div>
+                  <button 
+                    onClick={() => handleCreateCanvas(ws.id)}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', fontWeight: 600, fontSize: '13px', cursor: 'pointer', transition: 'all 0.2s' }}
+                    onMouseOver={(e) => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.borderColor = 'var(--accent-primary)'; e.currentTarget.style.color = 'var(--accent-primary)'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.background = 'var(--bg-secondary)'; e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                  >
+                    <Plus size={14} /> New Canvas
+                  </button>
+                </div>
+                
+                {/* Canvases Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
+                  {ws.canvases.map((canvas: any) => {
+                    const visuals = getVisuals(canvas.id);
+                    return (
+                      <Link key={canvas.id} href={`/canvas/${canvas.id}`} style={{ textDecoration: 'none', display: 'block' }}>
+                        <div style={{ borderRadius: '14px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease', display: 'flex', flexDirection: 'column' }}
+                             onMouseOver={(e) => { e.currentTarget.style.borderColor = visuals.color; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-4px)'; }}
+                             onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}
+                        >
+                          {/* Top Border Accent */}
+                          <div style={{ height: '4px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${visuals.color}, ${visuals.color}88)` }} />
+                          
+                          {/* Premium Abstract SVG Preview */}
+                          <div style={{ width: '100%', height: '140px', background: '#f8fafc', position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--border-color)' }}>
+                            <TemplatePreview pattern={visuals.pattern} color={visuals.color} width={300} height={140} />
+                            
+                            {/* Hover Overlay Layer */}
+                            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.03)', opacity: 0, transition: 'opacity 0.2s' }}
+                                 onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+                                 onMouseOut={(e) => e.currentTarget.style.opacity = '0'}
+                            />
+                          </div>
+
+                          <div style={{ padding: '16px 20px' }}>
+                            <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 10px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {canvas.title}
+                            </h3>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                                <Clock size={12} /> {new Date(Number(canvas.updatedAt) || canvas.updatedAt).toLocaleDateString()}
+                              </div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--accent-primary)', fontSize: '12px', fontWeight: 600 }}>
+                                Open <ArrowRight size={12} />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                  
+                  {/* Empty State for Canvases */}
+                  {ws.canvases.length === 0 && (
+                    <div style={{ gridColumn: '1 / -1', padding: '32px', textAlign: 'center', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px dashed var(--border-color)' }}>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: '0 0 16px' }}>This workspace is empty.</p>
+                      <button 
+                        onClick={() => handleCreateCanvas(ws.id)}
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', background: 'var(--text-primary)', color: 'var(--bg-primary)', fontWeight: 600, fontSize: '13px', border: 'none', cursor: 'pointer' }}
+                      >
+                        Create your first canvas
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </section>
+
       </div>
     </main>
   );
