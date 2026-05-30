@@ -98,8 +98,8 @@ export default function Dashboard() {
     refetch();
   };
 
-  const workspaces = data?.workspaces || [];
-  const totalCanvases = workspaces.reduce((acc: number, ws: any) => acc + ws.canvases.length, 0);
+  const workspaces: any[] = (data as any)?.workspaces || [];
+  const totalCanvases = workspaces.reduce((acc: number, ws: any) => acc + (ws.canvases?.length || 0), 0);
 
   return (
     <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
