@@ -5,7 +5,7 @@ import { Moon, Sun } from 'lucide-react';
 import { useCanvasStore } from '@/store/useCanvasStore';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
-import { use } from 'react';
+import { use, useState, useEffect } from 'react';
 
 const GET_CANVAS = gql`
   query GetCanvas($id: ID!) {
@@ -38,8 +38,11 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
     }
   };
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   // Determine current effective theme for icon rendering
-  const isCurrentlyDark = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const isCurrentlyDark = mounted && (theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches));
 
   const title = (data as any)?.canvas?.title || (loading ? 'Loading...' : 'Canvas Not Found');
 
@@ -80,7 +83,7 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
 
         <div style={{ pointerEvents: 'auto', display: 'flex', gap: '12px' }}>
           <button className="icon-btn glass-panel" style={{ width: '40px', height: '40px', padding: 0 }} onClick={toggleTheme}>
-            {isCurrentlyDark ? <Sun size={20} /> : <Moon size={20} />}
+            {mounted ? (isCurrentlyDark ? <Sun size={20} /> : <Moon size={20} />) : <div style={{width: 20, height: 20}} />}
           </button>
           <button className="glass-panel" style={{ 
             padding: '0 16px', 
