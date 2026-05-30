@@ -1,7 +1,6 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Moon, Sun } from 'lucide-react';
 import { useCanvasStore } from '@/store/useCanvasStore';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
@@ -23,26 +22,13 @@ const Toolbar = dynamic(() => import('@/components/Toolbar'), { ssr: false });
 
 export default function CanvasPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { theme, setTheme } = useCanvasStore();
   
   const { data, loading, error } = useQuery(GET_CANVAS, {
     variables: { id }
   });
 
-  const toggleTheme = () => {
-    if (theme === 'system') {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(isDark ? 'light' : 'dark');
-    } else {
-      setTheme(theme === 'dark' ? 'light' : 'dark');
-    }
-  };
-
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-
-  // Determine current effective theme for icon rendering
-  const isCurrentlyDark = mounted && (theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches));
 
   const title = (data as any)?.canvas?.title || (loading ? 'Loading...' : 'Canvas Not Found');
 
@@ -82,9 +68,6 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
         </div>
 
         <div style={{ pointerEvents: 'auto', display: 'flex', gap: '12px' }}>
-          <button className="icon-btn glass-panel" style={{ width: '40px', height: '40px', padding: 0 }} onClick={toggleTheme}>
-            {mounted ? (isCurrentlyDark ? <Sun size={20} /> : <Moon size={20} />) : <div style={{width: 20, height: 20}} />}
-          </button>
           <button className="glass-panel" style={{ 
             padding: '0 16px', 
             height: '40px', 
@@ -92,8 +75,12 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
             background: 'var(--accent-primary)', 
             color: 'white', 
             fontWeight: 500,
-            cursor: 'pointer' 
-          }}>
+            cursor: 'pointer',
+            transition: 'opacity 0.2s'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
+          onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+          >
             Share
           </button>
         </div>

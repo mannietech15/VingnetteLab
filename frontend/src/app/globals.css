@@ -211,6 +211,14 @@ html, body {
   gap: 20px;
 }
 
+.sidebar-desktop-only {
+  /* Default empty, hidden in media query */
+}
+
+.sidebar-mobile-only {
+  display: none !important;
+}
+
 /* Mobile Overrides */
 @media (max-width: 768px) {
   .app-container {
@@ -241,6 +249,10 @@ html, body {
 
   .sidebar-desktop-only {
     display: none !important;
+  }
+
+  .sidebar-mobile-only {
+    display: flex !important;
   }
 
   .sidebar-nav {

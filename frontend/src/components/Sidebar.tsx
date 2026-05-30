@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Home, LayoutGrid, Clock, Star, LayoutTemplate, Trash2, Settings, ChevronRight, Search, Plus } from 'lucide-react';
+import { Home, LayoutGrid, Clock, Star, LayoutTemplate, Trash2, Settings, ChevronRight, Search, Plus, Sun, Moon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useCanvasStore } from '@/store/useCanvasStore';
 
 const NAV_ITEMS = [
   { label: 'Home', icon: Home, href: '/' },
@@ -15,6 +16,25 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { theme, setTheme } = useCanvasStore();
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => setMounted(true), []);
+
+  const toggleTheme = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (theme === 'system') {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(isDark ? 'light' : 'dark');
+    } else {
+      setTheme(theme === 'dark' ? 'light' : 'dark');
+    }
+  };
+
+  const isCurrentlyDark = mounted && (theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches));
 
   return (
     <aside className="sidebar-container">
@@ -84,6 +104,16 @@ export default function Sidebar() {
           );
         })}
 
+        {/* Mobile Theme Toggle (Visible only on mobile nav) */}
+        <div 
+          className="sidebar-nav-item sidebar-mobile-only"
+          onClick={toggleTheme}
+          style={{ cursor: 'pointer', color: 'var(--text-secondary)' }}
+        >
+          {mounted ? (isCurrentlyDark ? <Sun size={18} /> : <Moon size={18} />) : <div style={{width: 18, height: 18}} />}
+          <span className="sidebar-nav-label">Theme</span>
+        </div>
+
         <div className="sidebar-desktop-only" style={{ margin: '24px 0 8px 12px', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
           Your Workspaces
         </div>
@@ -107,10 +137,7 @@ export default function Sidebar() {
 
       {/* User Profile Footer */}
       <div className="sidebar-desktop-only" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.2s' }}
-             onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'}
-             onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-        >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', borderRadius: '8px' }}>
           <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 600, fontSize: '14px' }}>
             M
           </div>
@@ -118,7 +145,14 @@ export default function Sidebar() {
             <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Mannie Tech</div>
             <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Pro Plan</div>
           </div>
-          <Settings size={16} color="var(--text-secondary)" />
+          <button onClick={toggleTheme} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '6px', cursor: 'pointer', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px', transition: 'all 0.2s' }}
+            onMouseOver={(e) => { e.currentTarget.style.color = 'var(--accent-primary)'; e.currentTarget.style.borderColor = 'var(--accent-primary)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+            title="Toggle Theme"
+          >
+            {mounted ? (isCurrentlyDark ? <Sun size={14} /> : <Moon size={14} />) : <div style={{width: 14, height: 14}} />}
+          </button>
+          <Settings size={16} color="var(--text-secondary)" style={{ cursor: 'pointer', marginLeft: '4px' }} title="Settings" />
         </div>
       </div>
     </aside>
