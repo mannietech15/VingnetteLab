@@ -83,7 +83,6 @@
 html, body {
   width: 100%;
   height: 100%;
-  overflow: hidden; /* Important for canvas app */
   overscroll-behavior-y: none; /* Prevent pull-to-refresh */
   background-color: var(--bg-primary);
   color: var(--text-primary);
