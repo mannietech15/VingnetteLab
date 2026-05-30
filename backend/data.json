@@ -29,6 +29,22 @@
           "updatedAt": "2026-05-30T17:03:50.821Z"
         }
       ]
+    },
+    {
+      "id": "ws_1780185147659",
+      "name": "Marketing Team",
+      "createdAt": "2026-05-30T23:52:27.659Z",
+      "updatedAt": "2026-05-30T23:52:27.659Z",
+      "ownerId": "usr_1",
+      "canvases": [
+        {
+          "id": "cv_1780185182287",
+          "title": "Branding and design",
+          "workspaceId": "ws_1780185147659",
+          "createdAt": "2026-05-30T23:53:02.287Z",
+          "updatedAt": "2026-05-30T23:53:02.287Z"
+        }
+      ]
     }
   ]
 }

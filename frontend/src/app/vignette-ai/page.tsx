@@ -1,132 +1,39 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Sparkles, ArrowRight, Command, MessageSquare, Zap, LayoutTemplate, Box, Cpu } from 'lucide-react';
-
-const ParticleNetwork = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let particles: any[] = [];
-    let animationFrameId: number;
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    let mouse = { x: -1000, y: -1000 };
-
-    const init = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      particles = [];
-      const numParticles = Math.floor((width * height) / 10000);
-      for (let i = 0; i < numParticles; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.8,
-          vy: (Math.random() - 0.5) * 0.8,
-          radius: Math.random() * 2 + 0.5
-        });
-      }
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height);
-      
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
-        
-        ctx.fillStyle = 'rgba(139, 92, 246, 0.6)';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(139, 92, 246, ${0.2 - dist/600})`;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-        
-        const dx = particles[i].x - mouse.x;
-        const dy = particles[i].y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 180) {
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(236, 72, 153, ${0.4 - dist/450})`;
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(mouse.x, mouse.y);
-          ctx.stroke();
-        }
-      }
-      animationFrameId = requestAnimationFrame(draw);
-    };
-
-    init();
-    draw();
-
-    const handleResize = () => init();
-    const handleMouseMove = (e: MouseEvent) => { mouse.x = e.clientX; mouse.y = e.clientY; };
-    const handleMouseLeave = () => { mouse.x = -1000; mouse.y = -1000; };
-    
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseout', handleMouseLeave);
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseout', handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }} />;
-};
 
 export default function VignetteAIPage() {
   const [prompt, setPrompt] = useState('');
   
   return (
     <main className="main-content" style={{ background: 'var(--bg-primary)', position: 'relative', overflow: 'hidden', minHeight: '100vh' }}>
-      {/* Interactive HTML5 Canvas API Particle Network */}
-      <ParticleNetwork />
-      
-      {/* Ambient Glow Effects Behind Canvas */}
+      {/* Background Effects */}
       <div style={{
         position: 'absolute',
-        top: '-10%', left: '-10%',
-        width: '500px', height: '500px',
+        top: '-20%',
+        left: '-10%',
+        width: '500px',
+        height: '500px',
         background: 'var(--accent-primary)',
-        filter: 'blur(150px)', opacity: 0.1,
-        borderRadius: '50%', pointerEvents: 'none'
+        filter: 'blur(120px)',
+        opacity: 0.15,
+        borderRadius: '50%',
+        pointerEvents: 'none',
+        animation: 'pulse-glow-ai 8s infinite alternate'
       }} />
       <div style={{
         position: 'absolute',
-        bottom: '-10%', right: '-10%',
-        width: '600px', height: '600px',
+        bottom: '-10%',
+        right: '-10%',
+        width: '600px',
+        height: '600px',
         background: '#8b5cf6',
-        filter: 'blur(150px)', opacity: 0.1,
-        borderRadius: '50%', pointerEvents: 'none'
+        filter: 'blur(140px)',
+        opacity: 0.12,
+        borderRadius: '50%',
+        pointerEvents: 'none',
+        animation: 'pulse-glow-ai 12s infinite alternate-reverse'
       }} />
       
       <style>{`
