@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Search, Sparkles, Users, Briefcase, Code, Palette, TrendingUp, ArrowRight, Star, Eye, Clock } from 'lucide-react';
+import { Search, Sparkles, Users, Briefcase, Code, Palette, TrendingUp, ArrowRight, Star, Eye } from 'lucide-react';
 
 // ─── Template Data ───────────────────────────────────────────────────────────
 
@@ -137,6 +137,103 @@ const TEMPLATES: Template[] = [
     author: 'VignetteLab',
     color: '#2563eb',
   },
+  // ─── New Templates ─────────────────────────────────────────
+  {
+    id: 'empathymap',
+    title: 'Empathy Map',
+    description: 'Step into your user\'s shoes. Map out what they Say, Think, Do, and Feel to develop deeper customer insights and build products that resonate.',
+    category: 'design',
+    image: '/templates/empathymap.png',
+    tags: ['UX research', 'user empathy', 'discovery'],
+    usageCount: 13200,
+    isFeatured: true,
+    author: 'VignetteLab',
+    color: '#e17055',
+  },
+  {
+    id: 'timeline',
+    title: 'Project Timeline',
+    description: 'Plan and visualize project schedules with a professional Gantt-style timeline. Track milestones, dependencies, and phase durations across weeks.',
+    category: 'agile',
+    image: '/templates/timeline.png',
+    tags: ['scheduling', 'milestones', 'Gantt chart'],
+    usageCount: 24100,
+    isFeatured: true,
+    author: 'VignetteLab',
+    color: '#2563eb',
+  },
+  {
+    id: 'designsprint',
+    title: 'Design Sprint',
+    description: 'Run a Google Ventures-style 5-day design sprint. Structured activities from understanding the problem to testing a prototype with real users.',
+    category: 'design',
+    image: '/templates/designsprint.png',
+    tags: ['sprint', 'prototyping', 'innovation'],
+    usageCount: 16800,
+    isFeatured: false,
+    author: 'VignetteLab',
+    color: '#7c3aed',
+  },
+  {
+    id: 'stakeholder',
+    title: 'Stakeholder Map',
+    description: 'Identify and prioritize stakeholders by plotting them on an Influence vs. Interest matrix. Tailor your communication strategy for each group.',
+    category: 'strategy',
+    image: '/templates/stakeholder.png',
+    tags: ['stakeholders', 'communication', 'influence'],
+    usageCount: 7800,
+    isFeatured: false,
+    author: 'VignetteLab',
+    color: '#f97316',
+  },
+  {
+    id: 'erd',
+    title: 'Database ER Diagram',
+    description: 'Design your database schema visually. Model entities, relationships, cardinality, and field types in a professional Entity-Relationship diagram.',
+    category: 'engineering',
+    image: '/templates/erd.png',
+    tags: ['database', 'schema', 'data modeling'],
+    usageCount: 18500,
+    isFeatured: true,
+    author: 'VignetteLab',
+    color: '#64748b',
+  },
+  {
+    id: 'persona',
+    title: 'User Persona',
+    description: 'Build detailed user persona profiles with demographics, goals, pain points, and behaviors. Ground your design decisions in real user research data.',
+    category: 'design',
+    image: '/templates/persona.png',
+    tags: ['UX', 'personas', 'user research'],
+    usageCount: 14300,
+    isFeatured: false,
+    author: 'VignetteLab',
+    color: '#0d9488',
+  },
+  {
+    id: 'businessmodel',
+    title: 'Business Model Canvas',
+    description: 'Map your entire business model on a single canvas. Define key partners, value propositions, revenue streams, and customer segments for lean strategy.',
+    category: 'strategy',
+    image: '/templates/businessmodel.png',
+    tags: ['lean startup', 'business strategy', 'canvas'],
+    usageCount: 22600,
+    isFeatured: true,
+    author: 'VignetteLab',
+    color: '#a855f7',
+  },
+  {
+    id: 'prioritymatrix',
+    title: 'Priority Matrix',
+    description: 'Prioritize tasks using the Eisenhower framework. Sort work by urgency and importance to focus on what matters most and eliminate distractions.',
+    category: 'agile',
+    image: '/templates/prioritymatrix.png',
+    tags: ['prioritization', 'productivity', 'decision making'],
+    usageCount: 19900,
+    isFeatured: false,
+    author: 'VignetteLab',
+    color: '#dc2626',
+  },
 ];
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -164,7 +261,7 @@ export default function TemplatesPage() {
   };
 
   return (
-    <main style={{ flex: 1, overflowY: 'auto', background: 'var(--bg-primary)' }}>
+    <main style={{ flex: 1, overflowY: 'auto', height: '100vh', background: 'var(--bg-primary)' }}>
       {/* Hero Section */}
       <section style={{
         padding: '48px 48px 0',
@@ -318,7 +415,7 @@ export default function TemplatesPage() {
                     src={t.image}
                     alt={t.title}
                     fill
-                    style={{ objectFit: 'cover', transition: 'transform 0.4s' , transform: hoveredCard === `f-${t.id}` ? 'scale(1.05)' : 'scale(1)' }}
+                    style={{ objectFit: 'cover', transition: 'transform 0.4s', transform: hoveredCard === `f-${t.id}` ? 'scale(1.05)' : 'scale(1)' }}
                   />
                   {/* Overlay on hover */}
                   <div style={{
