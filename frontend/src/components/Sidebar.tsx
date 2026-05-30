@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Home, LayoutGrid, Clock, Star, LayoutTemplate, Trash2, Settings, ChevronRight, Search, Plus, Sun, Moon } from 'lucide-react';
+import { Home, LayoutGrid, Clock, Star, LayoutTemplate, Settings, Search, Sun, Moon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useCanvasStore } from '@/store/useCanvasStore';
 
@@ -19,7 +19,10 @@ export default function Sidebar() {
   const { theme, setTheme } = useCanvasStore();
   const [mounted, setMounted] = useState(false);
   
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    // eslint-disable-next-line
+    setMounted(true);
+  }, []);
 
   const toggleTheme = (e?: React.MouseEvent) => {
     if (e) {
