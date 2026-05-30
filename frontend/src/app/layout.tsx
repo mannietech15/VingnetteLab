@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 import { Providers } from './providers';
+import Sidebar from '@/components/Sidebar';
 
 export default function RootLayout({
   children,
@@ -32,7 +33,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          {children}
+          <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)' }}>
+            <Sidebar />
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              {children}
+            </div>
+          </div>
         </Providers>
       </body>
     </html>

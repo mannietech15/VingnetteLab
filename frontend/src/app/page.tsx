@@ -4,7 +4,6 @@ import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import Link from 'next/link';
 import { useState } from 'react';
-import Sidebar from '@/components/Sidebar';
 
 const GET_WORKSPACES = gql`
   query GetWorkspaces {
@@ -67,11 +66,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)' }}>
-      <Sidebar />
-      <main style={{ flex: 1, overflowY: 'auto' }}>
-        <div style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto', color: 'var(--text-primary)' }}>
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+    <main style={{ flex: 1, overflowY: 'auto' }}>
+      <div style={{ padding: '40px', maxWidth: '1000px', margin: '0 auto', color: 'var(--text-primary)' }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
             <h1 style={{ fontSize: '32px', fontWeight: 'bold' }}>Dashboard</h1>
           </header>
 
@@ -156,9 +153,8 @@ export default function Dashboard() {
             </div>
           </div>
         ))}
-      </div>
+        </div>
       </div>
     </main>
-  </div>
   );
 }

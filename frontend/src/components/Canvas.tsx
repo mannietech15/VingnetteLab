@@ -363,10 +363,14 @@ export default function Canvas() {
       if (canvasRef.current) {
         // High DPI support
         const dpr = window.devicePixelRatio || 1;
-        canvasRef.current.width = window.innerWidth * dpr;
-        canvasRef.current.height = window.innerHeight * dpr;
-        canvasRef.current.style.width = `${window.innerWidth}px`;
-        canvasRef.current.style.height = `${window.innerHeight}px`;
+        const parent = canvasRef.current.parentElement;
+        const width = parent ? parent.clientWidth : window.innerWidth;
+        const height = parent ? parent.clientHeight : window.innerHeight;
+        
+        canvasRef.current.width = width * dpr;
+        canvasRef.current.height = height * dpr;
+        canvasRef.current.style.width = `${width}px`;
+        canvasRef.current.style.height = `${height}px`;
         
         const ctx = canvasRef.current.getContext('2d');
         if (ctx) ctx.scale(dpr, dpr);
