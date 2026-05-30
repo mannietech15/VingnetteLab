@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Home, LayoutGrid, Clock, Star, LayoutTemplate, Settings, Search, Sun, Moon } from 'lucide-react';
+import { Home, LayoutGrid, Clock, Star, LayoutTemplate, Settings, Search, Sun, Moon, Sparkles } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useCanvasStore } from '@/store/useCanvasStore';
 
 const NAV_ITEMS = [
   { label: 'Home', icon: Home, href: '/' },
   { label: 'Workspaces', icon: LayoutGrid, href: '/workspaces' },
+  { label: 'Vignette AI', icon: Sparkles, href: '/vignette-ai' },
   { label: 'Recent', icon: Clock, href: '/recent' },
   { label: 'Favorites', icon: Star, href: '/favorites' },
   { label: 'Templates', icon: LayoutTemplate, href: '/templates' },
