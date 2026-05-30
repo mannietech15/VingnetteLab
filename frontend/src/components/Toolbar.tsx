@@ -58,7 +58,7 @@ export default function Toolbar() {
 
   return (
     <div style={{
-      position: 'absolute',
+      position: 'fixed',
       bottom: '24px',
       left: '50%',
       transform: 'translateX(-50%)',
