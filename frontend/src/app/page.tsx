@@ -104,27 +104,27 @@ export default function Dashboard() {
   return (
     <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
       {/* Hero Banner */}
-      <div style={{ padding: '48px 48px 32px', background: 'linear-gradient(135deg, var(--accent-light) 0%, var(--bg-primary) 100%)', borderBottom: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ padding: '28px 48px 24px', background: 'linear-gradient(135deg, var(--accent-light) 0%, var(--bg-primary) 100%)', borderBottom: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', right: '5%', top: '-20%', opacity: 0.05, transform: 'rotate(15deg)', pointerEvents: 'none' }}>
-          <LayoutTemplate size={300} />
+          <LayoutTemplate size={240} />
         </div>
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 14px', borderRadius: '100px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 600, marginBottom: '16px', boxShadow: 'var(--shadow-sm)' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, marginBottom: '12px', boxShadow: 'var(--shadow-sm)' }}>
             <Sparkles size={14} style={{ color: 'var(--accent-primary)' }} /> Welcome to VignetteLab
           </span>
-          <h1 style={{ fontSize: '40px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-1px', margin: '0 0 16px' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px', margin: '0 0 12px' }}>
             Home
           </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', fontSize: '15px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--accent-primary)' }}>
-                <Folder size={18} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '14px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--accent-primary)' }}>
+                <Folder size={16} />
               </div>
               <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{workspaces.length}</span> Workspaces
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', fontSize: '15px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: '#10b981' }}>
-                <FileText size={18} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '14px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: '#10b981' }}>
+                <FileText size={16} />
               </div>
               <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalCanvases}</span> Canvases
             </div>
