@@ -264,6 +264,10 @@ html, body {
     font-weight: 600;
   }
 
+  .hide-on-mobile {
+    display: none !important;
+  }
+
   .templates-hero {
     padding: 24px 20px 0;
   }
