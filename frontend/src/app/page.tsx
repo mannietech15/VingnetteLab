@@ -102,65 +102,80 @@ export default function Dashboard() {
   const totalCanvases = workspaces.reduce((acc: number, ws: any) => acc + ws.canvases.length, 0);
 
   return (
-    <main className="main-content" style={{ background: 'var(--bg-primary)', position: 'relative' }}>
-      
-      {/* Full-Page Creative Fluid Aurora Background */}
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0, overflow: 'hidden', pointerEvents: 'none', background: 'var(--bg-primary)' }}>
-        {/* Subtle grid overlay to maintain the workspace vibe */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(to right, rgba(128,128,128,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(128,128,128,0.06) 1px, transparent 1px)', backgroundSize: '60px 60px', maskImage: 'radial-gradient(circle at 50% 50%, black, transparent 80%)', WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black, transparent 80%)' }} />
+    <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
+      {/* Hero Banner */}
+      <div style={{ padding: '32px 48px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
         
-        {/* Floating Organic Mesh Blobs */}
-        <div style={{ position: 'absolute', top: '0%', left: '-10%', width: '50vw', height: '50vw', background: 'var(--accent-primary)', opacity: 0.15, filter: 'blur(100px)', borderRadius: '50%', animation: 'blob-move-1 25s infinite alternate ease-in-out' }} />
-        <div style={{ position: 'absolute', bottom: '-20%', right: '-10%', width: '60vw', height: '60vw', background: '#10b981', opacity: 0.12, filter: 'blur(120px)', borderRadius: '50%', animation: 'blob-move-2 30s infinite alternate-reverse ease-in-out' }} />
-        <div style={{ position: 'absolute', top: '-10%', right: '20%', width: '40vw', height: '40vw', background: '#9c36b5', opacity: 0.15, filter: 'blur(90px)', borderRadius: '50%', animation: 'blob-move-3 20s infinite alternate ease-in-out' }} />
-
+        {/* Animated Infinite Canvas Dot Grid */}
+        <div style={{
+          position: 'absolute',
+          inset: '-100%',
+          opacity: 0.15,
+          pointerEvents: 'none',
+          backgroundImage: 'radial-gradient(circle at 2px 2px, var(--accent-primary) 2px, transparent 0)',
+          backgroundSize: '48px 48px',
+          animation: 'pan-canvas 40s linear infinite',
+          zIndex: 0
+        }} />
         <style>{`
-          @keyframes blob-move-1 {
-            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            100% { transform: translate(15vw, 20vh) scale(1.3) rotate(45deg); }
+          @keyframes pan-canvas {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-48px, -48px); }
           }
-          @keyframes blob-move-2 {
-            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            100% { transform: translate(-20vw, -15vh) scale(0.8) rotate(-45deg); }
+          @keyframes float-shape-1 {
+            0% { transform: translateY(0) rotate(-5deg) scale(1); }
+            50% { transform: translateY(-25px) rotate(5deg) scale(1.05); }
+            100% { transform: translateY(0) rotate(-5deg) scale(1); }
           }
-          @keyframes blob-move-3 {
-            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            100% { transform: translate(-15vw, 30vh) scale(1.2) rotate(20deg); }
+          @keyframes float-shape-2 {
+            0% { transform: translateY(0) translateX(0) rotate(10deg); }
+            50% { transform: translateY(20px) translateX(15px) rotate(-5deg); }
+            100% { transform: translateY(0) translateX(0) rotate(10deg); }
+          }
+          @keyframes pulse-glow {
+            0% { opacity: 0.15; filter: blur(40px); transform: scale(1); }
+            50% { opacity: 0.3; filter: blur(50px); transform: scale(1.2); }
+            100% { opacity: 0.15; filter: blur(40px); transform: scale(1); }
           }
         `}</style>
-      </div>
 
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        {/* Hero Banner (Cleaned & Elegant) */}
-        <div style={{ padding: '40px 48px 32px', borderBottom: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.02)', backdropFilter: 'blur(8px)' }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
-            <div style={{ position: 'absolute', right: '5%', top: '-20%', opacity: 0.05, transform: 'rotate(15deg)', pointerEvents: 'none' }}>
-              <LayoutTemplate size={240} />
+        {/* Ambient Glowing Orbs */}
+        <div style={{ position: 'absolute', right: '10%', top: '-20%', width: '400px', height: '400px', background: 'var(--accent-primary)', borderRadius: '50%', animation: 'pulse-glow 12s ease-in-out infinite', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', left: '-5%', bottom: '-50%', width: '300px', height: '300px', background: '#10b981', borderRadius: '50%', animation: 'pulse-glow 15s ease-in-out infinite', pointerEvents: 'none', zIndex: 0 }} />
+
+        {/* Floating Glassmorphic "Canvas Elements" */}
+        <div style={{ position: 'absolute', right: '15%', top: '25%', width: '120px', height: '80px', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', animation: 'float-shape-1 14s ease-in-out infinite', pointerEvents: 'none', zIndex: 0, boxShadow: 'var(--shadow-md)' }} />
+        <div style={{ position: 'absolute', right: '5%', bottom: '-10%', width: '160px', height: '110px', background: 'var(--accent-light)', opacity: 0.3, backdropFilter: 'blur(8px)', border: '1px solid var(--accent-primary)', borderRadius: '16px', animation: 'float-shape-2 18s ease-in-out infinite', pointerEvents: 'none', zIndex: 0, boxShadow: 'var(--shadow-sm)' }} />
+
+        <div style={{ position: 'absolute', right: '2%', top: '-15%', opacity: 0.05, transform: 'rotate(15deg)', pointerEvents: 'none', zIndex: 0 }}>
+          <LayoutTemplate size={280} />
+        </div>
+        
+        <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, marginBottom: '12px', boxShadow: 'var(--shadow-sm)' }}>
+            <Sparkles size={14} style={{ color: 'var(--accent-primary)' }} /> Welcome to VignetteLab
+          </span>
+          <h1 style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px', margin: '0 0 12px' }}>
+            Home
+          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '14px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--accent-primary)' }}>
+                <Folder size={16} />
+              </div>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{workspaces.length}</span> Workspaces
             </div>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, marginBottom: '16px', boxShadow: 'var(--shadow-sm)' }}>
-              <Sparkles size={14} style={{ color: 'var(--accent-primary)' }} /> Welcome to VignetteLab
-            </span>
-            <h1 style={{ fontSize: '36px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px', margin: '0 0 16px' }}>
-              Home
-            </h1>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '14px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--accent-primary)' }}>
-                  <Folder size={16} />
-                </div>
-                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{workspaces.length}</span> Workspaces
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '14px' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: '#10b981' }}>
+                <FileText size={16} />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '14px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: '#10b981' }}>
-                  <FileText size={16} />
-                </div>
-                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalCanvases}</span> Canvases
-              </div>
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalCanvases}</span> Canvases
             </div>
           </div>
         </div>
+      </div>
 
-        <div style={{ padding: '40px 48px 64px', maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+      <div style={{ padding: '40px 48px 64px', maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '48px' }}>
         
         {/* Workspace Creation */}
         <section>
@@ -301,7 +316,6 @@ export default function Dashboard() {
           )}
         </section>
 
-      </div>
       </div>
     </main>
   );
