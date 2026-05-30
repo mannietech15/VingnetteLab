@@ -35,7 +35,7 @@ export default function RootLayout({
         <Providers>
           <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-primary)' }}>
             <Sidebar />
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
               {children}
             </div>
           </div>
