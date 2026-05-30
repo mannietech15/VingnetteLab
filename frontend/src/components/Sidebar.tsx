@@ -155,7 +155,9 @@ export default function Sidebar() {
           >
             {mounted ? (isCurrentlyDark ? <Sun size={14} /> : <Moon size={14} />) : <div style={{width: 14, height: 14}} />}
           </button>
-          <Settings size={16} color="var(--text-secondary)" style={{ cursor: 'pointer', marginLeft: '4px' }} title="Settings" />
+          <div title="Settings" style={{ display: 'flex', alignItems: 'center' }}>
+            <Settings size={16} color="var(--text-secondary)" style={{ cursor: 'pointer', marginLeft: '4px' }} />
+          </div>
         </div>
       </div>
     </aside>
