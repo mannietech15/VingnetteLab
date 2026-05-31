@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { Search, Sparkles, Users, Briefcase, Code, Palette, TrendingUp, ArrowRight, Star, Eye } from 'lucide-react';
 import { TEMPLATES, Template } from '@/data/templates';
 import TemplatePreview from '@/components/TemplatePreview';
-import TiltedCard from '@/components/TiltedCard';
+import { motion, useMotionValue, useSpring } from 'motion/react';
+import type { SpringOptions } from 'motion/react';
 
 const CATEGORIES = [
   { id: 'all', label: 'All Templates', icon: Sparkles },
@@ -16,6 +17,12 @@ const CATEGORIES = [
   { id: 'collaboration', label: 'Collaboration', icon: Users },
 ];
 
+const tiltSpring: SpringOptions = {
+  damping: 30,
+  stiffness: 100,
+  mass: 2
+};
+
 function formatCount(n: number) {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
   return n.toString();
@@ -25,6 +32,33 @@ function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) 
   const [isHovered, setIsHovered] = useState(false);
   const height = isFeatured ? '180px' : '160px';
   const preview = t.image ? t.image : <TemplatePreview pattern={t.pattern} color={t.color} width={400} height={isFeatured ? 270 : 240} />;
+
+  // --- 3D Tilt Animation Physics (from React Bits TiltedCard) ---
+  const tiltRef = useRef<HTMLDivElement>(null);
+  const rotateX = useSpring(useMotionValue(0), tiltSpring);
+  const rotateY = useSpring(useMotionValue(0), tiltSpring);
+  const scale = useSpring(1, tiltSpring);
+  const rotateAmplitude = 19;
+
+  function handleTiltMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!tiltRef.current) return;
+    const rect = tiltRef.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    rotateX.set((offsetY / (rect.height / 2)) * -rotateAmplitude);
+    rotateY.set((offsetX / (rect.width / 2)) * rotateAmplitude);
+  }
+
+  function handleTiltEnter() {
+    scale.set(1.05);
+  }
+
+  function handleTiltLeave() {
+    scale.set(1);
+    rotateX.set(0);
+    rotateY.set(0);
+  }
+  // --- End 3D Tilt Animation Physics ---
 
   return (
     <div 
@@ -48,70 +82,90 @@ function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) 
       {isFeatured && <div style={{ height: '6px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${t.color}, ${t.color}88)` }} />}
       
       <div style={{ padding: '16px', zIndex: isHovered ? 20 : 1 }}>
-        <div style={{ 
-          position: 'relative', 
-          width: '100%', 
-          height: height, 
-          borderRadius: '20px', 
-          border: '1px solid var(--border-color)', 
-          overflow: 'hidden',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          {typeof preview === 'string' ? (
-            <img src={preview} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          ) : (
-            preview
-          )}
-          
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-            background: `linear-gradient(135deg, ${t.color}cc, ${t.color}77)`,
-            opacity: isHovered ? 1 : 0,
-            transition: 'opacity 0.25s ease',
-            zIndex: 2
-          }}>
-            <div style={{
+        {/* 3D Tilt wrapper — only adds animation, does NOT change visuals */}
+        <div
+          ref={tiltRef}
+          onMouseMove={handleTiltMove}
+          onMouseEnter={handleTiltEnter}
+          onMouseLeave={handleTiltLeave}
+          style={{ perspective: '800px' }}
+        >
+          <motion.div
+            style={{
+              rotateX,
+              rotateY,
+              scale,
+              transformStyle: 'preserve-3d',
+            }}
+          >
+            {/* === UNTOUCHED IMAGE CONTAINER BELOW === */}
+            <div style={{ 
+              position: 'relative', 
+              width: '100%', 
+              height: height, 
+              borderRadius: '20px', 
+              border: '1px solid var(--border-color)', 
+              overflow: 'hidden',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              padding: '10px 20px',
-              borderRadius: '10px',
-              background: '#ffffff',
-              color: '#1a1a1a',
-              fontWeight: 700,
-              fontSize: '14px',
-              boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
-              transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
-              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+              justifyContent: 'center'
             }}>
-              Use Template <ArrowRight size={16} />
-            </div>
-            {!isFeatured && (
+              {typeof preview === 'string' ? (
+                <img src={preview} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                preview
+              )}
+              
               <div style={{
+                position: 'absolute',
+                inset: 0,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '40px',
-                height: '40px',
-                borderRadius: '10px',
-                background: 'rgba(255,255,255,0.25)',
-                backdropFilter: 'blur(4px)',
-                color: '#ffffff',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
-                transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s',
+                gap: '12px',
+                background: `linear-gradient(135deg, ${t.color}cc, ${t.color}77)`,
+                opacity: isHovered ? 1 : 0,
+                transition: 'opacity 0.25s ease',
+                zIndex: 2
               }}>
-                <Eye size={18} />
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '10px 20px',
+                  borderRadius: '10px',
+                  background: '#ffffff',
+                  color: '#1a1a1a',
+                  fontWeight: 700,
+                  fontSize: '14px',
+                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
+                  transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
+                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                }}>
+                  Use Template <ArrowRight size={16} />
+                </div>
+                {!isFeatured && (
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.25)',
+                    backdropFilter: 'blur(4px)',
+                    color: '#ffffff',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                    transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
+                    transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s',
+                  }}>
+                    <Eye size={18} />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+            {/* === END UNTOUCHED IMAGE CONTAINER === */}
+          </motion.div>
         </div>
       </div>
 
