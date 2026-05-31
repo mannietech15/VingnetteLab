@@ -48,75 +48,71 @@ function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) 
       {isFeatured && <div style={{ height: '6px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${t.color}, ${t.color}88)` }} />}
       
       <div style={{ padding: '16px', zIndex: isHovered ? 20 : 1 }}>
-        <TiltedCard
-          imageSrc={preview}
-          altText={t.title}
-          captionText={`${t.title} - ${t.category}`}
-          containerHeight={height}
-          containerWidth="100%"
-          imageHeight="100%"
-          imageWidth="100%"
-          imageBorderRadius="20px"
-          imageBorder="1px solid var(--border-color)"
-          scaleOnHover={1}
-          rotateAmplitude={0}
-          showMobileWarning={false}
-          showTooltip={false}
-          displayOverlayContent={true}
-          overlayContent={
+        <div style={{ 
+          position: 'relative', 
+          width: '100%', 
+          height: height, 
+          borderRadius: '20px', 
+          border: '1px solid var(--border-color)', 
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          {typeof preview === 'string' ? (
+            <img src={preview} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          ) : (
+            preview
+          )}
+          
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '12px',
+            background: `linear-gradient(135deg, ${t.color}cc, ${t.color}77)`,
+            opacity: isHovered ? 1 : 0,
+            transition: 'opacity 0.25s ease',
+            zIndex: 2
+          }}>
             <div style={{
-              width: '100%',
-              height: '100%',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              gap: '12px',
-              borderRadius: '20px',
-              background: `linear-gradient(135deg, ${t.color}cc, ${t.color}77)`,
-              opacity: isHovered ? 1 : 0,
-              transition: 'opacity 0.25s ease',
-              pointerEvents: 'none' // Allow mouse movement to pass through to TiltedCard
+              gap: '8px',
+              padding: '10px 20px',
+              borderRadius: '10px',
+              background: '#ffffff',
+              color: '#1a1a1a',
+              fontWeight: 700,
+              fontSize: '14px',
+              boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
+              transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
+              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
             }}>
+              Use Template <ArrowRight size={16} />
+            </div>
+            {!isFeatured && (
               <div style={{
-                pointerEvents: 'auto',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                padding: '10px 20px',
+                justifyContent: 'center',
+                width: '40px',
+                height: '40px',
                 borderRadius: '10px',
-                background: '#ffffff',
-                color: '#1a1a1a',
-                fontWeight: 700,
-                fontSize: '14px',
-                boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
+                background: 'rgba(255,255,255,0.25)',
+                backdropFilter: 'blur(4px)',
+                color: '#ffffff',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                 transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
-                transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s',
               }}>
-                Use Template <ArrowRight size={16} />
+                <Eye size={18} />
               </div>
-              {!isFeatured && (
-                <div style={{
-                  pointerEvents: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '10px',
-                  background: 'rgba(255,255,255,0.25)',
-                  backdropFilter: 'blur(4px)',
-                  color: '#ffffff',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                  transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
-                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s',
-                  cursor: 'pointer'
-                }}>
-                  <Eye size={18} />
-                </div>
-              )}
-            </div>
-          }
-        />
+            )}
+          </div>
+        </div>
       </div>
 
       <div style={{ padding: isFeatured ? '16px 20px 20px' : '14px 18px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
