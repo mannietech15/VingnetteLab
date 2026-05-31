@@ -2,11 +2,42 @@
 
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
-import { Search, Sparkles, Users, Briefcase, Code, Palette, TrendingUp, ArrowRight, Star, Eye } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search, Sparkles, Users, Briefcase, Code, Palette, TrendingUp, ArrowRight, Star, Eye, Loader2 } from 'lucide-react';
 import { TEMPLATES, Template } from '@/data/templates';
 import TemplatePreview from '@/components/TemplatePreview';
 import { motion, useMotionValue, useSpring } from 'motion/react';
 import type { SpringOptions } from 'motion/react';
+import { gql } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
+
+const GET_WORKSPACES = gql`
+  query GetWorkspaces {
+    workspaces {
+      id
+      name
+    }
+  }
+`;
+
+const CREATE_WORKSPACE = gql`
+  mutation CreateWorkspace($name: String!) {
+    createWorkspace(name: $name) {
+      id
+      name
+    }
+  }
+`;
+
+const CREATE_CANVAS = gql`
+  mutation CreateCanvas($workspaceId: ID!, $title: String!) {
+    createCanvas(workspaceId: $workspaceId, title: $title) {
+      id
+      title
+      workspaceId
+    }
+  }
+`;
 
 const CATEGORIES = [
   { id: 'all', label: 'All Templates', icon: Sparkles },
@@ -28,7 +59,7 @@ function formatCount(n: number) {
   return n.toString();
 }
 
-function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) {
+function TemplateCard({ t, isFeatured, onUseTemplate, isCreating }: { t: Template; isFeatured?: boolean; onUseTemplate: (t: Template) => void; isCreating: boolean }) {
   const [isHovered, setIsHovered] = useState(false);
   const height = isFeatured ? '180px' : '160px';
   const preview = t.image ? t.image : <TemplatePreview pattern={t.pattern} color={t.color} width={400} height={isFeatured ? 270 : 240} />;
@@ -69,15 +100,17 @@ function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) 
         borderRadius: '14px',
         border: '1px solid var(--border-color)',
         background: 'var(--bg-secondary)',
-        cursor: 'pointer',
+        cursor: isCreating ? 'wait' : 'pointer',
         transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease',
         transform: isHovered ? 'translateY(-4px)' : 'none',
         boxShadow: isHovered ? 'var(--shadow-lg)' : 'none',
         borderColor: isHovered ? t.color + '66' : 'var(--border-color)',
+        opacity: isCreating ? 0.7 : 1,
         // IMPORTANT: No 'overflow: hidden' here! It clips 3D transforms.
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => !isCreating && onUseTemplate(t)}
     >
       {isFeatured && <div style={{ height: '6px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${t.color}, ${t.color}88)` }} />}
       
@@ -128,21 +161,25 @@ function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) 
                 transition: 'opacity 0.25s ease',
                 zIndex: 2
               }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '10px 20px',
-                  borderRadius: '10px',
-                  background: '#ffffff',
-                  color: '#1a1a1a',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
-                  transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
-                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
-                }}>
-                  Use Template <ArrowRight size={16} />
+                <div 
+                  onClick={(e) => { e.stopPropagation(); if (!isCreating) onUseTemplate(t); }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 20px',
+                    borderRadius: '10px',
+                    background: '#ffffff',
+                    color: '#1a1a1a',
+                    fontWeight: 700,
+                    fontSize: '14px',
+                    boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
+                    transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
+                    transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    cursor: isCreating ? 'wait' : 'pointer',
+                  }}>
+                  {isCreating ? <Loader2 size={16} className="animate-spin" /> : null}
+                  {isCreating ? 'Creating...' : 'Use Template'} {!isCreating && <ArrowRight size={16} />}
                 </div>
                 {!isFeatured && (
                   <div style={{
@@ -201,8 +238,50 @@ function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) 
 }
 
 export default function TemplatesPage() {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [creatingTemplateId, setCreatingTemplateId] = useState<string | null>(null);
+
+  const { data: workspacesData } = useQuery(GET_WORKSPACES);
+  const [createWorkspace] = useMutation(CREATE_WORKSPACE);
+  const [createCanvas] = useMutation(CREATE_CANVAS);
+
+  async function handleUseTemplate(template: Template) {
+    if (creatingTemplateId) return; // Prevent double-clicks
+    setCreatingTemplateId(template.id);
+
+    try {
+      // Get or create a workspace
+      let workspaceId: string;
+      const workspaces = (workspacesData as any)?.workspaces;
+
+      if (workspaces && workspaces.length > 0) {
+        workspaceId = workspaces[0].id;
+      } else {
+        // Auto-create a default workspace
+        const { data: wsData } = await createWorkspace({
+          variables: { name: 'My Workspace' },
+          refetchQueries: [{ query: GET_WORKSPACES }],
+        });
+        workspaceId = (wsData as any).createWorkspace.id;
+      }
+
+      // Create a new canvas from the template
+      const { data: canvasData } = await createCanvas({
+        variables: {
+          workspaceId,
+          title: template.title,
+        },
+      });
+
+      const newCanvasId = (canvasData as any).createCanvas.id;
+      router.push(`/canvas/${newCanvasId}`);
+    } catch (error) {
+      console.error('Failed to create canvas from template:', error);
+      setCreatingTemplateId(null);
+    }
+  }
 
   const filtered = TEMPLATES.filter((t) => {
     const matchesCategory = activeCategory === 'all' || t.category === activeCategory;
@@ -259,7 +338,7 @@ export default function TemplatesPage() {
           </h2>
           <div className="featured-grid">
             {featured.slice(0, 3).map((t) => (
-              <TemplateCard key={`f-${t.id}`} t={t} isFeatured={true} />
+              <TemplateCard key={`f-${t.id}`} t={t} isFeatured={true} onUseTemplate={handleUseTemplate} isCreating={creatingTemplateId === t.id} />
             ))}
           </div>
         </section>
@@ -281,7 +360,7 @@ export default function TemplatesPage() {
         ) : (
           <div className="templates-grid">
             {filtered.map((t) => (
-              <TemplateCard key={t.id} t={t} />
+              <TemplateCard key={t.id} t={t} onUseTemplate={handleUseTemplate} isCreating={creatingTemplateId === t.id} />
             ))}
           </div>
         )}
