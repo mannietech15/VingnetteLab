@@ -243,7 +243,7 @@ export default function TemplatePreview({ pattern, color, width = 400, height = 
   };
 
   return (
-    <svg width={width} height={height} viewBox={`0 0 400 240`} xmlns="http://www.w3.org/2000/svg" style={{ background: bg, borderRadius: '8px 8px 0 0' }}>
+    <svg width="100%" height="100%" viewBox={`0 0 400 240`} preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style={{ background: bg, borderRadius: '20px' }}>
       {/* Subtle dot grid background */}
       <defs>
         <pattern id={`dots-${pattern}`} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">

@@ -269,14 +269,27 @@ export default function Dashboard() {
                           {/* Top Border Accent */}
                           <div style={{ height: '4px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${visuals.color}, ${visuals.color}88)` }} />
                           
-                          {/* Premium Abstract SVG Preview */}
-                          <div style={{ width: 'calc(100% - 24px)', margin: '12px 12px 0 12px', height: '140px', background: '#f8fafc', position: 'relative', overflow: 'hidden', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-                            <TemplatePreview pattern={visuals.pattern} color={visuals.color} width={300} height={140} />
-                            
-                            {/* Hover Overlay Layer */}
-                            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.03)', opacity: 0, transition: 'opacity 0.2s' }}
-                                 onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
-                                 onMouseOut={(e) => e.currentTarget.style.opacity = '0'}
+                          {/* Premium Abstract SVG Preview with TiltedCard */}
+                          <div style={{ width: 'calc(100% - 24px)', margin: '12px 12px 0 12px', height: '140px', position: 'relative', zIndex: 10 }}>
+                            <TiltedCard
+                              imageSrc={<div style={{ width: '100%', height: '100%', background: '#f8fafc', borderRadius: '10px', border: '1px solid var(--border-color)', overflow: 'hidden' }}><TemplatePreview pattern={visuals.pattern} color={visuals.color} width={300} height={140} /></div>}
+                              altText={canvas.title}
+                              captionText="Open Canvas"
+                              containerHeight="140px"
+                              containerWidth="100%"
+                              imageHeight="140px"
+                              imageWidth="100%"
+                              rotateAmplitude={12}
+                              scaleOnHover={1.05}
+                              showMobileWarning={false}
+                              showTooltip={true}
+                              displayOverlayContent={true}
+                              overlayContent={
+                                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.03)', borderRadius: '10px', pointerEvents: 'none', opacity: 0, transition: 'opacity 0.2s' }}
+                                     onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+                                     onMouseOut={(e) => e.currentTarget.style.opacity = '0'}
+                                />
+                              }
                             />
                           </div>
 

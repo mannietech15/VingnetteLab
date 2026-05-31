@@ -47,7 +47,7 @@ function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) 
     >
       {isFeatured && <div style={{ height: '6px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${t.color}, ${t.color}88)` }} />}
       
-      <div style={{ padding: '12px 12px 0', zIndex: isHovered ? 20 : 1 }}>
+      <div style={{ padding: '16px', zIndex: isHovered ? 20 : 1 }}>
         <TiltedCard
           imageSrc={preview}
           altText={t.title}
@@ -56,10 +56,12 @@ function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) 
           containerWidth="100%"
           imageHeight="100%"
           imageWidth="100%"
-          scaleOnHover={1.05}
-          rotateAmplitude={12}
+          imageBorderRadius="20px"
+          imageBorder="1px solid var(--border-color)"
+          scaleOnHover={1}
+          rotateAmplitude={0}
           showMobileWarning={false}
-          showTooltip={true}
+          showTooltip={false}
           displayOverlayContent={true}
           overlayContent={
             <div style={{
@@ -69,7 +71,7 @@ function TemplateCard({ t, isFeatured }: { t: Template; isFeatured?: boolean }) 
               alignItems: 'center',
               justifyContent: 'center',
               gap: '12px',
-              borderRadius: '15px',
+              borderRadius: '20px',
               background: `linear-gradient(135deg, ${t.color}cc, ${t.color}77)`,
               opacity: isHovered ? 1 : 0,
               transition: 'opacity 0.25s ease',

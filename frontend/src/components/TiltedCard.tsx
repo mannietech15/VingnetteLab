@@ -1,7 +1,9 @@
-import React, { useRef, useState } from 'react';
+import type { SpringOptions } from 'motion/react';
+import { useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring } from 'motion/react';
 
 interface TiltedCardProps {
-  imageSrc?: string | React.ReactNode;
+  imageSrc: string | React.ReactNode;
   altText?: string;
   captionText?: string;
   containerHeight?: React.CSSProperties['height'];
@@ -16,6 +18,12 @@ interface TiltedCardProps {
   displayOverlayContent?: boolean;
 }
 
+const springValues: SpringOptions = {
+  damping: 30,
+  stiffness: 100,
+  mass: 2
+};
+
 export default function TiltedCard({
   imageSrc,
   altText = 'Tilted card image',
@@ -24,19 +32,28 @@ export default function TiltedCard({
   containerWidth = '100%',
   imageHeight = '300px',
   imageWidth = '300px',
+  imageBorderRadius = '10px',
+  imageBorder = 'none',
   scaleOnHover = 1.1,
   rotateAmplitude = 14,
   showMobileWarning = true,
   showTooltip = true,
   overlayContent = null,
   displayOverlayContent = false
-}: TiltedCardProps) {
+}: TiltedCardProps & { imageBorderRadius?: string; imageBorder?: string }) {
   const ref = useRef<HTMLElement>(null);
-  
-  const [transform, setTransform] = useState('rotateX(0deg) rotateY(0deg)');
-  const [scale, setScale] = useState(1);
-  const [opacity, setOpacity] = useState(0);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0, rotate: 0 });
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useMotionValue(0), springValues);
+  const rotateY = useSpring(useMotionValue(0), springValues);
+  const scale = useSpring(1, springValues);
+  const opacity = useSpring(0);
+  const rotateFigcaption = useSpring(0, {
+    stiffness: 350,
+    damping: 30,
+    mass: 1
+  });
+
   const [lastY, setLastY] = useState(0);
 
   function handleMouse(e: React.MouseEvent<HTMLElement>) {
@@ -49,139 +66,107 @@ export default function TiltedCard({
     const rotationX = (offsetY / (rect.height / 2)) * -rotateAmplitude;
     const rotationY = (offsetX / (rect.width / 2)) * rotateAmplitude;
 
-    setTransform(`rotateX(${rotationX}deg) rotateY(${rotationY}deg)`);
+    rotateX.set(rotationX);
+    rotateY.set(rotationY);
+
+    x.set(e.clientX - rect.left);
+    y.set(e.clientY - rect.top);
 
     const velocityY = offsetY - lastY;
-    setTooltipPos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      rotate: -velocityY * 0.6
-    });
+    rotateFigcaption.set(-velocityY * 0.6);
     setLastY(offsetY);
   }
 
   function handleMouseEnter() {
-    setScale(scaleOnHover);
-    setOpacity(1);
+    scale.set(scaleOnHover);
+    opacity.set(1);
   }
 
   function handleMouseLeave() {
-    setOpacity(0);
-    setScale(1);
-    setTransform(`rotateX(0deg) rotateY(0deg)`);
-    setTooltipPos(prev => ({ ...prev, rotate: 0 }));
+    opacity.set(0);
+    scale.set(1);
+    rotateX.set(0);
+    rotateY.set(0);
+    rotateFigcaption.set(0);
   }
 
   return (
     <figure
       ref={ref}
+      className="relative w-full h-full [perspective:800px] flex flex-col items-center justify-center"
       style={{
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: 0,
         height: containerHeight,
         width: containerWidth,
-        perspective: '800px',
-        zIndex: opacity === 1 ? 20 : 1 // Elevate when hovered to prevent overlap issues
+        margin: 0
       }}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {showMobileWarning && (
-        <div style={{ position: 'absolute', top: '16px', textAlign: 'center', fontSize: '14px', opacity: 0.5, zIndex: 10 }}>
-          Mobile view
+        <div className="absolute top-4 text-center text-sm block sm:hidden">
+          This effect is not optimized for mobile. Check on desktop.
         </div>
       )}
 
-      <div
+      <motion.div
+        className="relative [transform-style:preserve-3d]"
         style={{
-          position: 'relative',
           width: imageWidth,
           height: imageHeight,
-          transform: `${transform} scale(${scale})`,
-          transition: opacity === 0 ? 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)' : 'transform 0.1s ease-out',
-          transformStyle: 'preserve-3d'
+          rotateX,
+          rotateY,
+          scale
         }}
       >
         {typeof imageSrc === 'string' ? (
-          <img
+          <motion.img
             src={imageSrc}
             alt={altText}
+            className="absolute top-0 left-0 object-cover will-change-transform [transform:translateZ(0)]"
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
-              borderRadius: '15px',
-              transform: 'translateZ(0)',
-              boxShadow: opacity === 1 ? '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' : 'none',
-              transition: 'box-shadow 0.3s ease'
+              borderRadius: imageBorderRadius,
+              border: imageBorder
             }}
           />
         ) : (
-          <div
+          <motion.div
+            className="absolute top-0 left-0 overflow-hidden will-change-transform [transform:translateZ(0)]"
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
               width: '100%',
               height: '100%',
-              borderRadius: '15px',
-              overflow: 'hidden',
-              transform: 'translateZ(0)',
-              boxShadow: opacity === 1 ? '0 25px 50px -12px rgba(0, 0, 0, 0.25)' : 'none',
-              transition: 'box-shadow 0.3s ease'
+              borderRadius: imageBorderRadius,
+              border: imageBorder,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
             {imageSrc}
-          </div>
+          </motion.div>
         )}
 
         {displayOverlayContent && overlayContent && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 2,
-            transform: 'translateZ(30px)', // This gives the 3D pop out effect
-            pointerEvents: 'none' // Let hover events pass through to figure
-          }}>
+          <motion.div className="absolute top-0 left-0 z-[2] w-full h-full will-change-transform [transform:translateZ(30px)] pointer-events-none">
             {overlayContent}
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
 
       {showTooltip && (
-        <figcaption
+        <motion.figcaption
+          className="pointer-events-none absolute left-0 top-0 rounded-[4px] bg-white px-[10px] py-[4px] text-[10px] text-[#2d2d2d] opacity-0 z-[3] hidden sm:block"
           style={{
-            pointerEvents: 'none',
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            borderRadius: '8px',
-            background: 'rgba(0, 0, 0, 0.8)',
-            backdropFilter: 'blur(4px)',
-            padding: '6px 12px',
-            fontSize: '12px',
-            fontWeight: 600,
-            color: 'white',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-            transform: `translate(${tooltipPos.x}px, ${tooltipPos.y}px) rotate(${tooltipPos.rotate}deg)`,
+            x,
+            y,
             opacity,
-            transition: 'opacity 0.3s ease',
-            zIndex: 30
+            rotate: rotateFigcaption
           }}
         >
           {captionText}
-        </figcaption>
+        </motion.figcaption>
       )}
     </figure>
   );
