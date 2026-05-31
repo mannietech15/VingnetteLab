@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import { Home, LayoutGrid, Clock, Star, LayoutTemplate, Settings, Search, Sun, Moon, Sparkles } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useCanvasStore } from '@/store/useCanvasStore';
@@ -44,20 +46,7 @@ export default function Sidebar() {
     <aside className="sidebar-container">
       {/* Logo */}
       <div className="sidebar-desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '0 8px', marginBottom: '32px' }}>
-        <div style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '10px',
-          background: 'linear-gradient(135deg, var(--accent-primary), #9c36b5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white',
-          fontWeight: 'bold',
-          fontSize: '20px'
-        }}>
-          V
-        </div>
+        <Image src={vignetteLogo} alt="VignetteLab Logo" width={36} height={36} style={{ borderRadius: '10px', objectFit: 'cover' }} />
         <span style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
           VignetteLab
         </span>

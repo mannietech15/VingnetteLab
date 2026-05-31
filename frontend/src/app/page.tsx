@@ -270,7 +270,7 @@ export default function Dashboard() {
                           <div style={{ height: '4px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${visuals.color}, ${visuals.color}88)` }} />
                           
                           {/* Premium Abstract SVG Preview */}
-                          <div style={{ width: '100%', height: '140px', background: '#f8fafc', position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--border-color)' }}>
+                          <div style={{ width: 'calc(100% - 24px)', margin: '12px 12px 0 12px', height: '140px', background: '#f8fafc', position: 'relative', overflow: 'hidden', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
                             <TemplatePreview pattern={visuals.pattern} color={visuals.color} width={300} height={140} />
                             
                             {/* Hover Overlay Layer */}
