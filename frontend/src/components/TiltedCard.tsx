@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
 
 interface TiltedCardProps {
-  imageSrc: string | React.ReactNode;
+  imageSrc: React.ComponentProps<'img'>['src'] | React.ReactNode;
   altText?: string;
   captionText?: string;
   containerHeight?: React.CSSProperties['height'];
@@ -32,15 +32,13 @@ export default function TiltedCard({
   containerWidth = '100%',
   imageHeight = '300px',
   imageWidth = '300px',
-  imageBorderRadius = '10px',
-  imageBorder = 'none',
   scaleOnHover = 1.1,
   rotateAmplitude = 14,
   showMobileWarning = true,
   showTooltip = true,
   overlayContent = null,
   displayOverlayContent = false
-}: TiltedCardProps & { imageBorderRadius?: string; imageBorder?: string }) {
+}: TiltedCardProps) {
   const ref = useRef<HTMLElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -96,8 +94,7 @@ export default function TiltedCard({
       className="relative w-full h-full [perspective:800px] flex flex-col items-center justify-center"
       style={{
         height: containerHeight,
-        width: containerWidth,
-        margin: 0
+        width: containerWidth
       }}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
@@ -123,25 +120,18 @@ export default function TiltedCard({
           <motion.img
             src={imageSrc}
             alt={altText}
-            className="absolute top-0 left-0 object-cover will-change-transform [transform:translateZ(0)]"
+            className="absolute top-0 left-0 object-cover rounded-[20px] will-change-transform [transform:translateZ(0)]"
             style={{
               width: '100%',
-              height: '100%',
-              borderRadius: imageBorderRadius,
-              border: imageBorder
+              height: '100%'
             }}
           />
         ) : (
           <motion.div
-            className="absolute top-0 left-0 overflow-hidden will-change-transform [transform:translateZ(0)]"
+            className="absolute top-0 left-0 rounded-[20px] overflow-hidden will-change-transform [transform:translateZ(0)]"
             style={{
               width: '100%',
-              height: '100%',
-              borderRadius: imageBorderRadius,
-              border: imageBorder,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              height: '100%'
             }}
           >
             {imageSrc}
@@ -149,7 +139,7 @@ export default function TiltedCard({
         )}
 
         {displayOverlayContent && overlayContent && (
-          <motion.div className="absolute top-0 left-0 z-[2] w-full h-full will-change-transform [transform:translateZ(30px)] pointer-events-none">
+          <motion.div className="absolute top-0 left-0 z-[2] w-full h-full will-change-transform [transform:translateZ(30px)]">
             {overlayContent}
           </motion.div>
         )}
