@@ -344,126 +344,33 @@ export default function VignetteAIPage() {
           </div>
 
           <div className="empty-state-container" style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
             flex: 1,
-            gap: '32px',
-            textAlign: 'center',
-            padding: '0',
             position: 'relative',
-            marginTop: '0'
+            minHeight: '600px',
+            margin: '0 -32px -32px -32px',
+            borderBottomLeftRadius: '24px',
+            borderBottomRightRadius: '24px',
+            overflow: 'hidden'
           }}>
             <style>{`
               .theme-img-dark { display: block; }
               .theme-img-light { display: none; }
               :root[data-theme="light"] .theme-img-dark { display: none; }
               :root[data-theme="light"] .theme-img-light { display: block; }
-              
-              .hologram-stage {
-                position: relative;
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                perspective: 1000px;
-              }
-              
-              .hologram-base {
-                position: absolute;
-                bottom: 0;
-                width: 320px;
-                height: 80px;
-                background: radial-gradient(ellipse at center, var(--accent-primary) 0%, transparent 70%);
-                opacity: 0.3;
-                border-radius: 50%;
-                filter: blur(10px);
-                transform: rotateX(70deg);
-                animation: base-pulse 4s infinite alternate;
-              }
-              
-              .hologram-ring {
-                position: absolute;
-                bottom: 10px;
-                width: 260px;
-                height: 260px;
-                border: 2px dashed var(--accent-primary);
-                border-radius: 50%;
-                opacity: 0.2;
-                transform: rotateX(75deg);
-                animation: ring-spin 20s linear infinite;
-              }
-              
-              .hologram-ring-2 {
-                position: absolute;
-                bottom: 10px;
-                width: 300px;
-                height: 300px;
-                border: 1px solid var(--accent-primary);
-                border-radius: 50%;
-                opacity: 0.1;
-                transform: rotateX(75deg);
-                animation: ring-spin-reverse 15s linear infinite;
-              }
-
-              .hologram-content {
-                position: relative;
-                z-index: 2;
-                width: 100%;
-                height: 100%;
-                animation: float-hologram 6s ease-in-out infinite;
-                filter: drop-shadow(0 30px 40px rgba(0,0,0,0.4));
-                border-radius: 24px;
-                overflow: hidden;
-              }
-
-              :root[data-theme="light"] .hologram-content {
-                filter: drop-shadow(0 30px 40px rgba(139, 92, 246, 0.15));
-              }
-
-              @keyframes float-hologram {
-                0% { transform: translateY(0px) scale(1); }
-                50% { transform: translateY(-15px) scale(1.02); }
-                100% { transform: translateY(0px) scale(1); }
-              }
-              
-              @keyframes base-pulse {
-                0% { opacity: 0.1; transform: rotateX(70deg) scale(0.9); }
-                100% { opacity: 0.4; transform: rotateX(70deg) scale(1.1); }
-              }
-              
-              @keyframes ring-spin {
-                0% { transform: rotateX(75deg) rotate(0deg); }
-                100% { transform: rotateX(75deg) rotate(360deg); }
-              }
-              
-              @keyframes ring-spin-reverse {
-                0% { transform: rotateX(75deg) rotate(360deg); }
-                100% { transform: rotateX(75deg) rotate(0deg); }
-              }
             `}</style>
 
-            <div className="hologram-stage">
-               <div className="hologram-base" />
-               <div className="hologram-ring" />
-               <div className="hologram-ring-2" />
-               <div className="hologram-content">
-                 <Image 
-                    src={noRecentChatDark} 
-                    alt="No recent activity" 
-                    className="theme-img-dark"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} 
-                 />
-                 <Image 
-                    src={noRecentChatLight} 
-                    alt="No recent activity" 
-                    className="theme-img-light"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} 
-                 />
-               </div>
-            </div>
+            <Image 
+               src={noRecentChatDark} 
+               alt="No recent activity" 
+               className="theme-img-dark"
+               style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0 }} 
+            />
+            <Image 
+               src={noRecentChatLight} 
+               alt="No recent activity" 
+               className="theme-img-light"
+               style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0 }} 
+            />
           </div>
         </div>
 
