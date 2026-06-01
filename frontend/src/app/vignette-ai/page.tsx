@@ -340,9 +340,6 @@ export default function VignetteAIPage() {
             <div style={{ padding: '8px', background: 'var(--bg-primary)', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
               <Clock size={20} style={{ color: 'var(--accent-primary)' }} />
             </div>
-            <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0 }}>Recent Chats</h2>
-          </div>
-
           <div className="empty-state-container" style={{
             display: 'flex',
             flexDirection: 'column',
@@ -411,9 +408,12 @@ export default function VignetteAIPage() {
               .hologram-content {
                 position: relative;
                 z-index: 2;
-                width: 300px;
+                width: 100%;
+                height: 100%;
                 animation: float-hologram 6s ease-in-out infinite;
                 filter: drop-shadow(0 30px 40px rgba(0,0,0,0.4));
+                border-radius: 24px;
+                overflow: hidden;
               }
 
               :root[data-theme="light"] .hologram-content {
@@ -451,13 +451,13 @@ export default function VignetteAIPage() {
                     src={noRecentChatDark} 
                     alt="No recent activity" 
                     className="theme-img-dark"
-                    style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} 
                  />
                  <Image 
                     src={noRecentChatLight} 
                     alt="No recent activity" 
                     className="theme-img-light"
-                    style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} 
                  />
                </div>
             </div>
