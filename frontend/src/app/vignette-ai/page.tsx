@@ -47,20 +47,21 @@ function FeatureCard({ feature }: { feature: any }) {
           background: useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, ${feature.color}20, transparent 80%)`
         }}
       />
-      <div style={{ position: 'relative', zIndex: 1 }}>
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
         <div style={{ 
-          width: '44px', height: '44px', borderRadius: '12px', 
+          width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0,
           background: `${feature.color}15`, color: feature.color, 
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: `inset 0 0 0 1px ${feature.color}33`,
-          marginBottom: '16px',
           transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
           transform: isHovered ? 'scale(1.1) rotate(-5deg)' : 'scale(1) rotate(0deg)',
         }}>
-          <feature.icon size={22} />
+          <feature.icon size={20} />
         </div>
-        <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px' }}>{feature.title}</h3>
-        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>{feature.desc}</p>
+        <div>
+          <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px', paddingTop: '2px' }}>{feature.title}</h3>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>{feature.desc}</p>
+        </div>
       </div>
     </motion.div>
   );
