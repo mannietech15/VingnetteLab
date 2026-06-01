@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sparkles, ArrowRight, Command, MessageSquare, LayoutTemplate, Box, Cpu, Clock, MoreHorizontal } from 'lucide-react';
+import { Sparkles, ArrowRight, Command, MessageSquare, LayoutTemplate, Box, Cpu, Clock, MoreHorizontal, Code, FileText } from 'lucide-react';
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react';
 
 function FeatureCard({ feature }: { feature: any }) {
@@ -287,6 +287,8 @@ export default function VignetteAIPage() {
               { icon: MessageSquare, title: 'Contextual Chat', desc: 'Chat with your canvas. Ask AI to summarize notes, find connections, or expand on ideas seamlessly.', color: '#10b981' },
               { icon: Box, title: 'Auto-Components', desc: 'Describe what you need, and AI generates fully functional, styled components instantly onto the board.', color: '#f59e0b' },
               { icon: Cpu, title: 'Smart Connections', desc: 'AI predicts and draws relationships between nodes, maintaining an organized and scalable architecture.', color: '#8b5cf6' },
+              { icon: Code, title: 'Code Export', desc: 'Instantly turn your visual diagrams and architectures into deployable boilerplate and configurations.', color: '#ef4444' },
+              { icon: FileText, title: 'Note Extraction', desc: 'Automatically extract scattered stickies and text into structured, exportable markdown documents.', color: '#14b8a6' },
             ].map((feature, i) => (
               <FeatureCard key={i} feature={feature} />
             ))}
