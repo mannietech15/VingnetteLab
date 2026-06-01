@@ -294,14 +294,15 @@ export default function VignetteAIPage() {
 
         {/* Recent Chats Sidebar */}
         <div className="ai-glass-panel" style={{
-          width: '340px',
-          padding: '28px',
+          width: '400px',
+          marginTop: '100px',
+          padding: '32px',
           display: 'flex',
           flexDirection: 'column',
           gap: '28px',
           boxShadow: 'var(--shadow-md)',
           position: 'sticky',
-          top: '64px',
+          top: '40px',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-primary)' }}>
             <div style={{ padding: '8px', background: 'var(--bg-primary)', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
