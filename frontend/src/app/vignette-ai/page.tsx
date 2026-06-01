@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sparkles, ArrowRight, MessageSquare, LayoutTemplate, Box, Cpu, Clock, MoreHorizontal, Code, FileText } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageSquare, LayoutTemplate, Box, Cpu, Clock, Code, FileText } from 'lucide-react';
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react';
 import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
+import noRecentChatLight from '@/app/workspaces/noRecentChatLightMode.png';
+import noRecentChatDark from '@/app/workspaces/noRecentChatBlackMode.png';
 
 function FeatureCard({ feature }: { feature: any }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -69,44 +71,7 @@ function FeatureCard({ feature }: { feature: any }) {
   );
 }
 
-function ChatItem({ title, time }: { title: string, time: string }) {
-  const [isHovered, setIsHovered] = useState(false);
-  return (
-    <div 
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{
-      padding: '12px 16px',
-      borderRadius: '12px',
-      background: isHovered ? 'var(--bg-hover)' : 'transparent',
-      border: '1px solid',
-      borderColor: isHovered ? 'var(--border-color)' : 'transparent',
-      cursor: 'pointer',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '6px',
-      transition: 'all 0.2s ease',
-      position: 'relative',
-      overflow: 'hidden'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-        <span style={{ 
-          fontSize: '14px', 
-          fontWeight: 500, 
-          color: isHovered ? 'var(--accent-primary)' : 'var(--text-primary)', 
-          whiteSpace: 'nowrap', 
-          overflow: 'hidden', 
-          textOverflow: 'ellipsis',
-          transition: 'color 0.2s ease'
-        }}>
-          {title}
-        </span>
-        {isHovered && <MoreHorizontal size={16} style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />}
-      </div>
-      <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500 }}>{time}</span>
-    </div>
-  )
-}
+
 
 export default function VignetteAIPage() {
   const [prompt, setPrompt] = useState('');
@@ -378,53 +343,176 @@ export default function VignetteAIPage() {
             <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0 }}>Recent Chats</h2>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-            <div>
-              <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '12px', paddingLeft: '8px' }}>Today</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <ChatItem title="Microservices Architecture Diagram" time="2h ago" />
-                <ChatItem title="E-commerce Database Schema" time="5h ago" />
-              </div>
-            </div>
-            
-            <div>
-              <h3 style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '12px', paddingLeft: '8px' }}>Previous 7 Days</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <ChatItem title="Q3 Marketing Brainstorming" time="Yesterday" />
-                <ChatItem title="User Flow for User Onboarding" time="3 days ago" />
-                <ChatItem title="Wireframe Landing Page Setup" time="5 days ago" />
-                <ChatItem title="Optimize Checkout Process" time="6 days ago" />
-              </div>
-            </div>
-          </div>
-          
-          <button style={{
-            marginTop: 'auto',
-            padding: '14px',
-            borderRadius: '12px',
-            background: 'var(--bg-primary)',
-            border: '1px solid var(--border-color)',
-            color: 'var(--text-primary)',
-            fontSize: '14px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
+          <div className="empty-state-container" style={{
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px'
-          }}
-          onMouseOver={(e) => { 
-            e.currentTarget.style.borderColor = 'var(--text-primary)'; 
-            e.currentTarget.style.background = 'var(--bg-hover)';
-          }}
-          onMouseOut={(e) => { 
-            e.currentTarget.style.borderColor = 'var(--border-color)'; 
-            e.currentTarget.style.background = 'var(--bg-primary)';
-          }}
-          >
-            View All History
-          </button>
+            flex: 1,
+            gap: '32px',
+            textAlign: 'center',
+            padding: '40px 0',
+            position: 'relative',
+            marginTop: '20px'
+          }}>
+            <style>{`
+              .theme-img-dark { display: block; }
+              .theme-img-light { display: none; }
+              :root[data-theme="light"] .theme-img-dark { display: none; }
+              :root[data-theme="light"] .theme-img-light { display: block; }
+              
+              .hologram-stage {
+                position: relative;
+                width: 340px;
+                height: 340px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                perspective: 1000px;
+              }
+              
+              .hologram-base {
+                position: absolute;
+                bottom: 0;
+                width: 260px;
+                height: 60px;
+                background: radial-gradient(ellipse at center, var(--accent-primary) 0%, transparent 70%);
+                opacity: 0.3;
+                border-radius: 50%;
+                filter: blur(10px);
+                transform: rotateX(70deg);
+                animation: base-pulse 4s infinite alternate;
+              }
+              
+              .hologram-ring {
+                position: absolute;
+                bottom: 10px;
+                width: 200px;
+                height: 200px;
+                border: 2px dashed var(--accent-primary);
+                border-radius: 50%;
+                opacity: 0.2;
+                transform: rotateX(75deg);
+                animation: ring-spin 20s linear infinite;
+              }
+              
+              .hologram-ring-2 {
+                position: absolute;
+                bottom: 10px;
+                width: 230px;
+                height: 230px;
+                border: 1px solid var(--accent-primary);
+                border-radius: 50%;
+                opacity: 0.1;
+                transform: rotateX(75deg);
+                animation: ring-spin-reverse 15s linear infinite;
+              }
+
+              .hologram-content {
+                position: relative;
+                z-index: 2;
+                width: 300px;
+                animation: float-hologram 6s ease-in-out infinite;
+                filter: drop-shadow(0 30px 40px rgba(0,0,0,0.4));
+              }
+
+              :root[data-theme="light"] .hologram-content {
+                filter: drop-shadow(0 30px 40px rgba(139, 92, 246, 0.15));
+              }
+
+              @keyframes float-hologram {
+                0% { transform: translateY(0px) scale(1); }
+                50% { transform: translateY(-15px) scale(1.02); }
+                100% { transform: translateY(0px) scale(1); }
+              }
+              
+              @keyframes base-pulse {
+                0% { opacity: 0.1; transform: rotateX(70deg) scale(0.9); }
+                100% { opacity: 0.4; transform: rotateX(70deg) scale(1.1); }
+              }
+              
+              @keyframes ring-spin {
+                0% { transform: rotateX(75deg) rotate(0deg); }
+                100% { transform: rotateX(75deg) rotate(360deg); }
+              }
+              
+              @keyframes ring-spin-reverse {
+                0% { transform: rotateX(75deg) rotate(360deg); }
+                100% { transform: rotateX(75deg) rotate(0deg); }
+              }
+            `}</style>
+
+            <div className="hologram-stage">
+               <div className="hologram-base" />
+               <div className="hologram-ring" />
+               <div className="hologram-ring-2" />
+               <div className="hologram-content">
+                 <Image 
+                    src={noRecentChatDark} 
+                    alt="No recent activity" 
+                    className="theme-img-dark"
+                    style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
+                 />
+                 <Image 
+                    src={noRecentChatLight} 
+                    alt="No recent activity" 
+                    className="theme-img-light"
+                    style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
+                 />
+               </div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', zIndex: 1 }}>
+              <h3 style={{ 
+                fontSize: '22px', 
+                fontWeight: 800, 
+                margin: 0,
+                background: 'linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}>
+                Awaiting Inspiration
+              </h3>
+              <p style={{ fontSize: '15px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6, maxWidth: '280px' }}>
+                Your creative space is clear. Spark a new idea or let AI guide your next masterpiece.
+              </p>
+            </div>
+            
+            <button style={{
+              marginTop: '8px',
+              padding: '16px 32px',
+              borderRadius: '16px',
+              background: 'rgba(139, 92, 246, 0.1)',
+              border: '1px solid rgba(139, 92, 246, 0.2)',
+              color: 'var(--accent-primary)',
+              fontSize: '15px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              position: 'relative',
+              overflow: 'hidden',
+              zIndex: 1
+            }}
+            onMouseOver={(e) => { 
+              e.currentTarget.style.background = 'var(--accent-primary)'; 
+              e.currentTarget.style.color = 'white'; 
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 10px 20px rgba(139, 92, 246, 0.3)';
+            }}
+            onMouseOut={(e) => { 
+              e.currentTarget.style.background = 'rgba(139, 92, 246, 0.1)'; 
+              e.currentTarget.style.color = 'var(--accent-primary)'; 
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            >
+              <Sparkles size={18} /> Generate Idea
+            </button>
+          </div>
         </div>
 
       </div>
