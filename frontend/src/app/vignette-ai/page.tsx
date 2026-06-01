@@ -340,6 +340,9 @@ export default function VignetteAIPage() {
             <div style={{ padding: '8px', background: 'var(--bg-primary)', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
               <Clock size={20} style={{ color: 'var(--accent-primary)' }} />
             </div>
+            <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0 }}>Recent Chats</h2>
+          </div>
+
           <div className="empty-state-container" style={{
             display: 'flex',
             flexDirection: 'column',
@@ -360,8 +363,8 @@ export default function VignetteAIPage() {
               
               .hologram-stage {
                 position: relative;
-                width: 340px;
-                height: 340px;
+                width: 400px;
+                height: 400px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -371,8 +374,8 @@ export default function VignetteAIPage() {
               .hologram-base {
                 position: absolute;
                 bottom: 0;
-                width: 260px;
-                height: 60px;
+                width: 320px;
+                height: 80px;
                 background: radial-gradient(ellipse at center, var(--accent-primary) 0%, transparent 70%);
                 opacity: 0.3;
                 border-radius: 50%;
@@ -384,8 +387,8 @@ export default function VignetteAIPage() {
               .hologram-ring {
                 position: absolute;
                 bottom: 10px;
-                width: 200px;
-                height: 200px;
+                width: 260px;
+                height: 260px;
                 border: 2px dashed var(--accent-primary);
                 border-radius: 50%;
                 opacity: 0.2;
@@ -396,8 +399,8 @@ export default function VignetteAIPage() {
               .hologram-ring-2 {
                 position: absolute;
                 bottom: 10px;
-                width: 230px;
-                height: 230px;
+                width: 300px;
+                height: 300px;
                 border: 1px solid var(--accent-primary);
                 border-radius: 50%;
                 opacity: 0.1;
@@ -461,57 +464,6 @@ export default function VignetteAIPage() {
                  />
                </div>
             </div>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', zIndex: 1 }}>
-              <h3 style={{ 
-                fontSize: '22px', 
-                fontWeight: 800, 
-                margin: 0,
-                background: 'linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}>
-                Awaiting Inspiration
-              </h3>
-              <p style={{ fontSize: '15px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6, maxWidth: '280px' }}>
-                Your creative space is clear. Spark a new idea or let AI guide your next masterpiece.
-              </p>
-            </div>
-            
-            <button style={{
-              marginTop: '8px',
-              padding: '16px 32px',
-              borderRadius: '16px',
-              background: 'rgba(139, 92, 246, 0.1)',
-              border: '1px solid rgba(139, 92, 246, 0.2)',
-              color: 'var(--accent-primary)',
-              fontSize: '15px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-              position: 'relative',
-              overflow: 'hidden',
-              zIndex: 1
-            }}
-            onMouseOver={(e) => { 
-              e.currentTarget.style.background = 'var(--accent-primary)'; 
-              e.currentTarget.style.color = 'white'; 
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 10px 20px rgba(139, 92, 246, 0.3)';
-            }}
-            onMouseOut={(e) => { 
-              e.currentTarget.style.background = 'rgba(139, 92, 246, 0.1)'; 
-              e.currentTarget.style.color = 'var(--accent-primary)'; 
-              e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-            >
-              <Sparkles size={18} /> Generate Idea
-            </button>
           </div>
         </div>
 
