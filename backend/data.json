@@ -34,6 +34,27 @@
           "workspaceId": "ws_1780087576660",
           "createdAt": "2026-05-31T04:35:12.424Z",
           "updatedAt": "2026-05-31T04:35:12.424Z"
+        },
+        {
+          "id": "cv_1780348243593",
+          "title": "Mind Map",
+          "workspaceId": "ws_1780087576660",
+          "createdAt": "2026-06-01T21:10:43.593Z",
+          "updatedAt": "2026-06-01T21:10:43.593Z"
+        },
+        {
+          "id": "cv_1780348310132",
+          "title": "Kanban Board",
+          "workspaceId": "ws_1780087576660",
+          "createdAt": "2026-06-01T21:11:50.132Z",
+          "updatedAt": "2026-06-01T21:11:50.132Z"
+        },
+        {
+          "id": "cv_1780348500355",
+          "title": "Mind Map",
+          "workspaceId": "ws_1780087576660",
+          "createdAt": "2026-06-01T21:15:00.355Z",
+          "updatedAt": "2026-06-01T21:15:00.355Z"
         }
       ]
     },
@@ -50,6 +71,22 @@
           "workspaceId": "ws_1780185147659",
           "createdAt": "2026-05-30T23:53:02.287Z",
           "updatedAt": "2026-05-30T23:53:02.287Z"
+        }
+      ]
+    },
+    {
+      "id": "ws_1780348378546",
+      "name": "Software Dev Team",
+      "createdAt": "2026-06-01T21:12:58.546Z",
+      "updatedAt": "2026-06-01T21:12:58.546Z",
+      "ownerId": "usr_1",
+      "canvases": [
+        {
+          "id": "cv_1780348409661",
+          "title": "Website Dev",
+          "workspaceId": "ws_1780348378546",
+          "createdAt": "2026-06-01T21:13:29.661Z",
+          "updatedAt": "2026-06-01T21:13:29.661Z"
         }
       ]
     }
