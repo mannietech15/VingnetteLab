@@ -155,6 +155,38 @@ export default function VignetteAIPage() {
           background: rgba(0, 0, 0, 0.02);
           border: 1px solid rgba(0, 0, 0, 0.05);
         }
+        .marquee-container {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          width: 100%;
+          overflow: hidden;
+          mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        }
+        @keyframes scroll-left {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-50% - 12px)); }
+        }
+        @keyframes scroll-right {
+          0% { transform: translateX(calc(-50% - 12px)); }
+          100% { transform: translateX(0); }
+        }
+        .marquee-track-left {
+          display: flex;
+          gap: 24px;
+          width: max-content;
+          animation: scroll-left 35s linear infinite;
+        }
+        .marquee-track-right {
+          display: flex;
+          gap: 24px;
+          width: max-content;
+          animation: scroll-right 35s linear infinite;
+        }
+        .marquee-track-left:hover, .marquee-track-right:hover {
+          animation-play-state: paused;
+        }
       `}</style>
 
       <div style={{ display: 'flex', gap: '48px', maxWidth: '1500px', width: '100%', margin: '0 auto', padding: '64px 48px', position: 'relative', zIndex: 1, alignItems: 'flex-start' }}>
@@ -280,18 +312,36 @@ export default function VignetteAIPage() {
             </div>
           </div>
 
-          {/* Feature Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
-            {[
-              { icon: LayoutTemplate, title: 'Intelligent Layouts', desc: 'AI automatically organizes your messy canvas into beautiful, structured diagrams and workflows.', color: '#3b82f6' },
-              { icon: MessageSquare, title: 'Contextual Chat', desc: 'Chat with your canvas. Ask AI to summarize notes, find connections, or expand on ideas seamlessly.', color: '#10b981' },
-              { icon: Box, title: 'Auto-Components', desc: 'Describe what you need, and AI generates fully functional, styled components instantly onto the board.', color: '#f59e0b' },
-              { icon: Cpu, title: 'Smart Connections', desc: 'AI predicts and draws relationships between nodes, maintaining an organized and scalable architecture.', color: '#8b5cf6' },
-              { icon: Code, title: 'Code Export', desc: 'Instantly turn your visual diagrams and architectures into deployable boilerplate and configurations.', color: '#ef4444' },
-              { icon: FileText, title: 'Note Extraction', desc: 'Automatically extract scattered stickies and text into structured, exportable markdown documents.', color: '#14b8a6' },
-            ].map((feature, i) => (
-              <FeatureCard key={i} feature={feature} />
-            ))}
+          {/* Feature Marquee */}
+          <div className="marquee-container">
+            <div className="marquee-track-left">
+              {[
+                { icon: LayoutTemplate, title: 'Intelligent Layouts', desc: 'AI automatically organizes your messy canvas into beautiful, structured diagrams and workflows.', color: '#3b82f6' },
+                { icon: MessageSquare, title: 'Contextual Chat', desc: 'Chat with your canvas. Ask AI to summarize notes, find connections, or expand on ideas seamlessly.', color: '#10b981' },
+                { icon: Box, title: 'Auto-Components', desc: 'Describe what you need, and AI generates fully functional, styled components instantly onto the board.', color: '#f59e0b' },
+                { icon: LayoutTemplate, title: 'Intelligent Layouts', desc: 'AI automatically organizes your messy canvas into beautiful, structured diagrams and workflows.', color: '#3b82f6' },
+                { icon: MessageSquare, title: 'Contextual Chat', desc: 'Chat with your canvas. Ask AI to summarize notes, find connections, or expand on ideas seamlessly.', color: '#10b981' },
+                { icon: Box, title: 'Auto-Components', desc: 'Describe what you need, and AI generates fully functional, styled components instantly onto the board.', color: '#f59e0b' },
+              ].map((feature, i) => (
+                <div key={i} style={{ width: '320px', minWidth: '320px' }}>
+                  <FeatureCard feature={feature} />
+                </div>
+              ))}
+            </div>
+            <div className="marquee-track-right">
+              {[
+                { icon: Cpu, title: 'Smart Connections', desc: 'AI predicts and draws relationships between nodes, maintaining an organized and scalable architecture.', color: '#8b5cf6' },
+                { icon: Code, title: 'Code Export', desc: 'Instantly turn your visual diagrams and architectures into deployable boilerplate and configurations.', color: '#ef4444' },
+                { icon: FileText, title: 'Note Extraction', desc: 'Automatically extract scattered stickies and text into structured, exportable markdown documents.', color: '#14b8a6' },
+                { icon: Cpu, title: 'Smart Connections', desc: 'AI predicts and draws relationships between nodes, maintaining an organized and scalable architecture.', color: '#8b5cf6' },
+                { icon: Code, title: 'Code Export', desc: 'Instantly turn your visual diagrams and architectures into deployable boilerplate and configurations.', color: '#ef4444' },
+                { icon: FileText, title: 'Note Extraction', desc: 'Automatically extract scattered stickies and text into structured, exportable markdown documents.', color: '#14b8a6' },
+              ].map((feature, i) => (
+                <div key={i} style={{ width: '320px', minWidth: '320px' }}>
+                  <FeatureCard feature={feature} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
