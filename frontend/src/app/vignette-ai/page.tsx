@@ -156,7 +156,7 @@ export default function VignetteAIPage() {
         }
       `}</style>
 
-      <div style={{ display: 'flex', gap: '48px', maxWidth: '1400px', width: '100%', margin: '0 auto', padding: '64px 48px', position: 'relative', zIndex: 1, alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', gap: '48px', maxWidth: '1500px', width: '100%', margin: '0 auto', padding: '64px 48px', position: 'relative', zIndex: 1, alignItems: 'flex-start' }}>
         
         {/* Main Content Column */}
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -294,8 +294,8 @@ export default function VignetteAIPage() {
 
         {/* Recent Chats Sidebar */}
         <div className="ai-glass-panel" style={{
-          width: '400px',
-          marginTop: '100px',
+          width: '480px',
+          marginTop: '180px',
           padding: '32px',
           display: 'flex',
           flexDirection: 'column',
