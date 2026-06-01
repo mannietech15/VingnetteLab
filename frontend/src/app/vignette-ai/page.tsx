@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sparkles, ArrowRight, Command, MessageSquare, LayoutTemplate, Box, Cpu, Clock, MoreHorizontal, Code, FileText } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageSquare, LayoutTemplate, Box, Cpu, Clock, MoreHorizontal, Code, FileText } from 'lucide-react';
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react';
+import Image from 'next/image';
+import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 
 function FeatureCard({ feature }: { feature: any }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -234,7 +236,19 @@ export default function VignetteAIPage() {
             borderColor: isInputFocused ? 'var(--accent-primary)' : 'var(--border-color)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-primary)', borderRadius: '20px', padding: '8px 8px 8px 24px', border: '1px solid var(--border-color)' }}>
-              <Command size={24} style={{ color: isInputFocused ? 'var(--accent-primary)' : 'var(--text-secondary)', transition: 'color 0.3s ease' }} />
+              <Image 
+                src={vignetteLogo} 
+                alt="Vignette AI Logo" 
+                width={24} 
+                height={24} 
+                style={{ 
+                  borderRadius: '6px', 
+                  objectFit: 'cover', 
+                  opacity: isInputFocused ? 1 : 0.6,
+                  filter: isInputFocused ? 'drop-shadow(0 0 8px rgba(139, 92, 246, 0.6))' : 'grayscale(100%)',
+                  transition: 'all 0.3s ease' 
+                }} 
+              />
               <input 
                 type="text" 
                 value={prompt}
