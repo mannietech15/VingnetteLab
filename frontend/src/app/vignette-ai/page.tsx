@@ -351,9 +351,9 @@ export default function VignetteAIPage() {
             flex: 1,
             gap: '32px',
             textAlign: 'center',
-            padding: '40px 0',
+            padding: '0',
             position: 'relative',
-            marginTop: '20px'
+            marginTop: '0'
           }}>
             <style>{`
               .theme-img-dark { display: block; }
@@ -363,8 +363,8 @@ export default function VignetteAIPage() {
               
               .hologram-stage {
                 position: relative;
-                width: 400px;
-                height: 480px;
+                width: 100%;
+                height: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
