@@ -364,7 +364,7 @@ export default function VignetteAIPage() {
               .hologram-stage {
                 position: relative;
                 width: 400px;
-                height: 400px;
+                height: 480px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
