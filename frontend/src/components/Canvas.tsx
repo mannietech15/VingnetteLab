@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useCanvasStore, StrokeElement, ShapeElement } from '@/store/useCanvasStore';
 import { getStroke } from 'perfect-freehand';
+import { TEMPLATES } from '@/data/templates';
+import TemplatePreview from '@/components/TemplatePreview';
 
 // Helper to convert perfect-freehand stroke to SVG path
 function getSvgPathFromStroke(stroke: number[][]) {
@@ -23,7 +25,7 @@ function getSvgPathFromStroke(stroke: number[][]) {
 
 export const SHAPE_TOOLS = ['line', 'rect', 'rounded_rect', 'ellipse', 'triangle', 'right_triangle', 'diamond', 'pentagon', 'hexagon', 'arrow_right', 'arrow_left', 'arrow_up', 'arrow_down', 'star_4', 'star_5', 'star_6', 'heart', 'lightning'];
 
-export default function Canvas() {
+export default function Canvas({ templateId }: { templateId?: string | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
   const { 
@@ -38,6 +40,8 @@ export default function Canvas() {
     updateElement,
     removeElement
   } = useCanvasStore();
+
+  const template = templateId ? TEMPLATES.find(t => t.id === templateId) : null;
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [isPanning, setIsPanning] = useState(false);
@@ -84,13 +88,18 @@ export default function Canvas() {
     return null;
   }, [elements, camera.z]);
 
-  // Screen to World coordinates
-  const screenToWorld = (clientX: number, clientY: number) => {
+  // Screen to World coordinates — accounts for canvas element position (e.g. sidebar offset)
+  const screenToWorld = useCallback((clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
+    const rect = canvas.getBoundingClientRect();
+    const localX = clientX - rect.left;
+    const localY = clientY - rect.top;
     return {
-      x: (clientX - camera.x) / camera.z,
-      y: (clientY - camera.y) / camera.z
+      x: (localX - camera.x) / camera.z,
+      y: (localY - camera.y) / camera.z
     };
-  };
+  }, [camera]);
 
   // Main Render Loop
   const draw = useCallback(() => {
@@ -553,25 +562,25 @@ export default function Canvas() {
   };
 
   // Zooming
-  const onWheel = (e: React.WheelEvent) => {
-    e.preventDefault(); // need to attach via generic addEventListener to be passive: false
+  const onWheel = useCallback((e: WheelEvent | React.WheelEvent) => {
+    e.preventDefault();
     
-    // Pinch to zoom or scroll to pan
+    const canvas = canvasRef.current;
+    const rect = canvas ? canvas.getBoundingClientRect() : { left: 0, top: 0 };
+    const localX = e.clientX - rect.left;
+    const localY = e.clientY - rect.top;
+
     if (e.ctrlKey || e.metaKey) {
-      // Zoom
+      // Zoom towards cursor
       const zoomSensitivity = 0.001;
       const delta = -e.deltaY * zoomSensitivity;
-      const newZ = Math.min(Math.max(0.1, camera.z * (1 + delta)), 5);
-      
-      // Zoom towards cursor
-      const cursorX = e.clientX;
-      const cursorY = e.clientY;
       
       setCamera((prev) => {
+        const newZ = Math.min(Math.max(0.1, prev.z * (1 + delta)), 5);
         const scaleChange = newZ / prev.z;
         return {
-          x: cursorX - (cursorX - prev.x) * scaleChange,
-          y: cursorY - (cursorY - prev.y) * scaleChange,
+          x: localX - (localX - prev.x) * scaleChange,
+          y: localY - (localY - prev.y) * scaleChange,
           z: newZ
         };
       });
@@ -583,35 +592,65 @@ export default function Canvas() {
         y: prev.y - e.deltaY
       }));
     }
-  };
+  }, [setCamera]);
 
   useEffect(() => {
-    // Attach passive: false event listener for wheel to prevent default browser behavior
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      // Call our synthetic event handler logic
       onWheel(e as unknown as React.WheelEvent);
     };
 
     canvas.addEventListener('wheel', handleWheel, { passive: false });
     return () => canvas.removeEventListener('wheel', handleWheel);
-  });
+  }, [onWheel]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerOut={onPointerUp}
-      onPointerCancel={onPointerUp}
-      style={{
-        touchAction: 'none', // Prevent browser gestures
-        cursor: currentTool === 'select' ? 'grab' : isPanning ? 'grabbing' : 'crosshair'
-      }}
-    />
+    <>
+      {template && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          pointerEvents: 'none',
+          overflow: 'hidden',
+          zIndex: 0
+        }}>
+          <div style={{
+            position: 'absolute',
+            width: '2000px',
+            height: '1200px',
+            left: 0,
+            top: 0,
+            transform: `translate(${camera.x + 100 * camera.z}px, ${camera.y + 100 * camera.z}px) scale(${camera.z})`,
+            transformOrigin: '0 0',
+            opacity: 0.8,
+            boxShadow: '0 20px 40px rgba(0,0,0,0.05)',
+            borderRadius: '20px',
+            background: 'var(--bg-secondary)',
+          }}>
+            <TemplatePreview pattern={template.pattern} color={template.color} width={2000} height={1200} />
+          </div>
+        </div>
+      )}
+      <canvas
+        ref={canvasRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerOut={onPointerUp}
+        onPointerCancel={onPointerUp}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          touchAction: 'none', // Prevent browser gestures
+          cursor: currentTool === 'select' ? 'grab' : isPanning ? 'grabbing' : 'crosshair'
+        }}
+      />
+    </>
   );
 }

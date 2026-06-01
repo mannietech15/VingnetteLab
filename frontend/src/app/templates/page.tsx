@@ -276,7 +276,7 @@ export default function TemplatesPage() {
       });
 
       const newCanvasId = (canvasData as any).createCanvas.id;
-      router.push(`/canvas/${newCanvasId}`);
+      router.push(`/canvas/${newCanvasId}?template=${template.id}`);
     } catch (error) {
       console.error('Failed to create canvas from template:', error);
       setCreatingTemplateId(null);

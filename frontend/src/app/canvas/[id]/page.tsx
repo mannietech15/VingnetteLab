@@ -20,8 +20,12 @@ const GET_CANVAS = gql`
 const Canvas = dynamic(() => import('@/components/Canvas'), { ssr: false });
 const Toolbar = dynamic(() => import('@/components/Toolbar'), { ssr: false });
 
+import { useSearchParams } from 'next/navigation';
+
 export default function CanvasPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const searchParams = useSearchParams();
+  const templateId = searchParams.get('template');
   
   const { data, loading, error } = useQuery(GET_CANVAS, {
     variables: { id }
@@ -86,7 +90,7 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
         </div>
       </div>
 
-      <Canvas />
+      <Canvas templateId={templateId} />
       <Toolbar />
     </main>
   );
