@@ -22,14 +22,14 @@ function FeatureCard({ feature }: { feature: any }) {
       onMouseLeave={() => setIsHovered(false)}
       style={{
         position: 'relative',
-        padding: '32px',
-        borderRadius: '24px',
+        padding: '24px',
+        borderRadius: '20px',
         background: 'var(--bg-secondary)',
         border: '1px solid var(--border-color)',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        gap: '20px',
+        gap: '16px',
         cursor: 'pointer',
         boxShadow: isHovered ? '0 20px 40px rgba(0,0,0,0.1)' : '0 4px 6px rgba(0,0,0,0.02)',
         transform: isHovered ? 'translateY(-4px)' : 'none',
@@ -49,18 +49,18 @@ function FeatureCard({ feature }: { feature: any }) {
       />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ 
-          width: '56px', height: '56px', borderRadius: '16px', 
+          width: '44px', height: '44px', borderRadius: '12px', 
           background: `${feature.color}15`, color: feature.color, 
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: `inset 0 0 0 1px ${feature.color}33`,
-          marginBottom: '20px',
+          marginBottom: '16px',
           transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
           transform: isHovered ? 'scale(1.1) rotate(-5deg)' : 'scale(1) rotate(0deg)',
         }}>
-          <feature.icon size={28} />
+          <feature.icon size={22} />
         </div>
-        <h3 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 12px' }}>{feature.title}</h3>
-        <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>{feature.desc}</p>
+        <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px' }}>{feature.title}</h3>
+        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>{feature.desc}</p>
       </div>
     </motion.div>
   );
@@ -280,7 +280,7 @@ export default function VignetteAIPage() {
           </div>
 
           {/* Feature Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
             {[
               { icon: LayoutTemplate, title: 'Intelligent Layouts', desc: 'AI automatically organizes your messy canvas into beautiful, structured diagrams and workflows.', color: '#3b82f6' },
               { icon: MessageSquare, title: 'Contextual Chat', desc: 'Chat with your canvas. Ask AI to summarize notes, find connections, or expand on ideas seamlessly.', color: '#10b981' },
