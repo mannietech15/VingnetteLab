@@ -744,13 +744,17 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
             ref={(el) => {
               if (el && document.activeElement !== el) {
                 el.innerText = textEl.text;
-                el.focus();
-                const range = document.createRange();
-                range.selectNodeContents(el);
-                range.collapse(false);
-                const sel = window.getSelection();
-                sel?.removeAllRanges();
-                sel?.addRange(range);
+                setTimeout(() => {
+                  if (document.activeElement !== el) {
+                    el.focus();
+                    const range = document.createRange();
+                    range.selectNodeContents(el);
+                    range.collapse(false);
+                    const sel = window.getSelection();
+                    sel?.removeAllRanges();
+                    sel?.addRange(range);
+                  }
+                }, 10);
               }
             }}
           />
