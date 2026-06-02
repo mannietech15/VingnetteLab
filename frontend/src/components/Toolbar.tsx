@@ -6,7 +6,28 @@ import { Pen, MousePointer2, Minus, Square, AppWindow, Circle, Triangle, Play, D
 
 const COLORS = ['#1a1a1a', '#e03131', '#2f9e44', '#1971c2', '#f08c00', '#9c36b5'];
 const SIZES = [2, 4, 8, 12, 16];
-const FONTS = ['Inter', 'Roboto', 'Outfit', 'Playfair Display', 'Caveat', 'Fira Code'];
+const FONT_GROUPS = [
+  {
+    label: 'Sans-Serif',
+    fonts: ['Inter', 'Roboto', 'Outfit', 'Montserrat', 'Lato', 'Poppins', 'Raleway', 'Nunito', 'Ubuntu', 'Quicksand', 'Josefin Sans']
+  },
+  {
+    label: 'Serif',
+    fonts: ['Playfair Display', 'Merriweather', 'Lora', 'Georgia', 'Times New Roman', 'Palatino', 'Garamond', 'Bookman']
+  },
+  {
+    label: 'Display & Handwriting',
+    fonts: ['Lucida Calligraphy', 'Dancing Script', 'Pacifico', 'Caveat', 'Great Vibes', 'Lobster', 'Permanent Marker', 'Righteous', 'Comfortaa', 'Bebas Neue', 'Anton', 'Cinzel', 'Comic Sans MS', 'Brush Script MT', 'Papyrus']
+  },
+  {
+    label: 'Monospace',
+    fonts: ['Fira Code', 'Inconsolata', 'Space Mono', 'Courier New', 'Lucida Console']
+  },
+  {
+    label: 'System & Classic',
+    fonts: ['Arial', 'Helvetica', 'Verdana', 'Trebuchet MS', 'Tahoma', 'Geneva', 'Arial Black', 'Impact', 'Century Gothic', 'Optima', 'Copperplate']
+  }
+];
 const SHAPES = [
   { id: 'line', icon: Minus, label: 'Line' },
   { id: 'rect', icon: Square, label: 'Rectangle' },
@@ -101,13 +122,20 @@ export default function Toolbar() {
                     color: 'var(--text-primary)',
                     padding: '4px 8px',
                     borderRadius: '4px',
-                    fontFamily: currentFontFamily,
+                    fontFamily: `"${currentFontFamily}", sans-serif`,
                     outline: 'none',
                     cursor: 'pointer',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    maxWidth: '160px'
                   }}
                 >
-                  {FONTS.map(f => <option key={f} value={f} style={{fontFamily: f, color: '#1a1a1a'}}>{f}</option>)}
+                  {FONT_GROUPS.map(group => (
+                    <optgroup key={group.label} label={group.label}>
+                      {group.fonts.map(f => (
+                        <option key={f} value={f} style={{fontFamily: `"${f}", sans-serif`, color: '#1a1a1a'}}>{f}</option>
+                      ))}
+                    </optgroup>
+                  ))}
                 </select>
                 <div style={{ width: '1px', height: '20px', background: 'var(--border-color)', margin: '0 4px' }} />
               </>

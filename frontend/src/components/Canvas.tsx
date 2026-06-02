@@ -336,7 +336,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
         if (element.isFilled) ctx.fill(); else ctx.stroke();
       } else if (element.type === 'text') {
         if (element.id !== editingTextId) {
-          ctx.font = `${element.fontSize}px "${element.fontFamily}"`;
+          ctx.font = `${element.fontSize}px "${element.fontFamily}", sans-serif`;
           ctx.textBaseline = 'top';
           ctx.fillStyle = element.color;
           const lines = element.text.split('\n');
@@ -369,7 +369,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           w = xMax - xMin + el.size * 2;
           h = yMax - yMin + el.size * 2;
         } else if (el.type === 'text') {
-          ctx.font = `${el.fontSize}px "${el.fontFamily}"`;
+          ctx.font = `${el.fontSize}px "${el.fontFamily}", sans-serif`;
           const lines = el.text.split('\n');
           let maxW = 0;
           for (const line of lines) {
@@ -726,7 +726,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
               left: screenX,
               top: screenY,
               fontSize: `${textEl.fontSize * camera.z}px`,
-              fontFamily: `"${textEl.fontFamily}"`,
+              fontFamily: `"${textEl.fontFamily}", sans-serif`,
               color: textEl.color,
               background: 'transparent',
               border: '2px dashed var(--accent-primary)',
