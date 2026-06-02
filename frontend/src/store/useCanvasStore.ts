@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 import { supabase } from '@/lib/supabase';
 import { SupabaseProvider } from '@/lib/yjsSupabaseProvider';
 
-export type Tool = 'select' | 'pen' | 'eraser' | 'line' | 'rect' | 'rounded_rect' | 'ellipse' | 'triangle' | 'right_triangle' | 'diamond' | 'pentagon' | 'hexagon' | 'arrow_right' | 'arrow_left' | 'arrow_up' | 'arrow_down' | 'star_4' | 'star_5' | 'star_6' | 'heart' | 'lightning';
+export type Tool = 'select' | 'pen' | 'text' | 'eraser' | 'line' | 'rect' | 'rounded_rect' | 'ellipse' | 'triangle' | 'right_triangle' | 'diamond' | 'pentagon' | 'hexagon' | 'arrow_right' | 'arrow_left' | 'arrow_up' | 'arrow_down' | 'star_4' | 'star_5' | 'star_6' | 'heart' | 'lightning';
 export type Point = [number, number, number];
 
 export interface StrokeElement {
@@ -25,7 +25,18 @@ export interface ShapeElement {
   isFilled: boolean;
 }
 
-export type CanvasElement = StrokeElement | ShapeElement;
+export interface TextElement {
+  id: string;
+  type: 'text';
+  x: number;
+  y: number;
+  text: string;
+  fontFamily: string;
+  fontSize: number;
+  color: string;
+}
+
+export type CanvasElement = StrokeElement | ShapeElement | TextElement;
 
 interface Camera {
   x: number;
@@ -53,6 +64,7 @@ interface CanvasState {
   currentTool: Tool;
   currentColor: string;
   currentSize: number;
+  currentFontFamily: string;
   isFilled: boolean;
   theme: 'light' | 'dark' | 'system';
   
@@ -60,6 +72,7 @@ interface CanvasState {
   setTool: (tool: Tool) => void;
   setColor: (color: string) => void;
   setSize: (size: number) => void;
+  setFontFamily: (fontFamily: string) => void;
   setIsFilled: (isFilled: boolean) => void;
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
   setCamera: (updater: (prev: Camera) => Camera) => void;
@@ -86,12 +99,14 @@ export const useCanvasStore = create<CanvasState>((set) => {
     currentTool: 'pen',
     currentColor: '#1a1a1a',
     currentSize: 4,
+    currentFontFamily: 'Inter',
     isFilled: false,
     theme: 'system',
 
     setTool: (tool) => set({ currentTool: tool }),
     setColor: (color) => set({ currentColor: color }),
     setSize: (size) => set({ currentSize: size }),
+    setFontFamily: (fontFamily) => set({ currentFontFamily: fontFamily }),
     setIsFilled: (isFilled) => set({ isFilled }),
     setTheme: (theme) => set({ theme }),
     

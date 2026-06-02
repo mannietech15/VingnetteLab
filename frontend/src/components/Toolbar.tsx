@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useCanvasStore, Tool } from '@/store/useCanvasStore';
-import { Pen, MousePointer2, Minus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp, PaintBucket } from 'lucide-react';
+import { Pen, MousePointer2, Minus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp, PaintBucket, Type } from 'lucide-react';
 
 const COLORS = ['#1a1a1a', '#e03131', '#2f9e44', '#1971c2', '#f08c00', '#9c36b5'];
 const SIZES = [2, 4, 8, 12, 16];
+const FONTS = ['Inter', 'Roboto', 'Outfit', 'Playfair Display', 'Caveat', 'Fira Code'];
 const SHAPES = [
   { id: 'line', icon: Minus, label: 'Line' },
   { id: 'rect', icon: Square, label: 'Rectangle' },
@@ -28,7 +29,7 @@ const SHAPES = [
 ] as const;
 
 export default function Toolbar() {
-  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, isFilled, setIsFilled, theme, undo, redo } = useCanvasStore();
+  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, currentFontFamily, setFontFamily, isFilled, setIsFilled, theme, undo, redo } = useCanvasStore();
   const [showShapes, setShowShapes] = useState(false);
   const shapesMenuRef = useRef<HTMLDivElement>(null);
 
@@ -69,7 +70,7 @@ export default function Toolbar() {
       zIndex: 10,
     }}>
       {/* Colors & Sizes Toolbar */}
-      {(currentTool === 'pen' || isShapeTool) && (
+      {(currentTool === 'pen' || isShapeTool || currentTool === 'text') && (
         <div className="glass-panel" style={{ padding: '8px 16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: '8px' }}>
             {COLORS.map(c => (
@@ -89,6 +90,28 @@ export default function Toolbar() {
           </div>
           <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }} />
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            {currentTool === 'text' && (
+              <>
+                <select 
+                  value={currentFontFamily}
+                  onChange={(e) => setFontFamily(e.target.value)}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-primary)',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    fontFamily: currentFontFamily,
+                    outline: 'none',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  {FONTS.map(f => <option key={f} value={f} style={{fontFamily: f, color: '#1a1a1a'}}>{f}</option>)}
+                </select>
+                <div style={{ width: '1px', height: '20px', background: 'var(--border-color)', margin: '0 4px' }} />
+              </>
+            )}
             {isShapeTool && (
               <>
                 <button
@@ -145,6 +168,13 @@ export default function Toolbar() {
           title="Draw"
         >
           <Pen size={20} />
+        </button>
+        <button 
+          className={`icon-btn ${currentTool === 'text' ? 'active' : ''}`}
+          onClick={() => { setTool('text'); setShowShapes(false); }}
+          title="Text"
+        >
+          <Type size={20} />
         </button>
         <button 
           className={`icon-btn ${currentTool === 'eraser' ? 'active' : ''}`}
