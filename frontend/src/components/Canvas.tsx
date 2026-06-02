@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useCanvasStore, StrokeElement, ShapeElement } from '@/store/useCanvasStore';
+import { useCanvasStore, StrokeElement, ShapeElement, TextElement } from '@/store/useCanvasStore';
 import { getStroke } from 'perfect-freehand';
 import { TEMPLATES } from '@/data/templates';
 import TemplatePreview from '@/components/TemplatePreview';
@@ -34,6 +34,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     currentTool, 
     currentColor, 
     currentSize,
+    currentFontFamily,
     isFilled,
     setCamera,
     addElement,
@@ -47,6 +48,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
   const [isPanning, setIsPanning] = useState(false);
   const [currentStrokeId, setCurrentStrokeId] = useState<string | null>(null);
   const [lastPanPoint, setLastPanPoint] = useState<{x: number, y: number} | null>(null);
+  const [editingTextId, setEditingTextId] = useState<string | null>(null);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isDraggingElement, setIsDraggingElement] = useState(false);
@@ -74,6 +76,12 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           if (Math.sqrt(dx * dx + dy * dy) < (el.size * 2) / camera.z + 5) {
             return el;
           }
+        }
+      } else if (el.type === 'text') {
+        const textWidth = el.text.length * el.fontSize * 0.6; // rough estimate
+        const textHeight = el.fontSize * 1.2 * (el.text.split('\n').length);
+        if (x >= el.x && x <= el.x + textWidth && y >= el.y && y <= el.y + textHeight) {
+          return el;
         }
       } else {
         const xMin = Math.min(el.x, el.x + el.width);
@@ -326,6 +334,16 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
         ctx.lineTo(xMin + w*0.5, yMin + h*0.45);
         ctx.closePath();
         if (element.isFilled) ctx.fill(); else ctx.stroke();
+      } else if (element.type === 'text') {
+        if (element.id !== editingTextId) {
+          ctx.font = `${element.fontSize}px "${element.fontFamily}"`;
+          ctx.textBaseline = 'top';
+          ctx.fillStyle = element.color;
+          const lines = element.text.split('\n');
+          lines.forEach((line, i) => {
+            ctx.fillText(line, element.x, element.y + i * element.fontSize * 1.2);
+          });
+        }
       }
     }
 
@@ -350,6 +368,18 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           minY = yMin - el.size;
           w = xMax - xMin + el.size * 2;
           h = yMax - yMin + el.size * 2;
+        } else if (el.type === 'text') {
+          ctx.font = `${el.fontSize}px "${el.fontFamily}"`;
+          const lines = el.text.split('\n');
+          let maxW = 0;
+          for (const line of lines) {
+            const wText = ctx.measureText(line).width;
+            if (wText > maxW) maxW = wText;
+          }
+          minX = el.x;
+          minY = el.y;
+          w = maxW;
+          h = lines.length * el.fontSize * 1.2;
         } else {
           minX = Math.min(el.x, el.x + el.width);
           minY = Math.min(el.y, el.y + el.height);
@@ -426,6 +456,28 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
 
     // if not select, clear selection
     setSelectedId(null);
+
+    if (currentTool === 'text') {
+      const clickedEl = getElementAtPosition(x, y);
+      if (clickedEl && clickedEl.type === 'text') {
+        setEditingTextId(clickedEl.id);
+      } else {
+        const id = Date.now().toString();
+        const newText: TextElement = {
+          id,
+          type: 'text',
+          x,
+          y,
+          text: '',
+          fontFamily: currentFontFamily,
+          fontSize: currentSize * 6, // Base sizes 2,4,8,12,16 => 12,24,48,72,96
+          color: currentColor
+        };
+        addElement(newText);
+        setEditingTextId(id);
+      }
+      return;
+    }
 
     if (currentTool === 'pen') {
       setIsDrawing(true);
@@ -648,9 +700,62 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           inset: 0,
           zIndex: 1,
           touchAction: 'none', // Prevent browser gestures
-          cursor: currentTool === 'select' ? 'grab' : isPanning ? 'grabbing' : 'crosshair'
+          cursor: currentTool === 'select' ? 'grab' : isPanning ? 'grabbing' : currentTool === 'text' ? 'text' : 'crosshair'
         }}
       />
+      {editingTextId && elements.find(el => el.id === editingTextId)?.type === 'text' && (() => {
+        const textEl = elements.find(el => el.id === editingTextId) as TextElement;
+        const screenX = textEl.x * camera.z + camera.x;
+        const screenY = textEl.y * camera.z + camera.y;
+        return (
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) => {
+              const text = e.currentTarget.innerText;
+              if (!text.trim()) removeElement(textEl.id);
+              else updateElement(textEl.id, (el) => ({ ...el, text }));
+              setEditingTextId(null);
+            }}
+            onInput={(e) => {
+              updateElement(textEl.id, (el) => ({ ...el, text: e.currentTarget.innerText }));
+            }}
+            onPointerDown={e => e.stopPropagation()}
+            style={{
+              position: 'absolute',
+              left: screenX,
+              top: screenY,
+              fontSize: `${textEl.fontSize * camera.z}px`,
+              fontFamily: `"${textEl.fontFamily}"`,
+              color: textEl.color,
+              background: 'transparent',
+              border: '2px dashed var(--accent-primary)',
+              borderRadius: '4px',
+              outline: 'none',
+              padding: '0 4px',
+              margin: '0',
+              whiteSpace: 'pre',
+              lineHeight: 1.2,
+              minWidth: '20px',
+              minHeight: `${textEl.fontSize * camera.z * 1.2}px`,
+              zIndex: 10,
+              cursor: 'text'
+            }}
+            ref={(el) => {
+              if (el && document.activeElement !== el) {
+                el.innerText = textEl.text;
+                el.focus();
+                const range = document.createRange();
+                range.selectNodeContents(el);
+                range.collapse(false);
+                const sel = window.getSelection();
+                sel?.removeAllRanges();
+                sel?.addRange(range);
+              }
+            }}
+          />
+        );
+      })()}
     </>
   );
 }
