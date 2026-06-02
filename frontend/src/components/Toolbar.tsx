@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useCanvasStore, Tool } from '@/store/useCanvasStore';
-import { Pen, MousePointer2, Minus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp, PaintBucket, Type } from 'lucide-react';
+import { Pen, MousePointer2, Minus, Plus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp, PaintBucket, Type } from 'lucide-react';
 
 const COLORS = ['#1a1a1a', '#e03131', '#2f9e44', '#1971c2', '#f08c00', '#9c36b5'];
 const SIZES = [2, 4, 8, 12, 16];
@@ -50,7 +50,7 @@ const SHAPES = [
 ] as const;
 
 export default function Toolbar() {
-  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, currentFontFamily, setFontFamily, isFilled, setIsFilled, theme, undo, redo } = useCanvasStore();
+  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, currentFontFamily, setFontFamily, currentFontSize, setFontSize, isFilled, setIsFilled, theme, undo, redo } = useCanvasStore();
   const [showShapes, setShowShapes] = useState(false);
   const shapesMenuRef = useRef<HTMLDivElement>(null);
 
@@ -153,30 +153,101 @@ export default function Toolbar() {
                 <div style={{ width: '1px', height: '20px', background: 'var(--border-color)', margin: '0 4px' }} />
               </>
             )}
-            {SIZES.map(s => (
-              <button
-                key={s}
-                onClick={() => setSize(s)}
-                style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  background: 'transparent',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer'
-                }}
-              >
-                <div style={{
-                  width: `${s}px`,
-                  height: `${s}px`,
-                  borderRadius: '50%',
-                  backgroundColor: currentSize === s ? 'var(--text-primary)' : 'var(--text-secondary)'
-                }} />
-              </button>
-            ))}
+            {currentTool === 'text' ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <button
+                  onClick={() => setFontSize(currentFontSize - 2)}
+                  style={{
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-color)',
+                    background: 'transparent',
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'background 0.15s'
+                  }}
+                  onMouseOver={e => e.currentTarget.style.background = 'var(--bg-hover)'}
+                  onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+                  title="Decrease font size"
+                >
+                  <Minus size={14} />
+                </button>
+                <input
+                  type="number"
+                  value={currentFontSize}
+                  onChange={(e) => setFontSize(parseInt(e.target.value) || 8)}
+                  min={8}
+                  max={200}
+                  style={{
+                    width: '48px',
+                    textAlign: 'center',
+                    background: 'transparent',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-primary)',
+                    borderRadius: '6px',
+                    padding: '4px 2px',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    outline: 'none',
+                    appearance: 'textfield',
+                    MozAppearance: 'textfield' as any
+                  }}
+                />
+                <button
+                  onClick={() => setFontSize(currentFontSize + 2)}
+                  style={{
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-color)',
+                    background: 'transparent',
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'background 0.15s'
+                  }}
+                  onMouseOver={e => e.currentTarget.style.background = 'var(--bg-hover)'}
+                  onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+                  title="Increase font size"
+                >
+                  <Plus size={14} />
+                </button>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', marginLeft: '2px' }}>px</span>
+              </div>
+            ) : (
+              <>
+                {SIZES.map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setSize(s)}
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      background: 'transparent',
+                      border: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <div style={{
+                      width: `${s}px`,
+                      height: `${s}px`,
+                      borderRadius: '50%',
+                      backgroundColor: currentSize === s ? 'var(--text-primary)' : 'var(--text-secondary)'
+                    }} />
+                  </button>
+                ))}
+              </>
+            )}
           </div>
         </div>
       )}

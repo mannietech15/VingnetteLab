@@ -65,6 +65,7 @@ interface CanvasState {
   currentColor: string;
   currentSize: number;
   currentFontFamily: string;
+  currentFontSize: number;
   isFilled: boolean;
   theme: 'light' | 'dark' | 'system';
   
@@ -73,6 +74,7 @@ interface CanvasState {
   setColor: (color: string) => void;
   setSize: (size: number) => void;
   setFontFamily: (fontFamily: string) => void;
+  setFontSize: (fontSize: number) => void;
   setIsFilled: (isFilled: boolean) => void;
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
   setCamera: (updater: (prev: Camera) => Camera) => void;
@@ -100,6 +102,7 @@ export const useCanvasStore = create<CanvasState>((set) => {
     currentColor: '#1a1a1a',
     currentSize: 4,
     currentFontFamily: 'Inter',
+    currentFontSize: 24,
     isFilled: false,
     theme: 'system',
 
@@ -107,6 +110,7 @@ export const useCanvasStore = create<CanvasState>((set) => {
     setColor: (color) => set({ currentColor: color }),
     setSize: (size) => set({ currentSize: size }),
     setFontFamily: (fontFamily) => set({ currentFontFamily: fontFamily }),
+    setFontSize: (fontSize) => set({ currentFontSize: Math.max(8, Math.min(200, fontSize)) }),
     setIsFilled: (isFilled) => set({ isFilled }),
     setTheme: (theme) => set({ theme }),
     
