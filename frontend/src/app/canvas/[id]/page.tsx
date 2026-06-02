@@ -19,6 +19,7 @@ const GET_CANVAS = gql`
 // Dynamic import Canvas to avoid SSR issues with window/canvas API
 const Canvas = dynamic(() => import('@/components/Canvas'), { ssr: false });
 const Toolbar = dynamic(() => import('@/components/Toolbar'), { ssr: false });
+const ZoomControls = dynamic(() => import('@/components/ZoomControls'), { ssr: false });
 
 import { useSearchParams } from 'next/navigation';
 
@@ -92,6 +93,7 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
 
       <Canvas templateId={templateId} />
       <Toolbar />
+      <ZoomControls />
     </main>
   );
 }
