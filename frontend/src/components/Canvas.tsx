@@ -250,17 +250,18 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
         ctx.closePath();
         if (element.isFilled) ctx.fill(); else ctx.stroke();
       } else if (element.type.startsWith('arrow_')) {
-        ctx.strokeStyle = element.color;
-        ctx.fillStyle = element.color;
+        const shape = element as ShapeElement;
+        ctx.strokeStyle = shape.color;
+        ctx.fillStyle = shape.color;
         ctx.lineWidth = 2 / camera.z;
-        const dir = element.type.split('_')[1];
+        const dir = shape.type.split('_')[1];
         ctx.beginPath();
-        const xMin = Math.min(element.x, element.x + element.width);
-        const xMax = Math.max(element.x, element.x + element.width);
-        const yMin = Math.min(element.y, element.y + element.height);
-        const yMax = Math.max(element.y, element.y + element.height);
-        const w = Math.abs(element.width);
-        const h = Math.abs(element.height);
+        const xMin = Math.min(shape.x, shape.x + shape.width);
+        const xMax = Math.max(shape.x, shape.x + shape.width);
+        const yMin = Math.min(shape.y, shape.y + shape.height);
+        const yMax = Math.max(shape.y, shape.y + shape.height);
+        const w = Math.abs(shape.width);
+        const h = Math.abs(shape.height);
 
         if (dir === 'right') {
           ctx.moveTo(xMin, yMin + h*0.25); ctx.lineTo(xMin + w*0.5, yMin + h*0.25); ctx.lineTo(xMin + w*0.5, yMin);
@@ -280,16 +281,17 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           ctx.lineTo(xMax - w*0.25, yMin);
         }
         ctx.closePath();
-        if (element.isFilled) ctx.fill(); else ctx.stroke();
+        if (shape.isFilled) ctx.fill(); else ctx.stroke();
       } else if (element.type.startsWith('star_')) {
-        ctx.strokeStyle = element.color;
-        ctx.fillStyle = element.color;
+        const shape = element as ShapeElement;
+        ctx.strokeStyle = shape.color;
+        ctx.fillStyle = shape.color;
         ctx.lineWidth = 2 / camera.z;
-        const points = parseInt(element.type.split('_')[1] || '5');
+        const points = parseInt(shape.type.split('_')[1] || '5');
         ctx.beginPath();
-        const cx = element.x + element.width / 2;
-        const cy = element.y + element.height / 2;
-        const outerRadius = Math.min(Math.abs(element.width), Math.abs(element.height)) / 2;
+        const cx = shape.x + shape.width / 2;
+        const cy = shape.y + shape.height / 2;
+        const outerRadius = Math.min(Math.abs(shape.width), Math.abs(shape.height)) / 2;
         const innerRadius = points === 4 ? outerRadius * 0.3 : (points === 5 ? outerRadius * 0.5 : outerRadius * 0.6);
         for (let i = 0; i < points * 2; i++) {
           const radius = i % 2 === 0 ? outerRadius : innerRadius;
@@ -299,7 +301,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
         }
         ctx.closePath();
-        if (element.isFilled) ctx.fill(); else ctx.stroke();
+        if (shape.isFilled) ctx.fill(); else ctx.stroke();
       } else if (element.type === 'heart') {
         ctx.strokeStyle = element.color;
         ctx.fillStyle = element.color;
@@ -591,14 +593,15 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           }
         }
       } else if (SHAPE_TOOLS.includes(el.type)) {
+        const shape = el as ShapeElement;
         // Basic bounding box check for shapes
-        const xMin = Math.min(el.x, el.x + el.width);
-        const xMax = Math.max(el.x, el.x + el.width);
-        const yMin = Math.min(el.y, el.y + el.height);
-        const yMax = Math.max(el.y, el.y + el.height);
+        const xMin = Math.min(shape.x, shape.x + shape.width);
+        const xMax = Math.max(shape.x, shape.x + shape.width);
+        const yMin = Math.min(shape.y, shape.y + shape.height);
+        const yMax = Math.max(shape.y, shape.y + shape.height);
         
         if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
-          removeElement(el.id);
+          removeElement(shape.id);
         }
       }
     }

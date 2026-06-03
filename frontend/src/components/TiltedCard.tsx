@@ -134,7 +134,7 @@ export default function TiltedCard({
               height: '100%'
             }}
           >
-            {imageSrc}
+            <>{imageSrc}</>
           </motion.div>
         )}
 
