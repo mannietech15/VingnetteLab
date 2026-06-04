@@ -7,6 +7,7 @@ import { Sparkles, ArrowRight, Layers, Cpu, Zap, Shield, Globe, Star, Check } fr
 import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import Landing3D from '@/components/Landing3D';
+import Particles from '@/components/Particles';
 
 const FEATURES = [
   { icon: Layers, color: '#6366f1', title: 'Infinite Canvas', desc: 'An endlessly scalable workspace. Pan, zoom, draw, and think without limits.' },
@@ -71,6 +72,18 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.6 }}>
+          <Particles
+            particleColors={['#6366f1', '#8b5cf6', '#ec4899']}
+            particleCount={250}
+            particleSpread={12}
+            speed={0.1}
+            particleBaseSize={80}
+            moveParticlesOnHover={true}
+            alphaParticles={true}
+            disableRotation={false}
+          />
+        </div>
         <Landing3D />
         
         <motion.div style={{ position: 'relative', zIndex: 10, textAlign: 'center', maxWidth: '800px', padding: '0 20px', y, opacity }}
