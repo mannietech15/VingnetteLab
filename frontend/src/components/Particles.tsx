@@ -250,7 +250,7 @@ const Particles: React.FC<ParticlesProps> = ({
     pixelRatio
   ]);
 
-  return <div ref={containerRef} className={`relative w-full h-full ${className}`} />;
+  return <div ref={containerRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} className={className} />;
 };
 
 export default Particles;

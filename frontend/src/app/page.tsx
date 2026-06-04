@@ -72,7 +72,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.6 }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 1 }}>
           <Particles
             particleColors={['#6366f1', '#8b5cf6', '#ec4899']}
             particleCount={250}
