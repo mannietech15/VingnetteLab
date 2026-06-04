@@ -116,7 +116,7 @@ export default function LandingPage() {
         
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <SmartLoginButton href="/login" />
-          <SmartGetStartedButton href="/home" text="Get Started" size="sm" />
+          <SmartGetStartedButton href="/register" text="Get Started" size="sm" />
         </div>
       </nav>
       </div>
@@ -150,7 +150,7 @@ export default function LandingPage() {
           </p>
           
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-            <SmartGetStartedButton href="/home" text="Start for free" size="md" />
+            <SmartGetStartedButton href="/register" text="Start for free" size="md" />
           </div>
         </motion.div>
       </section>
@@ -317,7 +317,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10 }}>
           <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '24px' }}>Ready to transform your workflow?</h2>
           <p style={{ fontSize: '1.25rem', color: '#a1a1aa', marginBottom: '40px' }}>Join ambitious teams using VignetteLab to build the future.</p>
-          <SmartGetStartedButton href="/home" text="Start your free workspace" size="lg" />
+          <SmartGetStartedButton href="/register" text="Start your free workspace" size="lg" />
         </div>
       </section>
 

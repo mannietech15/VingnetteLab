@@ -39,7 +39,7 @@ export const MagneticWrapper = ({ children, className = '', disabled = false }: 
 };
 
 export const SmartGetStartedButton = ({ 
-  href = '/home', 
+  href = '/register', 
   text = 'Get Started', 
   size = 'md' 
 }: { 
