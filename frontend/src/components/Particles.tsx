@@ -56,7 +56,8 @@ const vertex = /* glsl */ `
     vColor = color;
     
     vec3 pos = position * uSpread;
-    pos.z *= 10.0;
+    pos.z *= 2.0; // Reduce depth multiplier so they don't clip behind camera
+    pos.z -= 10.0; // Push them slightly back
     
     vec4 mPos = modelMatrix * vec4(pos, 1.0);
     float t = uTime;

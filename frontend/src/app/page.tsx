@@ -75,10 +75,10 @@ export default function LandingPage() {
         <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 1 }}>
           <Particles
             particleColors={['#6366f1', '#8b5cf6', '#ec4899']}
-            particleCount={250}
-            particleSpread={12}
-            speed={0.1}
-            particleBaseSize={80}
+            particleCount={500}
+            particleSpread={25}
+            speed={0.05}
+            particleBaseSize={60}
             moveParticlesOnHover={true}
             alphaParticles={true}
             disableRotation={false}
