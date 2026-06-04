@@ -8,6 +8,7 @@ import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import Landing3D from '@/components/Landing3D';
 import Particles from '@/components/Particles';
+import BlurText from '@/components/BlurText';
 
 const FEATURES = [
   { icon: Layers, color: '#6366f1', title: 'Infinite Canvas', desc: 'An endlessly scalable workspace. Pan, zoom, draw, and think without limits.' },
@@ -92,12 +93,14 @@ export default function LandingPage() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '6px 16px', borderRadius: '100px', fontSize: '13px', fontWeight: 500, color: '#a1a1aa', marginBottom: '32px' }}>
-            <Sparkles size={14} color="#a855f7" /> Introducing Vignette AI
+            <Sparkles size={14} color="#a855f7" /> <BlurText text="Introducing Vignette AI" delay={50} animateBy="words" />
           </div>
           
-          <h1 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '24px' }}>
-            Design at the speed of <br />
-            <span style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>thought.</span>
+          <h1 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <BlurText text="Design at the speed of" delay={150} animateBy="words" />
+            <span style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', padding: '0 10px' }}>
+              <BlurText text="thought." delay={100} animateBy="letters" />
+            </span>
           </h1>
           
           <p style={{ fontSize: '1.25rem', color: '#a1a1aa', lineHeight: 1.6, marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
