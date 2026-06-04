@@ -129,30 +129,66 @@ export default function LandingPage() {
       <section id="features" style={{ padding: '120px 40px', position: 'relative', zIndex: 10, background: '#09090b' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-            <h2 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px' }}>Everything you need</h2>
-            <p style={{ fontSize: '1.25rem', color: '#a1a1aa', maxWidth: '600px', margin: '0 auto' }}>A thoughtfully crafted toolset that gets out of your way and lets you focus on the work that matters.</p>
+            <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px', fontFamily: "'Outfit', sans-serif" }}>Intelligent by design</h2>
+            <p style={{ fontSize: '1.25rem', color: '#a1a1aa', maxWidth: '600px', margin: '0 auto' }}>A meticulously engineered workspace that anticipates your needs, so you can focus entirely on your creative flow.</p>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
-            {FEATURES.map((f, i) => (
-              <motion.div key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                style={{
-                  background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
-                  padding: '40px 32px', borderRadius: '24px', position: 'relative', overflow: 'hidden'
-                }}
-                whileHover={{ y: -8, borderColor: f.color }}
-              >
-                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: `${f.color}22`, color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
-                  <f.icon size={24} />
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '12px' }}>{f.title}</h3>
-                <p style={{ color: '#a1a1aa', lineHeight: 1.6 }}>{f.desc}</p>
-              </motion.div>
-            ))}
+          {/* Bento Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '24px', autoRows: 'minmax(320px, auto)' }}>
+            {FEATURES.map((f, i) => {
+              // Calculate bento box spanning
+              let colSpan = 'span 2';
+              if (i === 0) colSpan = 'span 4'; // Top left large
+              else if (i === 1) colSpan = 'span 2'; // Top right small
+              else if (i === 2) colSpan = 'span 2'; // Middle left small
+              else if (i === 3) colSpan = 'span 4'; // Middle right large
+              else if (i === 4) colSpan = 'span 3'; // Bottom left half
+              else if (i === 5) colSpan = 'span 3'; // Bottom right half
+              
+              return (
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    gridColumn: colSpan,
+                    background: 'linear-gradient(180deg, rgba(24,24,27,0.6) 0%, rgba(9,9,11,0.8) 100%)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: '28px', position: 'relative', overflow: 'hidden',
+                    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05), 0 4px 20px rgba(0,0,0,0.5)',
+                    display: 'flex', flexDirection: 'column'
+                  }}
+                  whileHover={{ y: -4, borderColor: `${f.color}66`, boxShadow: `0 15px 40px -10px ${f.color}44, inset 0 1px 1px rgba(255,255,255,0.1)` }}
+                >
+                  {/* Ambient Background Glow inside the card */}
+                  <div style={{ 
+                    position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none',
+                    background: `radial-gradient(circle at ${i % 2 === 0 ? 'top right' : 'bottom left'}, ${f.color}15 0%, transparent 60%)`,
+                    opacity: 0.8
+                  }} />
+                  
+                  {/* Glassmorphic Icon Box */}
+                  <div style={{ padding: '40px', flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
+                    <div style={{ 
+                      width: '56px', height: '56px', borderRadius: '16px', 
+                      background: `linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0))`, 
+                      backdropFilter: 'blur(10px)',
+                      color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                      marginBottom: 'auto', border: `1px solid rgba(255,255,255,0.1)`, 
+                      boxShadow: `inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.2)` 
+                    }}>
+                      <f.icon size={26} />
+                    </div>
+                    
+                    <div style={{ marginTop: '60px' }}>
+                      <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '12px', color: '#fff', fontFamily: "'Outfit', sans-serif" }}>{f.title}</h3>
+                      <p style={{ color: '#a1a1aa', lineHeight: 1.6, fontSize: '1.1rem' }}>{f.desc}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </section>
