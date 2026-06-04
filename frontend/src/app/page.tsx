@@ -96,8 +96,8 @@ export default function LandingPage() {
             <Sparkles size={14} color="#a855f7" /> <BlurText text="Introducing Vignette AI" delay={50} animateBy="words" />
           </div>
           
-          <h1 style={{ fontSize: 'clamp(3.5rem, 7vw, 6.5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: "'Outfit', sans-serif" }}>
-            <BlurText text="Design at the speed of" delay={150} animateBy="words" />
+          <h1 style={{ textAlign: 'center', fontSize: 'clamp(3.5rem, 7vw, 6.5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: "'Outfit', sans-serif" }}>
+            <BlurText text="Design at the speed of thoughts" delay={150} animateBy="words" />
             <BlurText 
               text="thoughts." 
               delay={100} 
