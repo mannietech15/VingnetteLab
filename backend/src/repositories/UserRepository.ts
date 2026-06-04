@@ -1,14 +1,25 @@
-import { JsonDatabase } from '../infrastructure/JsonDatabase';
+import { prisma } from '../infrastructure/prismaClient';
 import { User } from '../domain/types';
 
 export class UserRepository {
-  private db = JsonDatabase.getInstance();
-
-  public findById(id: string): User | undefined {
-    return this.db.getData().users.find((u) => u.id === id);
+  public async findById(id: string): Promise<User | undefined> {
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) return undefined;
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name || undefined,
+      avatarUrl: user.avatarUrl || undefined,
+    };
   }
 
-  public findAll(): User[] {
-    return this.db.getData().users;
+  public async findAll(): Promise<User[]> {
+    const users = await prisma.user.findMany();
+    return users.map(user => ({
+      id: user.id,
+      email: user.email,
+      name: user.name || undefined,
+      avatarUrl: user.avatarUrl || undefined,
+    }));
   }
 }

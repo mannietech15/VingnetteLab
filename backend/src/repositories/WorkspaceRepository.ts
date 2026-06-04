@@ -1,52 +1,122 @@
-import { JsonDatabase } from '../infrastructure/JsonDatabase';
+import { prisma } from '../infrastructure/prismaClient';
 import { Workspace, CanvasMetadata } from '../domain/types';
 
 export class WorkspaceRepository {
-  private db = JsonDatabase.getInstance();
-
-  public findAll(): Workspace[] {
-    return this.db.getData().workspaces;
+  public async findAll(): Promise<Workspace[]> {
+    const workspaces = await prisma.workspace.findMany({
+      include: { canvases: true }
+    });
+    return workspaces.map(w => ({
+      id: w.id,
+      name: w.name,
+      createdAt: w.createdAt.toISOString(),
+      updatedAt: w.updatedAt.toISOString(),
+      ownerId: w.ownerId,
+      canvases: w.canvases.map(c => ({
+        id: c.id,
+        title: c.title,
+        workspaceId: c.workspaceId,
+        createdAt: c.createdAt.toISOString(),
+        updatedAt: c.updatedAt.toISOString(),
+        thumbnailUrl: c.thumbnailUrl || undefined,
+      }))
+    }));
   }
 
-  public findById(id: string): Workspace | undefined {
-    return this.db.getData().workspaces.find((w) => w.id === id);
-  }
-
-  public create(workspace: Workspace): Workspace {
-    this.db.getData().workspaces.push(workspace);
-    this.db.saveData();
-    return workspace;
-  }
-
-  public createCanvas(workspaceId: string, canvas: CanvasMetadata): CanvasMetadata | null {
-    const workspace = this.findById(workspaceId);
-    if (!workspace) return null;
+  public async findById(id: string): Promise<Workspace | undefined> {
+    const workspace = await prisma.workspace.findUnique({
+      where: { id },
+      include: { canvases: true }
+    });
+    if (!workspace) return undefined;
     
-    workspace.canvases.push(canvas);
-    this.db.saveData();
-    return canvas;
+    return {
+      id: workspace.id,
+      name: workspace.name,
+      createdAt: workspace.createdAt.toISOString(),
+      updatedAt: workspace.updatedAt.toISOString(),
+      ownerId: workspace.ownerId,
+      canvases: workspace.canvases.map(c => ({
+        id: c.id,
+        title: c.title,
+        workspaceId: c.workspaceId,
+        createdAt: c.createdAt.toISOString(),
+        updatedAt: c.updatedAt.toISOString(),
+        thumbnailUrl: c.thumbnailUrl || undefined,
+      }))
+    };
   }
 
-  public findCanvasById(canvasId: string): CanvasMetadata | null {
-    const workspaces = this.db.getData().workspaces;
-    for (const w of workspaces) {
-      const canvas = w.canvases.find(c => c.id === canvasId);
-      if (canvas) return canvas;
-    }
-    return null;
+  public async create(workspace: Omit<Workspace, 'canvases'>): Promise<Workspace> {
+    const created = await prisma.workspace.create({
+      data: {
+        id: workspace.id,
+        name: workspace.name,
+        createdAt: new Date(workspace.createdAt),
+        updatedAt: new Date(workspace.updatedAt),
+        ownerId: workspace.ownerId,
+      },
+      include: { canvases: true }
+    });
+    return {
+      id: created.id,
+      name: created.name,
+      createdAt: created.createdAt.toISOString(),
+      updatedAt: created.updatedAt.toISOString(),
+      ownerId: created.ownerId,
+      canvases: []
+    };
   }
 
-  public updateCanvasThumbnail(canvasId: string, thumbnailUrl: string): CanvasMetadata | null {
-    const workspaces = this.db.getData().workspaces;
-    for (const w of workspaces) {
-      const canvas = w.canvases.find(c => c.id === canvasId);
-      if (canvas) {
-        canvas.thumbnailUrl = thumbnailUrl;
-        canvas.updatedAt = new Date().toISOString();
-        this.db.saveData();
-        return canvas;
+  public async createCanvas(workspaceId: string, canvas: CanvasMetadata): Promise<CanvasMetadata | null> {
+    const created = await prisma.canvasMetadata.create({
+      data: {
+        id: canvas.id,
+        title: canvas.title,
+        workspaceId: workspaceId,
+        createdAt: new Date(canvas.createdAt),
+        updatedAt: new Date(canvas.updatedAt),
+        thumbnailUrl: canvas.thumbnailUrl || null,
       }
-    }
-    return null;
+    });
+    return {
+      id: created.id,
+      title: created.title,
+      workspaceId: created.workspaceId,
+      createdAt: created.createdAt.toISOString(),
+      updatedAt: created.updatedAt.toISOString(),
+      thumbnailUrl: created.thumbnailUrl || undefined,
+    };
+  }
+
+  public async findCanvasById(canvasId: string): Promise<CanvasMetadata | null> {
+    const canvas = await prisma.canvasMetadata.findUnique({
+      where: { id: canvasId }
+    });
+    if (!canvas) return null;
+    return {
+      id: canvas.id,
+      title: canvas.title,
+      workspaceId: canvas.workspaceId,
+      createdAt: canvas.createdAt.toISOString(),
+      updatedAt: canvas.updatedAt.toISOString(),
+      thumbnailUrl: canvas.thumbnailUrl || undefined,
+    };
+  }
+
+  public async updateCanvasThumbnail(canvasId: string, thumbnailUrl: string): Promise<CanvasMetadata | null> {
+    const updated = await prisma.canvasMetadata.update({
+      where: { id: canvasId },
+      data: { thumbnailUrl }
+    });
+    if (!updated) return null;
+    return {
+      id: updated.id,
+      title: updated.title,
+      workspaceId: updated.workspaceId,
+      createdAt: updated.createdAt.toISOString(),
+      updatedAt: updated.updatedAt.toISOString(),
+      thumbnailUrl: updated.thumbnailUrl || undefined,
+    };
   }
 }

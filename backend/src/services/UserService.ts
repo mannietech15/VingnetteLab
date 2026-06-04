@@ -4,7 +4,7 @@ import { User } from '../domain/types';
 export class UserService {
   private repository = new UserRepository();
 
-  public getUserById(id: string): User | undefined {
+  public async getUserById(id: string): Promise<User | undefined> {
     return this.repository.findById(id);
   }
 }
