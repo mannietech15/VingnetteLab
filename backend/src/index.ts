@@ -4,7 +4,6 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import { json } from 'body-parser';
 import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
 
@@ -31,10 +30,11 @@ async function startApolloServer() {
 
   await server.start();
 
+  app.use(cors<cors.CorsRequest>());
+  app.use(express.json());
+
   app.use(
     '/graphql',
-    cors<cors.CorsRequest>(),
-    json(),
     // @ts-ignore - Bypass type conflict between Apollo and Express versions
     expressMiddleware(server, {
       context: async ({ req }) => ({ token: req.headers.token }),
