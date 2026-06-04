@@ -195,6 +195,93 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Graph / Social Proof Section */}
+      <section style={{ padding: '120px 40px', position: 'relative', zIndex: 10, background: 'transparent' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px', fontFamily: "'Outfit', sans-serif" }}>Built for global scale</h2>
+          <p style={{ fontSize: '1.25rem', color: '#a1a1aa', marginBottom: '60px' }}>Join thousands of teams already designing at the speed of thought.</p>
+          
+          <div style={{
+            background: 'linear-gradient(180deg, rgba(24,24,27,0.4) 0%, rgba(9,9,11,0.6) 100%)',
+            border: '1px solid rgba(255,255,255,0.06)', borderRadius: '24px', padding: '40px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            {/* Stats Row */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '40px', textAlign: 'left', flexWrap: 'wrap', gap: '20px' }}>
+              <div>
+                <div style={{ color: '#a1a1aa', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Active Users</div>
+                <div style={{ fontSize: '3rem', fontWeight: 700, color: '#fff', fontFamily: "'Outfit', sans-serif" }}>124,500+</div>
+              </div>
+              <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
+                <div>
+                  <div style={{ color: '#a1a1aa', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Canvases Created</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 600, color: '#fff', fontFamily: "'Outfit', sans-serif" }}>2.4M</div>
+                </div>
+                <div>
+                  <div style={{ color: '#a1a1aa', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Uptime</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 600, color: '#10b981', fontFamily: "'Outfit', sans-serif" }}>99.99%</div>
+                </div>
+              </div>
+            </div>
+
+            {/* SVG Graph */}
+            <div style={{ height: '240px', width: '100%', position: 'relative' }}>
+              <svg width="100%" height="100%" viewBox="0 0 1000 240" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+                <defs>
+                  <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#6366f1" />
+                    <stop offset="50%" stopColor="#8b5cf6" />
+                    <stop offset="100%" stopColor="#ec4899" />
+                  </linearGradient>
+                  <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#ec4899" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                
+                {/* Grid lines */}
+                <path d="M 0 60 L 1000 60 M 0 120 L 1000 120 M 0 180 L 1000 180" stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 4" />
+                
+                {/* Fill Area */}
+                <motion.path 
+                  d="M 0 240 L 0 200 C 150 190, 300 180, 450 150 C 600 120, 650 140, 750 80 C 850 20, 950 40, 1000 20 L 1000 240 Z"
+                  fill="url(#fillGrad)"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.8 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                />
+
+                {/* Animated Line */}
+                <motion.path 
+                  d="M 0 200 C 150 190, 300 180, 450 150 C 600 120, 650 140, 750 80 C 850 20, 950 40, 1000 20"
+                  fill="none"
+                  stroke="url(#lineGrad)"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  initial={{ pathLength: 0 }}
+                  whileInView={{ pathLength: 1 }}
+                  transition={{ duration: 2, ease: "easeOut", delay: 0.2 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                />
+                
+                {/* Glowing dot at end */}
+                <motion.circle 
+                  cx="1000" cy="20" r="6" 
+                  fill="#ec4899" 
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 2.2, type: 'spring' }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  style={{ filter: 'drop-shadow(0 0 12px #ec4899)' }}
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section style={{ padding: '120px 40px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '1000px', background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(9,9,11,0) 70%)', pointerEvents: 'none' }} />
