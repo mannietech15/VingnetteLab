@@ -1,335 +1,189 @@
 'use client';
 
-import { gql } from '@apollo/client';
-import { useQuery, useMutation } from '@apollo/client/react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
-import { Plus, Folder, FileText, ArrowRight, Sparkles, LayoutTemplate, Settings, Clock, Users } from 'lucide-react';
-import TemplatePreview from '@/components/TemplatePreview';
-import TiltedCard from '@/components/TiltedCard';
+import { motion, useScroll, useTransform } from 'motion/react';
+import { Sparkles, ArrowRight, Layers, Cpu, Zap, Shield, Globe, Star, Check } from 'lucide-react';
+import Image from 'next/image';
+import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
+import Landing3D from '@/components/Landing3D';
 
-const GET_WORKSPACES = gql`
-  query GetWorkspaces {
-    workspaces {
-      id
-      name
-      canvases {
-        id
-        title
-        updatedAt
-      }
-    }
-  }
-`;
+const FEATURES = [
+  { icon: Layers, color: '#6366f1', title: 'Infinite Canvas', desc: 'An endlessly scalable workspace. Pan, zoom, draw, and think without limits.' },
+  { icon: Cpu, color: '#8b5cf6', title: 'AI-Powered Layouts', desc: 'Let Vignette AI organize your chaos into structured, beautiful diagrams instantly.' },
+  { icon: Zap, color: '#f59e0b', title: 'Real-time Sync', desc: 'CRDT-powered collaboration. Multiple cursors, zero conflicts.' },
+  { icon: Shield, color: '#10b981', title: 'Enterprise Security', desc: 'SOC 2 compliant. Your data, encrypted end-to-end.' },
+  { icon: Globe, color: '#3b82f6', title: 'Works Everywhere', desc: 'Browser, desktop, tablet. Syncs seamlessly across all devices.' },
+  { icon: Star, color: '#ec4899', title: 'Smart Templates', desc: 'Jump-start any project with 50+ professionally designed canvas templates.' },
+];
 
-const CREATE_WORKSPACE = gql`
-  mutation CreateWorkspace($name: String!) {
-    createWorkspace(name: $name) {
-      id
-      name
-      canvases {
-        id
-      }
-    }
-  }
-`;
+export default function LandingPage() {
+  const [scrolled, setScrolled] = useState(false);
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
-const CREATE_CANVAS = gql`
-  mutation CreateCanvas($workspaceId: ID!, $title: String!) {
-    createCanvas(workspaceId: $workspaceId, title: $title) {
-      id
-      title
-      workspaceId
-    }
-  }
-`;
-
-// Helper to dynamically assign beautiful patterns and colors to user-created canvases
-const PATTERNS = ['cards_grid', 'sticky_notes', 'timeline_h', 'hierarchy', 'flowchart', 'venn', 'columns_4', 'process_arrows'];
-const COLORS = ['#4361ee', '#e03131', '#2f9e44', '#f59e0b', '#9c36b5', '#14b8a6', '#0ea5e9', '#ec4899'];
-
-function getVisuals(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  return {
-    pattern: PATTERNS[Math.abs(hash) % PATTERNS.length] as any,
-    color: COLORS[Math.abs(hash) % COLORS.length]
-  };
-}
-
-export default function Dashboard() {
-  const { data, loading, error, refetch } = useQuery(GET_WORKSPACES);
-  const [createWorkspace] = useMutation(CREATE_WORKSPACE);
-  const [createCanvas] = useMutation(CREATE_CANVAS);
-  const [newWsName, setNewWsName] = useState('');
-  const [isCreating, setIsCreating] = useState(false);
-
-  if (loading) return (
-    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '3px solid var(--border-color)', borderTopColor: 'var(--accent-primary)', animation: 'spin 1s linear infinite' }} />
-      <p style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Loading Command Center...</p>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
-  );
-
-  if (error) return (
-    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)' }}>
-      <div style={{ padding: '32px', background: 'var(--bg-secondary)', borderRadius: '16px', border: '1px solid #ef4444', color: '#ef4444', textAlign: 'center' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}>Connection Error</h3>
-        <p>{error.message}</p>
-      </div>
-    </div>
-  );
-
-  const handleCreateWorkspace = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newWsName.trim()) return;
-    setIsCreating(true);
-    await createWorkspace({ variables: { name: newWsName } });
-    setNewWsName('');
-    setIsCreating(false);
-    refetch();
-  };
-
-  const handleCreateCanvas = async (workspaceId: string) => {
-    const title = prompt('Enter canvas title:');
-    if (!title) return;
-    await createCanvas({ variables: { workspaceId, title } });
-    refetch();
-  };
-
-  const workspaces: any[] = (data as any)?.workspaces || [];
-  const totalCanvases = workspaces.reduce((acc: number, ws: any) => acc + (ws.canvases?.length || 0), 0);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
-      {/* Hero Banner */}
-      <div style={{ padding: '32px 48px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
-        
-        {/* Animated Infinite Canvas Dot Grid */}
-        <div style={{
-          position: 'absolute',
-          inset: '-100%',
-          opacity: 0.15,
-          pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(circle at 2px 2px, var(--accent-primary) 2px, transparent 0)',
-          backgroundSize: '48px 48px',
-          animation: 'pan-canvas 40s linear infinite',
-          zIndex: 0
-        }} />
-        <style>{`
-          @keyframes pan-canvas {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-48px, -48px); }
-          }
-          @keyframes float-shape-1 {
-            0% { transform: translateY(0) rotate(-5deg) scale(1); }
-            50% { transform: translateY(-25px) rotate(5deg) scale(1.05); }
-            100% { transform: translateY(0) rotate(-5deg) scale(1); }
-          }
-          @keyframes float-shape-2 {
-            0% { transform: translateY(0) translateX(0) rotate(10deg); }
-            50% { transform: translateY(20px) translateX(15px) rotate(-5deg); }
-            100% { transform: translateY(0) translateX(0) rotate(10deg); }
-          }
-          @keyframes pulse-glow {
-            0% { opacity: 0.15; filter: blur(40px); transform: scale(1); }
-            50% { opacity: 0.3; filter: blur(50px); transform: scale(1.2); }
-            100% { opacity: 0.15; filter: blur(40px); transform: scale(1); }
-          }
-        `}</style>
-
-        {/* Ambient Glowing Orbs */}
-        <div style={{ position: 'absolute', right: '10%', top: '-20%', width: '400px', height: '400px', background: 'var(--accent-primary)', borderRadius: '50%', animation: 'pulse-glow 12s ease-in-out infinite', pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ position: 'absolute', left: '-5%', bottom: '-50%', width: '300px', height: '300px', background: '#10b981', borderRadius: '50%', animation: 'pulse-glow 15s ease-in-out infinite', pointerEvents: 'none', zIndex: 0 }} />
-
-        {/* Floating Glassmorphic "Canvas Elements" */}
-        <div style={{ position: 'absolute', right: '15%', top: '25%', width: '120px', height: '80px', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', animation: 'float-shape-1 14s ease-in-out infinite', pointerEvents: 'none', zIndex: 0, boxShadow: 'var(--shadow-md)' }} />
-        <div style={{ position: 'absolute', right: '5%', bottom: '-10%', width: '160px', height: '110px', background: 'var(--accent-light)', opacity: 0.3, backdropFilter: 'blur(8px)', border: '1px solid var(--accent-primary)', borderRadius: '16px', animation: 'float-shape-2 18s ease-in-out infinite', pointerEvents: 'none', zIndex: 0, boxShadow: 'var(--shadow-sm)' }} />
-
-        <div style={{ position: 'absolute', right: '2%', top: '-15%', opacity: 0.05, transform: 'rotate(15deg)', pointerEvents: 'none', zIndex: 0 }}>
-          <LayoutTemplate size={280} />
+    <div style={{ background: '#09090b', color: '#fafafa', minHeight: '100vh', fontFamily: 'var(--font-inter), sans-serif', overflowX: 'hidden' }}>
+      
+      {/* Navbar */}
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+        padding: '16px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        background: scrolled ? 'rgba(9, 9, 11, 0.7)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(16px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : '1px solid transparent',
+        transition: 'all 0.3s ease'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Image src={vignetteLogo} alt="VignetteLab Logo" width={32} height={32} style={{ borderRadius: '8px' }} />
+          <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em' }}>VignetteLab</span>
         </div>
         
-        <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, marginBottom: '12px', boxShadow: 'var(--shadow-sm)' }}>
-            <Sparkles size={14} style={{ color: 'var(--accent-primary)' }} /> Welcome to VignetteLab
-          </span>
-          <h1 style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px', margin: '0 0 12px' }}>
-            Home
+        <div style={{ display: 'flex', gap: '32px', fontSize: '14px', fontWeight: 500, color: '#a1a1aa' }}>
+          <a href="#features" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = '#fff'} onMouseOut={e => e.currentTarget.style.color = '#a1a1aa'}>Features</a>
+          <a href="#pricing" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = '#fff'} onMouseOut={e => e.currentTarget.style.color = '#a1a1aa'}>Pricing</a>
+        </div>
+        
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <Link href="/login" style={{ color: '#fafafa', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Log In</Link>
+          <Link href="/home" style={{
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+            color: '#fff', padding: '10px 20px', borderRadius: '100px', fontSize: '14px', fontWeight: 600,
+            textDecoration: 'none', boxShadow: '0 4px 14px 0 rgba(99, 102, 241, 0.39)',
+            transition: 'transform 0.2s', display: 'inline-flex', alignItems: 'center', gap: '8px'
+          }}
+          onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
+          onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            Get Started <ArrowRight size={16} />
+          </Link>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', overflow: 'hidden' }}>
+        <Landing3D />
+        
+        <motion.div style={{ position: 'relative', zIndex: 10, textAlign: 'center', maxWidth: '800px', padding: '0 20px', y, opacity }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '6px 16px', borderRadius: '100px', fontSize: '13px', fontWeight: 500, color: '#a1a1aa', marginBottom: '32px' }}>
+            <Sparkles size={14} color="#a855f7" /> Introducing Vignette AI
+          </div>
+          
+          <h1 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '24px' }}>
+            Design at the speed of <br />
+            <span style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>thought.</span>
           </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '14px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: 'var(--accent-primary)' }}>
-                <Folder size={16} />
-              </div>
-              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{workspaces.length}</span> Workspaces
+          
+          <p style={{ fontSize: '1.25rem', color: '#a1a1aa', lineHeight: 1.6, marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
+            The infinite canvas workspace that teams love. Draw, diagram, collaborate, and let AI transform your ideas into polished outputs — all in one place.
+          </p>
+          
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+            <Link href="/home" style={{
+              background: '#fafafa', color: '#09090b', padding: '16px 32px', borderRadius: '100px', fontSize: '16px', fontWeight: 600,
+              textDecoration: 'none', transition: 'transform 0.2s', display: 'inline-flex', alignItems: 'center', gap: '8px'
+            }}
+            onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
+            onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              Start for free <ArrowRight size={18} />
+            </Link>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Features */}
+      <section id="features" style={{ padding: '120px 40px', position: 'relative', zIndex: 10, background: '#09090b' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '80px' }}>
+            <h2 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px' }}>Everything you need</h2>
+            <p style={{ fontSize: '1.25rem', color: '#a1a1aa', maxWidth: '600px', margin: '0 auto' }}>A thoughtfully crafted toolset that gets out of your way and lets you focus on the work that matters.</p>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+            {FEATURES.map((f, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                style={{
+                  background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
+                  padding: '40px 32px', borderRadius: '24px', position: 'relative', overflow: 'hidden'
+                }}
+                whileHover={{ y: -8, borderColor: f.color }}
+              >
+                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: `${f.color}22`, color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+                  <f.icon size={24} />
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '12px' }}>{f.title}</h3>
+                <p style={{ color: '#a1a1aa', lineHeight: 1.6 }}>{f.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section style={{ padding: '120px 40px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '1000px', background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(9,9,11,0) 70%)', pointerEvents: 'none' }} />
+        
+        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10 }}>
+          <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '24px' }}>Ready to transform your workflow?</h2>
+          <p style={{ fontSize: '1.25rem', color: '#a1a1aa', marginBottom: '40px' }}>Join ambitious teams using VignetteLab to build the future.</p>
+          <Link href="/home" style={{
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+            color: '#fff', padding: '18px 40px', borderRadius: '100px', fontSize: '18px', fontWeight: 600,
+            textDecoration: 'none', boxShadow: '0 8px 30px rgba(99, 102, 241, 0.4)',
+            transition: 'transform 0.2s', display: 'inline-block'
+          }}
+          onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
+          onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            Start your free workspace
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '60px 40px 40px', background: '#09090b' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '40px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              <Image src={vignetteLogo} alt="Logo" width={24} height={24} style={{ borderRadius: '6px' }} />
+              <span style={{ fontSize: '18px', fontWeight: 700 }}>VignetteLab</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '14px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', color: '#10b981' }}>
-                <FileText size={16} />
-              </div>
-              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalCanvases}</span> Canvases
+            <p style={{ color: '#71717a', fontSize: '14px', maxWidth: '300px' }}>The infinite canvas for ambitious teams. Draw, diagram, collaborate, and let AI transform your ideas.</p>
+          </div>
+          <div style={{ display: 'flex', gap: '80px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <span style={{ fontWeight: 600, marginBottom: '8px' }}>Product</span>
+              {['Features', 'Pricing', 'Templates', 'Changelog'].map(l => <a key={l} href="#" style={{ color: '#a1a1aa', textDecoration: 'none', fontSize: '14px' }}>{l}</a>)}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <span style={{ fontWeight: 600, marginBottom: '8px' }}>Company</span>
+              {['About', 'Blog', 'Careers', 'Contact'].map(l => <a key={l} href="#" style={{ color: '#a1a1aa', textDecoration: 'none', fontSize: '14px' }}>{l}</a>)}
             </div>
           </div>
         </div>
-      </div>
-
-      <div style={{ padding: '40px 48px 64px', maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '48px' }}>
-        
-        {/* Workspace Creation */}
-        <section>
-          <div style={{ background: 'var(--bg-secondary)', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px', boxShadow: 'var(--shadow-sm)' }}>
-            <div>
-              <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 4px' }}>Create New Workspace</h2>
-              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Organize your canvases into dedicated team or project folders.</p>
-            </div>
-            <form onSubmit={handleCreateWorkspace} style={{ display: 'flex', gap: '12px', flex: 1, minWidth: '280px', maxWidth: '400px' }}>
-              <input 
-                type="text" 
-                placeholder="E.g. Marketing Team" 
-                value={newWsName}
-                onChange={(e) => setNewWsName(e.target.value)}
-                disabled={isCreating}
-                style={{ 
-                  padding: '12px 16px', 
-                  borderRadius: '10px', 
-                  border: '1px solid var(--border-color)',
-                  background: 'var(--bg-primary)',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                  outline: 'none',
-                  flex: 1,
-                  transition: 'all 0.2s'
-                }}
-                onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent-primary)'; }}
-                onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; }}
-              />
-              <button type="submit" disabled={isCreating || !newWsName.trim()} style={{
-                padding: '0 24px',
-                borderRadius: '10px',
-                border: 'none',
-                background: newWsName.trim() ? 'var(--accent-primary)' : 'var(--border-color)',
-                color: newWsName.trim() ? 'white' : 'var(--text-secondary)',
-                fontWeight: 600,
-                cursor: newWsName.trim() ? 'pointer' : 'not-allowed',
-                transition: 'all 0.2s',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <Plus size={18} /> {isCreating ? 'Creating...' : 'Create'}
-              </button>
-            </form>
-          </div>
-        </section>
-
-        {/* Workspaces & Canvases List */}
-        <section style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
-          {workspaces.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-secondary)', background: 'var(--bg-secondary)', borderRadius: '16px', border: '1px dashed var(--border-color)' }}>
-              <Folder size={48} style={{ margin: '0 auto 16px', opacity: 0.3 }} />
-              <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>No Workspaces Yet</h3>
-              <p style={{ fontSize: '14px', maxWidth: '400px', margin: '0 auto' }}>Create your first workspace above to start organizing your infinite canvas projects.</p>
-            </div>
-          ) : (
-            workspaces.map((ws: any) => (
-              <div key={ws.id}>
-                {/* Workspace Header */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px solid var(--border-color)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--accent-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Folder size={16} />
-                    </div>
-                    <h2 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{ws.name}</h2>
-                    <span style={{ padding: '2px 8px', borderRadius: '100px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                      {ws.canvases.length} Canvas{ws.canvases.length !== 1 ? 'es' : ''}
-                    </span>
-                  </div>
-                  <button 
-                    onClick={() => handleCreateCanvas(ws.id)}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', fontWeight: 600, fontSize: '13px', cursor: 'pointer', transition: 'all 0.2s' }}
-                    onMouseOver={(e) => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.borderColor = 'var(--accent-primary)'; e.currentTarget.style.color = 'var(--accent-primary)'; }}
-                    onMouseOut={(e) => { e.currentTarget.style.background = 'var(--bg-secondary)'; e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
-                  >
-                    <Plus size={14} /> New Canvas
-                  </button>
-                </div>
-                
-                {/* Canvases Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
-                  {ws.canvases.map((canvas: any) => {
-                    const visuals = getVisuals(canvas.id);
-                    return (
-                      <Link key={canvas.id} href={`/canvas/${canvas.id}`} style={{ textDecoration: 'none', display: 'block' }}>
-                        <div style={{ borderRadius: '14px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease', display: 'flex', flexDirection: 'column' }}
-                             onMouseOver={(e) => { e.currentTarget.style.borderColor = visuals.color; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-4px)'; }}
-                             onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}
-                        >
-                          {/* Top Border Accent */}
-                          <div style={{ height: '4px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${visuals.color}, ${visuals.color}88)` }} />
-                          
-                          {/* Premium Abstract SVG Preview with TiltedCard */}
-                          <div style={{ width: 'calc(100% - 24px)', margin: '12px 12px 0 12px', height: '140px', position: 'relative', zIndex: 10 }}>
-                            <TiltedCard
-                              imageSrc={<div style={{ width: '100%', height: '100%', background: '#f8fafc', borderRadius: '10px', border: '1px solid var(--border-color)', overflow: 'hidden' }}><TemplatePreview pattern={visuals.pattern} color={visuals.color} width={300} height={140} /></div>}
-                              altText={canvas.title}
-                              captionText="Open Canvas"
-                              containerHeight="140px"
-                              containerWidth="100%"
-                              imageHeight="140px"
-                              imageWidth="100%"
-                              rotateAmplitude={12}
-                              scaleOnHover={1.05}
-                              showMobileWarning={false}
-                              showTooltip={true}
-                              displayOverlayContent={true}
-                              overlayContent={
-                                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.03)', borderRadius: '10px', pointerEvents: 'none', opacity: 0, transition: 'opacity 0.2s' }}
-                                     onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
-                                     onMouseOut={(e) => e.currentTarget.style.opacity = '0'}
-                                />
-                              }
-                            />
-                          </div>
-
-                          <div style={{ padding: '16px 20px' }}>
-                            <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 10px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                              {canvas.title}
-                            </h3>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)' }}>
-                                <Clock size={12} /> {new Date(Number(canvas.updatedAt) || canvas.updatedAt).toLocaleDateString()}
-                              </div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--accent-primary)', fontSize: '12px', fontWeight: 600 }}>
-                                Open <ArrowRight size={12} />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                  
-                  {/* Empty State for Canvases */}
-                  {ws.canvases.length === 0 && (
-                    <div style={{ gridColumn: '1 / -1', padding: '32px', textAlign: 'center', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px dashed var(--border-color)' }}>
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: '0 0 16px' }}>This workspace is empty.</p>
-                      <button 
-                        onClick={() => handleCreateCanvas(ws.id)}
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', background: 'var(--text-primary)', color: 'var(--bg-primary)', fontWeight: 600, fontSize: '13px', border: 'none', cursor: 'pointer' }}
-                      >
-                        Create your first canvas
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </section>
-
-      </div>
-    </main>
+        <div style={{ maxWidth: '1200px', margin: '40px auto 0', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', color: '#71717a', fontSize: '14px' }}>
+          <span>© 2026 VignetteLab. All rights reserved.</span>
+          <span>Made with ❤️ for creators everywhere.</span>
+        </div>
+      </footer>
+    </div>
   );
 }
