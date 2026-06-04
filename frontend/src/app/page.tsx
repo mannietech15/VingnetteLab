@@ -98,9 +98,12 @@ export default function LandingPage() {
           
           <h1 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <BlurText text="Design at the speed of" delay={150} animateBy="words" />
-            <span style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', padding: '0 10px' }}>
-              <BlurText text="thought." delay={100} animateBy="letters" />
-            </span>
+            <BlurText 
+              text="thought." 
+              delay={100} 
+              animateBy="letters" 
+              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', padding: '0 10px' }}
+            />
           </h1>
           
           <p style={{ fontSize: '1.25rem', color: '#a1a1aa', lineHeight: 1.6, marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
