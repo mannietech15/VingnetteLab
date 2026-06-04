@@ -21,6 +21,7 @@ const FEATURES = [
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('');
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -30,7 +31,23 @@ export default function LandingPage() {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    // Setup intersection observer for sections
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, { rootMargin: '-40% 0px -50% 0px' });
+
+    const sections = document.querySelectorAll('section[id]');
+    sections.forEach(section => observer.observe(section));
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      sections.forEach(section => observer.unobserve(section));
+    };
   }, []);
 
   return (
@@ -71,9 +88,29 @@ export default function LandingPage() {
           <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em' }}>VignetteLab</span>
         </div>
         
-        <div style={{ display: 'flex', gap: '32px', fontSize: '14px', fontWeight: 500, color: '#a1a1aa' }}>
-          <a href="#features" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = '#fff'} onMouseOut={e => e.currentTarget.style.color = '#a1a1aa'}>Features</a>
-          <a href="#pricing" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = '#fff'} onMouseOut={e => e.currentTarget.style.color = '#a1a1aa'}>Pricing</a>
+        <div style={{ display: 'flex', gap: '8px', fontSize: '14px', fontWeight: 500, color: '#a1a1aa' }}>
+          {[
+            { id: 'features', label: 'Features' },
+            { id: 'scale', label: 'Scale' },
+            { id: 'pricing', label: 'Pricing' }
+          ].map(link => (
+            <a 
+              key={link.id}
+              href={`#${link.id}`} 
+              style={{ 
+                color: activeSection === link.id ? '#fff' : 'inherit', 
+                background: activeSection === link.id ? 'rgba(255,255,255,0.1)' : 'transparent',
+                padding: '6px 16px',
+                borderRadius: '100px',
+                textDecoration: 'none', 
+                transition: 'all 0.2s ease'
+              }} 
+              onMouseOver={e => { if (activeSection !== link.id) e.currentTarget.style.color = '#fff' }} 
+              onMouseOut={e => { if (activeSection !== link.id) e.currentTarget.style.color = 'inherit' }}
+            >
+              {link.label}
+            </a>
+          ))}
         </div>
         
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
@@ -204,7 +241,7 @@ export default function LandingPage() {
       </section>
 
       {/* Graph / Social Proof Section */}
-      <section style={{ padding: '120px 40px', position: 'relative', zIndex: 10, background: 'transparent' }}>
+      <section id="scale" style={{ padding: '120px 40px', position: 'relative', zIndex: 10, background: 'transparent' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px', fontFamily: "'Outfit', sans-serif" }}>Built for global scale</h2>
           <p style={{ fontSize: '1.25rem', color: '#a1a1aa', marginBottom: '60px' }}>Join thousands of teams already designing at the speed of thought.</p>
