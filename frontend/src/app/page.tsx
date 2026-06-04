@@ -34,8 +34,22 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div style={{ background: '#09090b', color: '#fafafa', minHeight: '100vh', fontFamily: 'var(--font-inter), sans-serif', overflowX: 'hidden' }}>
+    <div style={{ background: '#09090b', color: '#fafafa', minHeight: '100vh', fontFamily: "'Outfit', var(--font-inter), sans-serif", overflowX: 'hidden' }}>
       
+      {/* Global Particles Background */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, opacity: 1, pointerEvents: 'none' }}>
+        <Particles
+          particleColors={['#6366f1', '#8b5cf6', '#ec4899']}
+          particleCount={1200}
+          particleSpread={25}
+          speed={0.3}
+          particleBaseSize={150}
+          moveParticlesOnHover={true}
+          alphaParticles={true}
+          disableRotation={false}
+        />
+      </div>
+
       {/* Navbar */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
@@ -73,18 +87,6 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 1 }}>
-          <Particles
-            particleColors={['#6366f1', '#8b5cf6', '#ec4899']}
-            particleCount={1200}
-            particleSpread={25}
-            speed={0.3}
-            particleBaseSize={150}
-            moveParticlesOnHover={true}
-            alphaParticles={true}
-            disableRotation={false}
-          />
-        </div>
         <Landing3D />
         
         <motion.div style={{ position: 'relative', zIndex: 10, textAlign: 'center', maxWidth: '800px', padding: '0 20px', y, opacity }}
@@ -126,7 +128,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" style={{ padding: '120px 40px', position: 'relative', zIndex: 10, background: '#09090b' }}>
+      <section id="features" style={{ padding: '120px 40px', position: 'relative', zIndex: 10, background: 'transparent' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '80px' }}>
             <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px', fontFamily: "'Outfit', sans-serif" }}>Intelligent by design</h2>
@@ -215,7 +217,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '60px 40px 40px', background: '#09090b' }}>
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '60px 40px 40px', background: 'transparent', position: 'relative', zIndex: 10 }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '40px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
