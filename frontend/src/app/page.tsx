@@ -9,6 +9,7 @@ import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import Landing3D from '@/components/Landing3D';
 import Particles from '@/components/Particles';
 import BlurText from '@/components/BlurText';
+import { SmartGetStartedButton, SmartLoginButton } from '@/components/SmartButtons';
 
 const FEATURES = [
   { icon: Layers, color: '#6366f1', title: 'Infinite Canvas', desc: 'An endlessly scalable workspace. Pan, zoom, draw, and think without limits.' },
@@ -90,7 +91,7 @@ export default function LandingPage() {
         
         <div style={{ display: 'flex', gap: '8px', fontSize: '14px', fontWeight: 500, color: '#a1a1aa' }}>
           {[
-            { id: 'features', label: 'Features' },
+            { id: 'features', label: 'Design' },
             { id: 'scale', label: 'Scale' },
             { id: 'pricing', label: 'Pricing' }
           ].map(link => (
@@ -113,19 +114,9 @@ export default function LandingPage() {
           ))}
         </div>
         
-        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <Link href="/login" style={{ color: '#fafafa', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Log In</Link>
-          <Link href="/home" style={{
-            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-            color: '#fff', padding: '10px 20px', borderRadius: '100px', fontSize: '14px', fontWeight: 600,
-            textDecoration: 'none', boxShadow: '0 4px 14px 0 rgba(99, 102, 241, 0.39)',
-            transition: 'transform 0.2s', display: 'inline-flex', alignItems: 'center', gap: '8px'
-          }}
-          onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
-          onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            Get Started <ArrowRight size={16} />
-          </Link>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <SmartLoginButton href="/login" />
+          <SmartGetStartedButton href="/home" text="Get Started" size="sm" />
         </div>
       </nav>
       </div>
@@ -159,15 +150,7 @@ export default function LandingPage() {
           </p>
           
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-            <Link href="/home" style={{
-              background: '#fafafa', color: '#09090b', padding: '16px 32px', borderRadius: '100px', fontSize: '16px', fontWeight: 600,
-              textDecoration: 'none', transition: 'transform 0.2s', display: 'inline-flex', alignItems: 'center', gap: '8px'
-            }}
-            onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
-            onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              Start for free <ArrowRight size={18} />
-            </Link>
+            <SmartGetStartedButton href="/home" text="Start for free" size="md" />
           </div>
         </motion.div>
       </section>
@@ -334,17 +317,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10 }}>
           <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '24px' }}>Ready to transform your workflow?</h2>
           <p style={{ fontSize: '1.25rem', color: '#a1a1aa', marginBottom: '40px' }}>Join ambitious teams using VignetteLab to build the future.</p>
-          <Link href="/home" style={{
-            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-            color: '#fff', padding: '18px 40px', borderRadius: '100px', fontSize: '18px', fontWeight: 600,
-            textDecoration: 'none', boxShadow: '0 8px 30px rgba(99, 102, 241, 0.4)',
-            transition: 'transform 0.2s', display: 'inline-block'
-          }}
-          onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
-          onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            Start your free workspace
-          </Link>
+          <SmartGetStartedButton href="/home" text="Start your free workspace" size="lg" />
         </div>
       </section>
 
