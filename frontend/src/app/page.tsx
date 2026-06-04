@@ -136,7 +136,7 @@ export default function LandingPage() {
           </div>
           
           {/* Bento Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '24px', autoRows: 'minmax(320px, auto)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '24px', gridAutoRows: 'minmax(320px, auto)' }}>
             {FEATURES.map((f, i) => {
               // Calculate bento box spanning
               let colSpan = 'span 2';
