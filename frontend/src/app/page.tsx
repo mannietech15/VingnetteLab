@@ -96,14 +96,16 @@ export default function LandingPage() {
             <Sparkles size={14} color="#a855f7" /> <BlurText text="Introducing Vignette AI" delay={50} animateBy="words" />
           </div>
           
-          <h1 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <BlurText text="Design at the speed of" delay={150} animateBy="words" />
-            <BlurText 
-              text="thought." 
-              delay={100} 
-              animateBy="letters" 
-              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', padding: '0 10px' }}
-            />
+          <h1 style={{ textAlign: 'center', fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.04em', marginBottom: '24px' }}>
+            <span style={{ display: 'inline-flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', alignItems: 'center' }}>
+              <BlurText text="Design at the speed of thoughts" delay={150} animateBy="words" />
+              <BlurText 
+                text="thoughts." 
+                delay={100} 
+                animateBy="letters" 
+                style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', padding: '0 10px' }}
+              />
+            </span>
           </h1>
           
           <p style={{ fontSize: '1.25rem', color: '#a1a1aa', lineHeight: 1.6, marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
