@@ -8,6 +8,17 @@ import { json } from 'body-parser';
 import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
 
+import { prisma } from './infrastructure/prismaClient';
+
+async function checkDatabaseConnection() {
+  try {
+    await prisma.$connect();
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 async function startApolloServer() {
   const app = express();
   const httpServer = http.createServer(app);
@@ -32,7 +43,16 @@ async function startApolloServer() {
 
   const PORT = process.env.PORT || 4000;
   await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve));
-  console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
+  
+  const dbConnected = await checkDatabaseConnection();
+  
+  console.log('\n=============================================');
+  console.log('🔮 VignetteLab Backend Status');
+  console.log('=============================================');
+  console.log(`[${dbConnected ? '🟢' : '🔴'}] PostgreSQL Database (${dbConnected ? 'Connected' : 'Disconnected'})`);
+  console.log(`[🟢] GraphQL Server      (http://localhost:${PORT}/graphql)`);
+  console.log(`[🟢] Express API         (Port ${PORT})`);
+  console.log('=============================================\n');
 }
 
 startApolloServer().catch((err) => {
