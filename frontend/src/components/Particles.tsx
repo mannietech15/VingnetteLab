@@ -216,9 +216,9 @@ const Particles: React.FC<ParticlesProps> = ({
       }
 
       if (!disableRotation) {
-        particles.rotation.x = Math.sin(elapsed * 0.0002) * 0.1;
-        particles.rotation.y = Math.cos(elapsed * 0.0005) * 0.15;
-        particles.rotation.z += 0.01 * speed;
+        particles.rotation.x = Math.sin(elapsed * 0.0004) * 0.2;
+        particles.rotation.y = Math.cos(elapsed * 0.0008) * 0.3;
+        particles.rotation.z += 0.05 * speed;
       }
 
       renderer.render({ scene: particles, camera });
