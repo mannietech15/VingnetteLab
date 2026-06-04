@@ -51,14 +51,21 @@ export default function LandingPage() {
       </div>
 
       {/* Navbar */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        padding: '16px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: scrolled ? 'rgba(9, 9, 11, 0.7)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(16px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : '1px solid transparent',
-        transition: 'all 0.3s ease'
-      }}>
+      <div style={{ position: 'fixed', top: scrolled ? '16px' : '24px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 50, pointerEvents: 'none', transition: 'all 0.3s ease' }}>
+        <nav style={{
+          pointerEvents: 'auto',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '12px 24px', 
+          background: scrolled ? 'rgba(9, 9, 11, 0.6)' : 'rgba(9, 9, 11, 0.3)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: '100px',
+          width: '90%',
+          maxWidth: '1100px',
+          boxShadow: scrolled ? '0 10px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)' : '0 4px 20px rgba(0,0,0,0.2)',
+          transition: 'all 0.3s ease'
+        }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <Image src={vignetteLogo} alt="VignetteLab Logo" width={32} height={32} style={{ borderRadius: '8px' }} />
           <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em' }}>VignetteLab</span>
@@ -84,6 +91,7 @@ export default function LandingPage() {
           </Link>
         </div>
       </nav>
+      </div>
 
       {/* Hero Section */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', overflow: 'hidden' }}>
