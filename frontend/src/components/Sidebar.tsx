@@ -9,7 +9,7 @@ import { usePathname } from 'next/navigation';
 import { useCanvasStore } from '@/store/useCanvasStore';
 
 const NAV_ITEMS = [
-  { label: 'Home', icon: Home, href: '/' },
+  { label: 'Home', icon: Home, href: '/home' },
   { label: 'Workspaces', icon: LayoutGrid, href: '/workspaces' },
   { label: 'Vignette AI', icon: Sparkles, href: '/vignette-ai' },
   { label: 'Recent', icon: Clock, href: '/recent' },
