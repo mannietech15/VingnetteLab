@@ -27,7 +27,7 @@ export default function LoginPage() {
       
       {/* Left Panel (60%) */}
       <div style={{ flex: '0 0 60%', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '60px', borderRight: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 0% 0%, rgba(99,102,241,0.15) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(139,92,246,0.1) 0%, transparent 50%)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 0% 0%, rgba(16,185,129,0.15) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(59,130,246,0.1) 0%, transparent 50%)', zIndex: 0 }} />
         
         <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'auto' }}>
           <Image src={vignetteLogo} alt="Logo" width={32} height={32} style={{ borderRadius: '8px' }} />
@@ -36,7 +36,7 @@ export default function LoginPage() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ position: 'relative', zIndex: 10, maxWidth: '600px' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '6px 16px', borderRadius: '100px', fontSize: '13px', fontWeight: 500, color: '#a1a1aa', marginBottom: '24px' }}>
-            <Sparkles size={14} color="#a855f7" /> The infinite canvas for teams
+            <Sparkles size={14} color="#10b981" /> The infinite canvas for teams
           </div>
           <h1 style={{ fontSize: '3.5rem', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '32px' }}>
             Pick up exactly where you left off.
@@ -47,7 +47,7 @@ export default function LoginPage() {
               "VignetteLab replaced 4 tools for our design team. The infinite canvas experience is unlike anything else we've tried."
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600 }}>SC</div>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600 }}>SC</div>
               <div>
                 <div style={{ fontWeight: 600 }}>Sarah Chen</div>
                 <div style={{ fontSize: '14px', color: '#71717a' }}>Head of Design, Stripe</div>
@@ -77,7 +77,7 @@ export default function LoginPage() {
                 onChange={e => setEmail(e.target.value)}
                 required
                 style={{ width: '100%', padding: '14px 16px 14px 44px', background: '#18181b', border: '1px solid #27272a', borderRadius: '12px', color: '#fafafa', fontSize: '15px', outline: 'none', transition: 'all 0.2s' }}
-                onFocus={e => { e.currentTarget.style.borderColor = '#6366f1'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.2)'; }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#10b981'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(16,185,129,0.2)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = '#27272a'; e.currentTarget.style.boxShadow = 'none'; }}
               />
             </div>
@@ -91,7 +91,7 @@ export default function LoginPage() {
                 onChange={e => setPassword(e.target.value)}
                 required
                 style={{ width: '100%', padding: '14px 44px', background: '#18181b', border: '1px solid #27272a', borderRadius: '12px', color: '#fafafa', fontSize: '15px', outline: 'none', transition: 'all 0.2s' }}
-                onFocus={e => { e.currentTarget.style.borderColor = '#6366f1'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(99,102,241,0.2)'; }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#10b981'; e.currentTarget.style.boxShadow = '0 0 0 2px rgba(16,185,129,0.2)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = '#27272a'; e.currentTarget.style.boxShadow = 'none'; }}
               />
               <button
@@ -105,20 +105,20 @@ export default function LoginPage() {
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '14px' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#a1a1aa' }}>
-                <input type="checkbox" style={{ accentColor: '#6366f1', width: '16px', height: '16px', cursor: 'pointer' }} />
+                <input type="checkbox" style={{ accentColor: '#10b981', width: '16px', height: '16px', cursor: 'pointer' }} />
                 Remember me
               </label>
-              <a href="#" style={{ color: '#6366f1', textDecoration: 'none', fontWeight: 500 }}>Forgot password?</a>
+              <a href="#" style={{ color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>Forgot password?</a>
             </div>
 
             <button
               type="submit"
               disabled={isLoading || !email || !password}
               style={{
-                width: '100%', padding: '14px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                width: '100%', padding: '14px', background: 'linear-gradient(135deg, #3b82f6, #10b981)',
                 border: 'none', borderRadius: '12px', color: '#fff', fontSize: '15px', fontWeight: 600,
                 cursor: (isLoading || !email || !password) ? 'not-allowed' : 'pointer', opacity: (isLoading || !email || !password) ? 0.7 : 1,
-                boxShadow: '0 4px 14px rgba(99, 102, 241, 0.3)', transition: 'all 0.2s', marginTop: '8px'
+                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)', transition: 'all 0.2s', marginTop: '8px'
               }}
             >
               {isLoading ? 'Signing in...' : 'Sign in to your account'}
@@ -150,7 +150,7 @@ export default function LoginPage() {
           </div>
 
           <p style={{ textAlign: 'center', marginTop: '32px', color: '#a1a1aa', fontSize: '14px' }}>
-            Don't have an account? <Link href="/register" style={{ color: '#6366f1', textDecoration: 'none', fontWeight: 500 }}>Sign up</Link>
+            Don't have an account? <Link href="/register" style={{ color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>Sign up</Link>
           </p>
 
         </motion.div>

@@ -53,7 +53,7 @@ export default function RegisterPage() {
       {/* Background Effects */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
         <Particles
-          particleColors={['#ec4899', '#8b5cf6', '#6366f1']}
+          particleColors={['#3b82f6', '#10b981', '#059669']}
           particleCount={800}
           particleSpread={15}
           speed={0.2}
@@ -71,29 +71,29 @@ export default function RegisterPage() {
           <div style={{ padding: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
             <Image src={vignetteLogo} alt="Logo" width={32} height={32} style={{ borderRadius: '8px' }} />
           </div>
-          <span style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '-0.02em', background: 'linear-gradient(to right, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>VignetteLab</span>
+          <span style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '-0.02em', background: 'linear-gradient(to right, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>VignetteLab</span>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ position: 'relative', zIndex: 10, maxWidth: '600px' }}>
           <motion.div 
             whileHover={{ scale: 1.05 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(236,72,153,0.1)', border: '1px solid rgba(236,72,153,0.3)', padding: '8px 20px', borderRadius: '100px', fontSize: '14px', fontWeight: 600, color: '#f472b6', marginBottom: '32px', boxShadow: '0 0 20px rgba(236,72,153,0.2)' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', padding: '8px 20px', borderRadius: '100px', fontSize: '14px', fontWeight: 600, color: '#34d399', marginBottom: '32px', boxShadow: '0 0 20px rgba(16,185,129,0.2)' }}
           >
             <Sparkles size={16} /> Join 10,000+ creators
           </motion.div>
           
           <h1 style={{ fontSize: '4.5rem', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '32px' }}>
             Design without <br/>
-            <span style={{ background: 'linear-gradient(135deg, #ec4899, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>boundaries.</span>
+            <span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>boundaries.</span>
           </h1>
           
           <div style={{ position: 'relative', padding: '40px', background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '32px', backdropFilter: 'blur(20px)', boxShadow: '0 20px 40px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1)' }}>
-            <div style={{ position: 'absolute', top: '-15px', left: '40px', fontSize: '60px', color: 'rgba(236,72,153,0.2)', fontFamily: 'serif', lineHeight: 1 }}>"</div>
+            <div style={{ position: 'absolute', top: '-15px', left: '40px', fontSize: '60px', color: 'rgba(16,185,129,0.2)', fontFamily: 'serif', lineHeight: 1 }}>"</div>
             <p style={{ fontSize: '1.25rem', color: '#d4d4d8', fontStyle: 'italic', marginBottom: '32px', lineHeight: 1.6, position: 'relative', zIndex: 2 }}>
               The infinite canvas experience combined with AI spatial organization is unlike anything else we've tried. VignetteLab completely replaced our previous whiteboard and diagramming tools.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, #ec4899, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '18px', boxShadow: '0 4px 14px rgba(236,72,153,0.3)' }}>MW</div>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'linear-gradient(135deg, #3b82f6, #10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '18px', boxShadow: '0 4px 14px rgba(16,185,129,0.3)' }}>MW</div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: '16px' }}>Marcus Webb</div>
                 <div style={{ fontSize: '14px', color: '#a1a1aa' }}>CTO, Linear</div>
@@ -138,7 +138,7 @@ export default function RegisterPage() {
               <User size={18} color="#71717a" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', zIndex: 2, transition: 'color 0.2s' }} />
               <input type="text" placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} required
                 style={{ width: '100%', padding: '16px 16px 16px 48px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', color: '#fafafa', fontSize: '15px', outline: 'none', transition: 'all 0.3s' }}
-                onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; e.currentTarget.style.boxShadow = '0 0 0 4px rgba(139,92,246,0.1)'; e.currentTarget.style.background = 'rgba(0,0,0,0.5)'; }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#10b981'; e.currentTarget.style.boxShadow = '0 0 0 4px rgba(16,185,129,0.1)'; e.currentTarget.style.background = 'rgba(0,0,0,0.5)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = 'rgba(0,0,0,0.3)'; }} />
             </div>
 
@@ -146,7 +146,7 @@ export default function RegisterPage() {
               <Mail size={18} color="#71717a" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', zIndex: 2 }} />
               <input type="email" placeholder="name@company.com" value={email} onChange={e => setEmail(e.target.value)} required
                 style={{ width: '100%', padding: '16px 16px 16px 48px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', color: '#fafafa', fontSize: '15px', outline: 'none', transition: 'all 0.3s' }}
-                onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; e.currentTarget.style.boxShadow = '0 0 0 4px rgba(139,92,246,0.1)'; e.currentTarget.style.background = 'rgba(0,0,0,0.5)'; }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#10b981'; e.currentTarget.style.boxShadow = '0 0 0 4px rgba(16,185,129,0.1)'; e.currentTarget.style.background = 'rgba(0,0,0,0.5)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = 'rgba(0,0,0,0.3)'; }} />
             </div>
 
@@ -155,7 +155,7 @@ export default function RegisterPage() {
                 <Lock size={18} color="#71717a" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', zIndex: 2 }} />
                 <input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required
                   style={{ width: '100%', padding: '16px 48px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', color: '#fafafa', fontSize: '15px', outline: 'none', transition: 'all 0.3s' }}
-                  onFocus={e => { e.currentTarget.style.borderColor = '#8b5cf6'; e.currentTarget.style.boxShadow = '0 0 0 4px rgba(139,92,246,0.1)'; e.currentTarget.style.background = 'rgba(0,0,0,0.5)'; }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#10b981'; e.currentTarget.style.boxShadow = '0 0 0 4px rgba(16,185,129,0.1)'; e.currentTarget.style.background = 'rgba(0,0,0,0.5)'; }}
                   onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = 'rgba(0,0,0,0.3)'; }} />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#a1a1aa', display: 'flex', padding: '4px', borderRadius: '6px' }} onMouseOver={e => e.currentTarget.style.background='rgba(255,255,255,0.1)'} onMouseOut={e => e.currentTarget.style.background='none'}>
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -180,7 +180,7 @@ export default function RegisterPage() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '14px', color: '#a1a1aa', marginTop: '4px' }}>
-              <input type="checkbox" required style={{ accentColor: '#8b5cf6', width: '18px', height: '18px', cursor: 'pointer', marginTop: '2px', borderRadius: '4px' }} />
+              <input type="checkbox" required style={{ accentColor: '#10b981', width: '18px', height: '18px', cursor: 'pointer', marginTop: '2px', borderRadius: '4px' }} />
               <span style={{ lineHeight: 1.5 }}>I agree to the <a href="#" style={{ color: '#fff', textDecoration: 'none', fontWeight: 500, borderBottom: '1px solid rgba(255,255,255,0.3)' }}>Terms of Service</a> and <a href="#" style={{ color: '#fff', textDecoration: 'none', fontWeight: 500, borderBottom: '1px solid rgba(255,255,255,0.3)' }}>Privacy Policy</a></span>
             </div>
 
@@ -190,11 +190,11 @@ export default function RegisterPage() {
               whileHover={(isLoading || isSuccess || !email || !password) ? {} : { scale: 1.02 }}
               whileTap={(isLoading || isSuccess || !email || !password) ? {} : { scale: 0.98 }}
               style={{
-                width: '100%', padding: '16px', background: isSuccess ? '#10b981' : 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+                width: '100%', padding: '16px', background: isSuccess ? '#10b981' : 'linear-gradient(135deg, #3b82f6, #10b981)',
                 border: 'none', borderRadius: '16px', color: '#fff', fontSize: '16px', fontWeight: 700,
                 cursor: (isLoading || isSuccess || !email || !password) ? 'not-allowed' : 'pointer',
                 opacity: (isLoading || isSuccess || !email || !password) ? 0.7 : 1,
-                boxShadow: isSuccess ? '0 8px 30px rgba(16, 185, 129, 0.4)' : '0 8px 30px rgba(139, 92, 246, 0.4)', transition: 'all 0.3s', marginTop: '12px',
+                boxShadow: isSuccess ? '0 8px 30px rgba(16, 185, 129, 0.4)' : '0 8px 30px rgba(16, 185, 129, 0.4)', transition: 'all 0.3s', marginTop: '12px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
               }}>
               {isLoading ? (
