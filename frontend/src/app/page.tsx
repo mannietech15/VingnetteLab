@@ -123,6 +123,9 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', overflow: 'hidden' }}>
+        {/* Subtle dot grid overlay */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)', backgroundSize: '32px 32px', maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%)', WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%)', zIndex: 0, pointerEvents: 'none' }} />
+        
         <Landing3D />
         
         <motion.div style={{ position: 'relative', zIndex: 10, textAlign: 'center', maxWidth: '800px', padding: '0 20px', y, opacity }}
@@ -130,9 +133,11 @@ export default function LandingPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '6px 16px', borderRadius: '100px', fontSize: '13px', fontWeight: 500, color: '#a1a1aa', marginBottom: '32px' }}>
-            <Sparkles size={14} color="#10b981" /> <BlurText text="Introducing Vignette AI" delay={50} animateBy="words" />
-          </div>
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', padding: '8px 20px', borderRadius: '100px', fontSize: '14px', fontWeight: 600, color: '#34d399', marginBottom: '32px', boxShadow: '0 0 20px rgba(16,185,129,0.2)', cursor: 'pointer' }}>
+            <Sparkles size={16} color="#10b981" /> <BlurText text="Introducing Vignette AI" delay={50} animateBy="words" />
+          </motion.div>
           
           <h1 style={{ textAlign: 'center', fontSize: 'clamp(3rem, 5.5vw, 5rem)', fontWeight: 800, lineHeight: 1.0, letterSpacing: '-0.04em', marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: "'Outfit', sans-serif" }}>
             <BlurText text="Design at the speed of" delay={150} animateBy="words" />
@@ -184,10 +189,10 @@ export default function LandingPage() {
                   style={{
                     gridColumn: colSpan,
                     background: 'linear-gradient(180deg, rgba(24,24,27,0.6) 0%, rgba(9,9,11,0.8) 100%)',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.08)',
                     borderRadius: '28px', position: 'relative', overflow: 'hidden',
-                    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05), 0 4px 20px rgba(0,0,0,0.5)',
-                    display: 'flex', flexDirection: 'column'
+                    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 8px 30px rgba(0,0,0,0.4)',
+                    display: 'flex', flexDirection: 'column', backdropFilter: 'blur(12px)'
                   }}
                   whileHover={{ y: -4, borderColor: `${f.color}66`, boxShadow: `0 15px 40px -10px ${f.color}44, inset 0 1px 1px rgba(255,255,255,0.1)` }}
                 >
@@ -311,14 +316,24 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section style={{ padding: '120px 40px', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ padding: '120px 40px', position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '1000px', background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(9,9,11,0) 70%)', pointerEvents: 'none' }} />
         
-        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10 }}>
-          <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '24px' }}>Ready to transform your workflow?</h2>
-          <p style={{ fontSize: '1.25rem', color: '#a1a1aa', marginBottom: '40px' }}>Join ambitious teams using VignetteLab to build the future.</p>
-          <SmartGetStartedButton href="/register" text="Start your free workspace" size="lg" />
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true }}
+          style={{ maxWidth: '1000px', width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10, background: 'linear-gradient(135deg, rgba(24,24,27,0.8) 0%, rgba(9,9,11,0.95) 100%)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '40px', padding: '80px 40px', backdropFilter: 'blur(20px)', boxShadow: '0 30px 60px -15px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1)' }}>
+          
+          <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '60%', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.5), transparent)' }} />
+          
+          <h2 style={{ fontSize: '4rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '24px', fontFamily: "'Outfit', sans-serif" }}>Ready to transform your <br/><span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>workflow?</span></h2>
+          <p style={{ fontSize: '1.25rem', color: '#a1a1aa', marginBottom: '40px', maxWidth: '500px', margin: '0 auto 40px' }}>Join ambitious teams using VignetteLab to design, brainstorm, and build the future.</p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
+            <SmartGetStartedButton href="/register" text="Start your free workspace" size="lg" />
+          </div>
+        </motion.div>
       </section>
 
       {/* Footer */}
