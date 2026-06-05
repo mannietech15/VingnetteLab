@@ -104,7 +104,7 @@ export default function RegisterPage() {
       </div>
 
       {/* Right Panel (45%) */}
-      <div style={{ flex: '0 0 45%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', position: 'relative', zIndex: 10 }}>
+      <div style={{ flex: '0 0 45%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '40px 40px 40px 20px', position: 'relative', zIndex: 10 }}>
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }} 
           animate={{ opacity: 1, scale: 1 }} 

@@ -58,7 +58,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right Panel (40%) */}
-      <div style={{ flex: '0 0 40%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', position: 'relative', zIndex: 10, background: '#09090b' }}>
+      <div style={{ flex: '0 0 40%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '40px 40px 40px 20px', position: 'relative', zIndex: 10, background: '#09090b' }}>
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} style={{ width: '100%', maxWidth: '400px' }}>
           
           <div style={{ marginBottom: '40px' }}>
