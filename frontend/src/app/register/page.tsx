@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Lock, Eye, EyeOff, User, Sparkles, ArrowRight, Check } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Sparkles, ArrowRight, Check, Loader2 } from 'lucide-react';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import Particles from '@/components/Particles';
 
@@ -74,7 +74,7 @@ export default function RegisterPage() {
           <span style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '-0.02em', background: 'linear-gradient(to right, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>VignetteLab</span>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ position: 'relative', zIndex: 10, maxWidth: '600px' }}>
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ position: 'relative', zIndex: 10, maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
           <motion.div 
             whileHover={{ scale: 1.05 }}
             style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', padding: '8px 20px', borderRadius: '100px', fontSize: '14px', fontWeight: 600, color: '#34d399', marginBottom: '32px', boxShadow: '0 0 20px rgba(16,185,129,0.2)' }}
