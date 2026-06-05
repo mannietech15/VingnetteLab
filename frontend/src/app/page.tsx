@@ -145,7 +145,7 @@ export default function LandingPage() {
               text="thoughts." 
               delay={100} 
               animateBy="letters" 
-              style={{ marginTop: '-0.2em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}
+              style={{ marginTop: '-0.2em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 900 }}
               spanStyle={{ background: 'linear-gradient(135deg, #3b82f6, #10b981, #059669)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent', padding: '0 5px' }}
             />
           </h1>
