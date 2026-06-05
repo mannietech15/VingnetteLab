@@ -117,18 +117,6 @@ export default function RegisterPage() {
             <p style={{ color: '#a1a1aa', fontSize: '16px', marginBottom: '24px' }}>Start your 14-day free trial today</p>
             
             <AnimatePresence>
-              {ipAddress && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }} 
-                  animate={{ opacity: 1, y: 0 }}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '6px 16px', borderRadius: '100px', margin: '0 auto' }}
-                >
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 10px #10b981' }} />
-                  <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 600, letterSpacing: '0.05em', fontFamily: 'monospace' }}>
-                    SECURE SESSION • ORIGIN IP: {ipAddress}
-                  </span>
-                </motion.div>
-              )}
             </AnimatePresence>
           </div>
 
