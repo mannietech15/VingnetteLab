@@ -57,7 +57,7 @@ export default function LandingPage() {
       {/* Global Particles Background */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0, opacity: 1, pointerEvents: 'none' }}>
         <Particles
-          particleColors={['#6366f1', '#8b5cf6', '#ec4899']}
+          particleColors={['#3b82f6', '#10b981', '#059669']}
           particleCount={1200}
           particleSpread={25}
           speed={0.3}
@@ -131,7 +131,7 @@ export default function LandingPage() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '6px 16px', borderRadius: '100px', fontSize: '13px', fontWeight: 500, color: '#a1a1aa', marginBottom: '32px' }}>
-            <Sparkles size={14} color="#a855f7" /> <BlurText text="Introducing Vignette AI" delay={50} animateBy="words" />
+            <Sparkles size={14} color="#10b981" /> <BlurText text="Introducing Vignette AI" delay={50} animateBy="words" />
           </div>
           
           <h1 style={{ textAlign: 'center', fontSize: 'clamp(3rem, 5.5vw, 5rem)', fontWeight: 800, lineHeight: 1.0, letterSpacing: '-0.04em', marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: "'Outfit', sans-serif" }}>
@@ -141,7 +141,7 @@ export default function LandingPage() {
               delay={100} 
               animateBy="letters" 
               style={{ marginTop: '-0.2em', fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 700 }}
-              spanStyle={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', padding: '0 5px' }}
+              spanStyle={{ background: 'linear-gradient(135deg, #3b82f6, #10b981, #059669)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', padding: '0 5px' }}
             />
           </h1>
           
@@ -258,13 +258,13 @@ export default function LandingPage() {
               <svg width="100%" height="100%" viewBox="0 0 1000 240" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
                 <defs>
                   <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#6366f1" />
-                    <stop offset="50%" stopColor="#8b5cf6" />
-                    <stop offset="100%" stopColor="#ec4899" />
+                    <stop offset="0%" stopColor="#3b82f6" />
+                    <stop offset="50%" stopColor="#10b981" />
+                    <stop offset="100%" stopColor="#059669" />
                   </linearGradient>
                   <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#ec4899" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#059669" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
                   </linearGradient>
                 </defs>
                 
@@ -297,12 +297,12 @@ export default function LandingPage() {
                 {/* Glowing dot at end */}
                 <motion.circle 
                   cx="1000" cy="20" r="6" 
-                  fill="#ec4899" 
+                  fill="#10b981" 
                   initial={{ scale: 0, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 2.2, type: 'spring' }}
                   viewport={{ once: true, margin: '-100px' }}
-                  style={{ filter: 'drop-shadow(0 0 12px #ec4899)' }}
+                  style={{ filter: 'drop-shadow(0 0 12px #10b981)' }}
                 />
               </svg>
             </div>
@@ -312,7 +312,7 @@ export default function LandingPage() {
 
       {/* CTA Section */}
       <section style={{ padding: '120px 40px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '1000px', background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(9,9,11,0) 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '1000px', height: '1000px', background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(9,9,11,0) 70%)', pointerEvents: 'none' }} />
         
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10 }}>
           <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '24px' }}>Ready to transform your workflow?</h2>

@@ -16,6 +16,14 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [ipAddress, setIpAddress] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    fetch('/api/ip')
+      .then(res => res.json())
+      .then(data => setIpAddress(data.ip))
+      .catch(console.error);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,9 +112,24 @@ export default function RegisterPage() {
           style={{ width: '100%', maxWidth: '440px', background: 'rgba(24,24,27,0.6)', backdropFilter: 'blur(20px)', padding: '48px', borderRadius: '32px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1)' }}
         >
           
-          <div style={{ marginBottom: '40px', textAlign: 'center' }}>
+          <div style={{ marginBottom: '40px', textAlign: 'center', position: 'relative' }}>
             <h2 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '12px' }}>Create your account</h2>
-            <p style={{ color: '#a1a1aa', fontSize: '16px' }}>Start your 14-day free trial today</p>
+            <p style={{ color: '#a1a1aa', fontSize: '16px', marginBottom: '24px' }}>Start your 14-day free trial today</p>
+            
+            <AnimatePresence>
+              {ipAddress && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }} 
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '6px 16px', borderRadius: '100px', margin: '0 auto' }}
+                >
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 10px #10b981' }} />
+                  <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 600, letterSpacing: '0.05em', fontFamily: 'monospace' }}>
+                    SECURE SESSION • ORIGIN IP: {ipAddress}
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
