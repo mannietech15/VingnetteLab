@@ -122,7 +122,7 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
-            <div style={{ position: 'relative', group: 'input' }} className="group">
+            <div style={{ position: 'relative' }} className="group">
               <User size={18} color="#71717a" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', zIndex: 2, transition: 'color 0.2s' }} />
               <input type="text" placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} required
                 style={{ width: '100%', padding: '16px 16px 16px 48px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', color: '#fafafa', fontSize: '15px', outline: 'none', transition: 'all 0.3s' }}
