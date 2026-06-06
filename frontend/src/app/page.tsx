@@ -7,7 +7,6 @@ import { Sparkles, ArrowRight, Layers, Cpu, Zap, Shield, Globe, Star, Check } fr
 import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import Landing3D from '@/components/Landing3D';
-import Particles from '@/components/Particles';
 import BlurText from '@/components/BlurText';
 import { SmartGetStartedButton, SmartLoginButton } from '@/components/SmartButtons';
 
@@ -54,20 +53,6 @@ export default function LandingPage() {
   return (
     <div style={{ background: '#09090b', color: '#fafafa', minHeight: '100vh', fontFamily: "'Outfit', var(--font-inter), sans-serif", overflowX: 'hidden' }}>
       
-      {/* Global Particles Background */}
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0, opacity: 1, pointerEvents: 'none' }}>
-        <Particles
-          particleColors={['#3b82f6', '#10b981', '#059669']}
-          particleCount={1200}
-          particleSpread={25}
-          speed={0.3}
-          particleBaseSize={150}
-          moveParticlesOnHover={true}
-          alphaParticles={true}
-          disableRotation={false}
-        />
-      </div>
-
       {/* Navbar */}
       <div style={{ position: 'fixed', top: scrolled ? '16px' : '24px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 50, pointerEvents: 'none', transition: 'all 0.3s ease' }}>
         <nav style={{
