@@ -27,10 +27,10 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div style={{ background: '#09090b', color: '#fafafa', minHeight: '100vh', fontFamily: "'Outfit', var(--font-inter), sans-serif", overflowX: 'hidden' }}>
+    <div style={{ background: '#1e140f', color: '#fafafa', minHeight: '100vh', fontFamily: "'Outfit', var(--font-inter), sans-serif", overflowX: 'hidden' }}>
       
       {/* Minimalist Navbar */}
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : '1px solid transparent', background: scrolled ? 'rgba(9, 9, 11, 0.8)' : 'transparent', backdropFilter: scrolled ? 'blur(12px)' : 'none', transition: 'all 0.3s ease' }}>
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : '1px solid transparent', background: scrolled ? 'rgba(30, 20, 15, 0.8)' : 'transparent', backdropFilter: scrolled ? 'blur(12px)' : 'none', transition: 'all 0.3s ease' }}>
         <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 40px', maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Image src={vignetteLogo} alt="Logo" width={28} height={28} style={{ borderRadius: '6px' }} />
@@ -49,7 +49,7 @@ export default function LandingPage() {
 
       {/* Clean Hero */}
       <section style={{ minHeight: '95vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(59,130,246,0.05) 0%, rgba(9,9,11,0) 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(59,130,246,0.05) 0%, rgba(30,20,15,0) 70%)', pointerEvents: 'none' }} />
         
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} style={{ textAlign: 'center', maxWidth: '800px', padding: '0 24px', zIndex: 10 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', padding: '6px 16px', borderRadius: '100px', fontSize: '13px', fontWeight: 500, color: '#a1a1aa', marginBottom: '32px' }}>
@@ -68,7 +68,7 @@ export default function LandingPage() {
       </section>
 
       {/* Simple Features Grid */}
-      <section id="features" style={{ padding: '120px 40px', background: '#09090b', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
+      <section id="features" style={{ padding: '120px 40px', background: '#1e140f', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '80px' }}>
             <h2 style={{ fontSize: '3rem', fontWeight: 700, letterSpacing: '-0.03em', marginBottom: '16px' }}>Everything you need.<br/>Nothing you don't.</h2>
@@ -97,7 +97,7 @@ export default function LandingPage() {
       </section>
 
       {/* Clean Footer */}
-      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.03)', padding: '60px 40px', background: '#09090b' }}>
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.03)', padding: '60px 40px', background: '#1e140f' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#71717a', fontSize: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Image src={vignetteLogo} alt="Logo" width={20} height={20} style={{ borderRadius: '4px', opacity: 0.5 }} />
