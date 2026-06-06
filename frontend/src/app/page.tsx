@@ -203,23 +203,23 @@ export default function LandingPage() {
                     opacity: 0.8
                   }} />
                   
-                  {/* Glassmorphic Icon Box */}
-                  <div style={{ padding: '40px', flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
-                    <div style={{ 
-                      width: '56px', height: '56px', borderRadius: '16px', 
-                      background: `linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0))`, 
-                      backdropFilter: 'blur(10px)',
-                      color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                      marginBottom: 'auto', border: `1px solid rgba(255,255,255,0.1)`, 
-                      boxShadow: `inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.2)` 
-                    }}>
-                      <f.icon size={26} />
+                  {/* Content Box */}
+                  <div style={{ padding: '36px', flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                      <h3 style={{ fontSize: '1.6rem', fontWeight: 600, color: '#fff', fontFamily: "'Outfit', sans-serif", margin: 0, paddingRight: '20px' }}>{f.title}</h3>
+                      <div style={{ 
+                        width: '48px', height: '48px', borderRadius: '14px', flexShrink: 0,
+                        background: `linear-gradient(135deg, ${f.color}15, rgba(255,255,255,0))`, 
+                        backdropFilter: 'blur(10px)',
+                        color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                        border: `1px solid ${f.color}33`, 
+                        boxShadow: `inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 10px rgba(0,0,0,0.2)` 
+                      }}>
+                        <f.icon size={22} />
+                      </div>
                     </div>
                     
-                    <div style={{ marginTop: '32px' }}>
-                      <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '12px', color: '#fff', fontFamily: "'Outfit', sans-serif" }}>{f.title}</h3>
-                      <p style={{ color: '#a1a1aa', lineHeight: 1.6, fontSize: '1.1rem' }}>{f.desc}</p>
-                    </div>
+                    <p style={{ color: '#a1a1aa', lineHeight: 1.6, fontSize: '1.1rem', margin: 0, maxWidth: colSpan.includes('4') || colSpan.includes('3') ? '85%' : '100%' }}>{f.desc}</p>
                   </div>
                 </motion.div>
               )
