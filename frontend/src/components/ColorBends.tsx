@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
@@ -128,7 +127,7 @@ void main() {
 `;
 
 export default function ColorBends({
-  className,
+  className = "",
   style,
   rotation = 90,
   speed = 0.2,
@@ -333,5 +332,5 @@ export default function ColorBends({
     };
   }, []);
 
-  return <div ref={containerRef} className={className} style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', ...style }} />;
+  return <div ref={containerRef} className={\`w-full h-full relative overflow-hidden \${className}\`} style={style} />;
 }

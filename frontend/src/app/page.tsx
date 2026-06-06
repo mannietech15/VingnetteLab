@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { Sparkles, ArrowRight, Layers, Cpu, Zap, Shield, Globe, Star, Check } from 'lucide-react';
 import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
-import Landing3D from '@/components/Landing3D';
+import ColorBends from '@/components/ColorBends';
 import BlurText from '@/components/BlurText';
 import { SmartGetStartedButton, SmartLoginButton } from '@/components/SmartButtons';
 
@@ -111,7 +111,23 @@ export default function LandingPage() {
         {/* Subtle dot grid overlay */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)', backgroundSize: '32px 32px', maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%)', WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%)', zIndex: 0, pointerEvents: 'none' }} />
         
-        <Landing3D />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, opacity: 0.8 }}>
+          <ColorBends
+            colors={["#ff5c7a", "#8a5cff", "#00ffd1"]}
+            rotation={90}
+            speed={0.2}
+            scale={1}
+            frequency={1}
+            warpStrength={1}
+            mouseInfluence={1}
+            noise={0.15}
+            parallax={0.5}
+            iterations={1}
+            intensity={1.5}
+            bandWidth={6}
+            transparent
+          />
+        </div>
         
         <motion.div style={{ position: 'relative', zIndex: 10, textAlign: 'center', maxWidth: '800px', padding: '0 20px', y, opacity }}
           initial={{ opacity: 0, y: 30 }}
