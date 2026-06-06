@@ -91,10 +91,10 @@ export default function LandingPage() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--nav-bg)', border: '1px solid var(--card-border)', padding: '8px 20px', borderRadius: '100px', fontSize: '14px', fontWeight: 600, color: '#3b82f6', marginBottom: '32px' }}>
             <Sparkles size={16} /> Introducing Vignette AI 2.0
           </div>
-          <h1 style={{ fontSize: 'clamp(4rem, 6vw, 6.5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '32px' }}>
+          <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '24px' }}>
             Design at the speed of <br/><span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>thought.</span>
           </h1>
-          <p style={{ fontSize: '1.4rem', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '48px', maxWidth: '700px', margin: '0 auto 48px' }}>
+          <p style={{ fontSize: '1.15rem', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
             The infinite canvas workspace that ambitious teams love. Draw, diagram, collaborate, and let AI transform your ideas into polished outputs — all in one unified place.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
@@ -107,8 +107,8 @@ export default function LandingPage() {
       <section id="features" style={{ padding: '120px 40px', position: 'relative', zIndex: 10 }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-            <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px' }}>Intelligent by design</h2>
-            <p style={{ fontSize: '1.25rem', color: 'var(--muted)', maxWidth: '600px', margin: '0 auto' }}>A meticulously engineered workspace that anticipates your needs, so you can focus entirely on your creative flow.</p>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '16px' }}>Intelligent by design</h2>
+            <p style={{ fontSize: '1.1rem', color: 'var(--muted)', maxWidth: '600px', margin: '0 auto' }}>A meticulously engineered workspace that anticipates your needs, so you can focus entirely on your creative flow.</p>
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '24px', gridAutoRows: 'minmax(280px, auto)' }}>
@@ -130,10 +130,10 @@ export default function LandingPage() {
                   }}
                 >
                   <div style={{ padding: '40px', flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-                      <h3 style={{ fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>{f.title}</h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                      <h3 style={{ fontSize: '1.4rem', fontWeight: 700, margin: 0 }}>{f.title}</h3>
                       <div style={{ 
-                        width: '56px', height: '56px', borderRadius: '16px', flexShrink: 0,
+                        width: '48px', height: '48px', borderRadius: '14px', flexShrink: 0,
                         background: isDark ? `${f.color}15` : `${f.color}20`, 
                         color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', 
                         border: `1px solid ${f.color}30`
@@ -141,7 +141,7 @@ export default function LandingPage() {
                         <f.icon size={28} />
                       </div>
                     </div>
-                    <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '1.15rem', margin: 0, maxWidth: colSpan.includes('4') || colSpan.includes('3') ? '85%' : '100%' }}>{f.desc}</p>
+                    <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '1rem', margin: 0, maxWidth: colSpan.includes('4') || colSpan.includes('3') ? '85%' : '100%' }}>{f.desc}</p>
                   </div>
                 </motion.div>
               )
@@ -153,9 +153,9 @@ export default function LandingPage() {
       {/* How it Works */}
       <section id="how-it-works" style={{ padding: '120px 40px', borderTop: '1px solid var(--card-border)', borderBottom: '1px solid var(--card-border)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-            <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px' }}>How VignetteLab works</h2>
-            <p style={{ fontSize: '1.25rem', color: 'var(--muted)', maxWidth: '600px', margin: '0 auto' }}>From scattered thoughts to structured brilliance in three simple steps.</p>
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '16px' }}>How VignetteLab works</h2>
+            <p style={{ fontSize: '1.1rem', color: 'var(--muted)', maxWidth: '600px', margin: '0 auto' }}>From scattered thoughts to structured brilliance in three simple steps.</p>
           </div>
           
           <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -164,8 +164,8 @@ export default function LandingPage() {
                 <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(59,130,246,0.1)', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', fontWeight: 700, margin: '0 auto 24px' }}>
                   {i + 1}
                 </div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '16px' }}>{step.title}</h3>
-                <p style={{ color: 'var(--muted)', fontSize: '1.1rem', lineHeight: 1.6 }}>{step.desc}</p>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '12px' }}>{step.title}</h3>
+                <p style={{ color: 'var(--muted)', fontSize: '1rem', lineHeight: 1.6 }}>{step.desc}</p>
               </div>
             ))}
           </div>
@@ -175,21 +175,21 @@ export default function LandingPage() {
       {/* Stats Section */}
       <section id="pricing" style={{ padding: '120px 40px', position: 'relative', zIndex: 10 }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px' }}>Built for global scale</h2>
-          <p style={{ fontSize: '1.25rem', color: 'var(--muted)', marginBottom: '60px' }}>Join thousands of teams already designing at the speed of thought.</p>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '16px' }}>Built for global scale</h2>
+          <p style={{ fontSize: '1.1rem', color: 'var(--muted)', marginBottom: '60px' }}>Join thousands of teams already designing at the speed of thought.</p>
           
-          <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '24px', padding: '60px', display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '40px' }}>
+          <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '24px', padding: '40px 60px', display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '40px' }}>
             <div>
-              <div style={{ color: 'var(--muted)', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Active Users</div>
-              <div style={{ fontSize: '3.5rem', fontWeight: 800 }}>124,500+</div>
+              <div style={{ color: 'var(--muted)', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Active Users</div>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>124,500+</div>
             </div>
             <div>
-              <div style={{ color: 'var(--muted)', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Canvases Created</div>
-              <div style={{ fontSize: '3.5rem', fontWeight: 800 }}>2.4M</div>
+              <div style={{ color: 'var(--muted)', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Canvases Created</div>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>2.4M</div>
             </div>
             <div>
-              <div style={{ color: 'var(--muted)', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Uptime</div>
-              <div style={{ fontSize: '3.5rem', fontWeight: 800, color: '#10b981' }}>99.99%</div>
+              <div style={{ color: 'var(--muted)', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Uptime</div>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: '#10b981' }}>99.99%</div>
             </div>
           </div>
         </div>
@@ -198,8 +198,8 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section style={{ padding: '120px 40px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10, background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '40px', padding: '80px 40px', boxShadow: 'var(--shadow)' }}>
-          <h2 style={{ fontSize: '4rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '24px' }}>Ready to transform your <br/><span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>workflow?</span></h2>
-          <p style={{ fontSize: '1.25rem', color: 'var(--muted)', marginBottom: '40px', maxWidth: '500px', margin: '0 auto 40px' }}>Join ambitious teams using VignetteLab to design, brainstorm, and build the future.</p>
+          <h2 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '20px' }}>Ready to transform your <br/><span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>workflow?</span></h2>
+          <p style={{ fontSize: '1.1rem', color: 'var(--muted)', marginBottom: '40px', maxWidth: '500px', margin: '0 auto 40px' }}>Join ambitious teams using VignetteLab to design, brainstorm, and build the future.</p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
             <SmartGetStartedButton href="/register" text="Start your free workspace" size="lg" />
           </div>
