@@ -162,14 +162,14 @@ export default function LandingPage() {
 
       {/* Features */}
       <section id="features" style={{ padding: '120px 40px', position: 'relative', zIndex: 10, background: 'transparent' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '80px' }}>
             <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px', fontFamily: "'Outfit', sans-serif" }}>Intelligent by design</h2>
             <p style={{ fontSize: '1.25rem', color: '#a1a1aa', maxWidth: '600px', margin: '0 auto' }}>A meticulously engineered workspace that anticipates your needs, so you can focus entirely on your creative flow.</p>
           </div>
           
           {/* Bento Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '24px', gridAutoRows: 'minmax(320px, auto)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '24px', gridAutoRows: 'minmax(240px, auto)' }}>
             {FEATURES.map((f, i) => {
               // Calculate bento box spanning
               let colSpan = 'span 2';
@@ -216,7 +216,7 @@ export default function LandingPage() {
                       <f.icon size={26} />
                     </div>
                     
-                    <div style={{ marginTop: '60px' }}>
+                    <div style={{ marginTop: '32px' }}>
                       <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '12px', color: '#fff', fontFamily: "'Outfit', sans-serif" }}>{f.title}</h3>
                       <p style={{ color: '#a1a1aa', lineHeight: 1.6, fontSize: '1.1rem' }}>{f.desc}</p>
                     </div>
