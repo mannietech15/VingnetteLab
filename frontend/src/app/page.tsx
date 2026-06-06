@@ -12,12 +12,12 @@ import BlurText from '@/components/BlurText';
 import { SmartGetStartedButton, SmartLoginButton } from '@/components/SmartButtons';
 
 const FEATURES = [
-  { icon: Layers, color: '#6366f1', title: 'Infinite Canvas', desc: 'An endlessly scalable workspace. Pan, zoom, draw, and think without limits.' },
-  { icon: Cpu, color: '#8b5cf6', title: 'AI-Powered Layouts', desc: 'Let Vignette AI organize your chaos into structured, beautiful diagrams instantly.' },
-  { icon: Zap, color: '#f59e0b', title: 'Real-time Sync', desc: 'CRDT-powered collaboration. Multiple cursors, zero conflicts.' },
-  { icon: Shield, color: '#10b981', title: 'Enterprise Security', desc: 'SOC 2 compliant. Your data, encrypted end-to-end.' },
-  { icon: Globe, color: '#3b82f6', title: 'Works Everywhere', desc: 'Browser, desktop, tablet. Syncs seamlessly across all devices.' },
-  { icon: Star, color: '#ec4899', title: 'Smart Templates', desc: 'Jump-start any project with 50+ professionally designed canvas templates.' },
+  { icon: Layers, color: '#6366f1', title: 'Infinite Canvas', desc: 'An endlessly scalable workspace that adapts to your needs. Pan, zoom, draw, and think without boundaries. Organize your most complex thoughts into a single, cohesive spatial layout that grows as your ideas expand.' },
+  { icon: Cpu, color: '#8b5cf6', title: 'AI-Powered Layouts', desc: 'Harness the power of Vignette AI to automatically organize your chaotic brainstorming sessions into beautifully structured, professional diagrams and mind maps instantly. Let the intelligence handle the busywork.' },
+  { icon: Zap, color: '#f59e0b', title: 'Real-time Sync', desc: 'Experience seamless CRDT-powered collaboration. Work with your entire team simultaneously with multiple cursors, live updates, and absolute zero merge conflicts, ensuring everyone is always on the exact same page.' },
+  { icon: Shield, color: '#10b981', title: 'Enterprise Security', desc: 'Built from the ground up to be SOC 2 compliant. Your intellectual property is protected with end-to-end encryption, automated backups, and advanced role-based access controls for complete peace of mind.' },
+  { icon: Globe, color: '#3b82f6', title: 'Works Everywhere', desc: 'Access your workspaces from anywhere. Whether you are on a desktop browser, an iPad, or a mobile device, our platform syncs your changes seamlessly across all platforms for an uninterrupted creative workflow.' },
+  { icon: Star, color: '#ec4899', title: 'Smart Templates', desc: 'Never start from a blank page again. Jump-start your next big project with over 50 professionally designed, highly customizable canvas templates tailored for agile workflows, strategy planning, and deep research.' },
 ];
 
 export default function LandingPage() {
@@ -162,7 +162,7 @@ export default function LandingPage() {
 
       {/* Features */}
       <section id="features" style={{ padding: '120px 40px', position: 'relative', zIndex: 10, background: 'transparent' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '80px' }}>
             <h2 style={{ fontSize: '3.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px', fontFamily: "'Outfit', sans-serif" }}>Intelligent by design</h2>
             <p style={{ fontSize: '1.25rem', color: '#a1a1aa', maxWidth: '600px', margin: '0 auto' }}>A meticulously engineered workspace that anticipates your needs, so you can focus entirely on your creative flow.</p>
