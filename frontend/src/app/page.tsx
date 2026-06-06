@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { Sparkles, Layers, Cpu, Zap, Shield, Globe, Star, Moon, Sun } from 'lucide-react';
 import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
+import vignetteLab from '@/app/workspaces/vignetteLab.png';
 import { SmartGetStartedButton, SmartLoginButton } from '@/components/SmartButtons';
 
 const FEATURES = [
@@ -88,8 +89,8 @@ export default function LandingPage() {
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '800px', background: isDark ? 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(9,9,11,0) 70%)' : 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(250,250,250,0) 70%)', pointerEvents: 'none' }} />
         
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--nav-bg)', border: '1px solid var(--card-border)', padding: '8px 20px', borderRadius: '100px', fontSize: '14px', fontWeight: 600, color: '#3b82f6', marginBottom: '32px' }}>
-            <Sparkles size={16} /> Introducing Vignette AI 2.0
+          <div style={{ marginBottom: '32px' }}>
+            <Image src={vignetteLab} alt="VignetteLab" style={{ margin: '0 auto', height: '56px', width: 'auto', filter: isDark ? 'none' : 'invert(1)' }} />
           </div>
           <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '24px' }}>
             Design at the speed of <br/><span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>thought.</span>
