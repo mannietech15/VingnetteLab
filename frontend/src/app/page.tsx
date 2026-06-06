@@ -118,11 +118,6 @@ export default function LandingPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', padding: '8px 20px', borderRadius: '100px', fontSize: '14px', fontWeight: 600, color: '#34d399', marginBottom: '32px', boxShadow: '0 0 20px rgba(16,185,129,0.2)', cursor: 'pointer' }}>
-            <Sparkles size={16} color="#10b981" /> <BlurText text="Introducing Vignette AI" delay={50} animateBy="words" />
-          </motion.div>
           
           <h1 style={{ textAlign: 'center', fontSize: 'clamp(3rem, 5.5vw, 5rem)', fontWeight: 800, lineHeight: 1.0, letterSpacing: '-0.04em', marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: "'Outfit', sans-serif" }}>
             <BlurText text="Design at the speed of" delay={150} animateBy="words" />
