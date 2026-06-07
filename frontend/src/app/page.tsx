@@ -90,7 +90,7 @@ export default function LandingPage() {
         
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
           <div style={{ marginBottom: '32px' }}>
-            <Image src={vignetteLab} alt="VignetteLab" style={{ margin: '0 auto', height: '100px', width: 'auto', filter: isDark ? 'none' : 'invert(1)' }} />
+            <Image src={vignetteLab} alt="VignetteLab" style={{ margin: '0 auto', height: '250px', width: 'auto', filter: isDark ? 'none' : 'invert(1)' }} />
           </div>
           <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '24px' }}>
             Design at the speed of <br/><span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>thought.</span>
