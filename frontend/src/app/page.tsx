@@ -86,9 +86,43 @@ export default function LandingPage() {
       </div>
 
       {/* Hero Section */}
-      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', position: 'relative' }}>
+      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', position: 'relative', overflow: 'hidden' }}>
         <Landing3D />
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '800px', background: isDark ? 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(9,9,11,0) 70%)' : 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(250,250,250,0) 70%)', pointerEvents: 'none' }} />
+        
+        {/* Animated Background Grid */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(var(--muted) 1px, transparent 1px)', backgroundSize: '40px 40px', opacity: 0.15, zIndex: 1 }} />
+        
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '800px', background: isDark ? 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(9,9,11,0) 70%)' : 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(250,250,250,0) 70%)', pointerEvents: 'none', zIndex: 2 }} />
+
+        {/* Floating Mockup Cards */}
+        <motion.div 
+          animate={{ y: [0, -20, 0], rotate: [0, 3, 0] }} 
+          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+          style={{ position: 'absolute', top: '25%', left: '10%', background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)', backdropFilter: 'blur(16px)', border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, padding: '20px', borderRadius: '24px', zIndex: 5, boxShadow: '0 20px 40px rgba(0,0,0,0.1)', width: '220px' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }} />
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#f59e0b' }} />
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#10b981' }} />
+          </div>
+          <div style={{ width: '100%', height: '8px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '4px', marginBottom: '12px' }} />
+          <div style={{ width: '80%', height: '8px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '4px', marginBottom: '12px' }} />
+          <div style={{ width: '60%', height: '8px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '4px' }} />
+        </motion.div>
+
+        <motion.div 
+          animate={{ y: [0, 25, 0], rotate: [0, -3, 0] }} 
+          transition={{ repeat: Infinity, duration: 7, ease: "easeInOut", delay: 1 }}
+          style={{ position: 'absolute', bottom: '25%', right: '10%', background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)', backdropFilter: 'blur(16px)', border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, padding: '24px', borderRadius: '24px', zIndex: 5, boxShadow: '0 20px 40px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', gap: '16px' }}
+        >
+          <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'linear-gradient(135deg, #3b82f6, #10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+            <Cpu size={24} />
+          </div>
+          <div>
+            <div style={{ width: '120px', height: '10px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '5px', marginBottom: '10px' }} />
+            <div style={{ width: '80px', height: '10px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '5px' }} />
+          </div>
+        </motion.div>
         
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
           <div style={{ marginBottom: '32px' }}>

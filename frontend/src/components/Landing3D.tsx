@@ -11,9 +11,7 @@ export default function Landing3D() {
       width: '100%', 
       height: '100%', 
       zIndex: 0, 
-      opacity: 0.75,
-      maskImage: 'radial-gradient(circle at center, black 0%, transparent 80%)',
-      WebkitMaskImage: 'radial-gradient(circle at center, black 0%, transparent 80%)'
+      opacity: 1
     }}>
       <ColorBends
         colors={["#3b82f6", "#10b981", "#059669", "#1e3a8a"]}
