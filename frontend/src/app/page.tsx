@@ -35,10 +35,37 @@ const FEATURES = [
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
+  const [isDark, setIsDark] = useState(true);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+
+  // Theme tokens
+  const t = {
+    bg: isDark ? '#09090b' : '#ffffff',
+    text: isDark ? '#fafafa' : '#09090b',
+    muted: isDark ? '#a1a1aa' : '#6b7280',
+    mutedFaint: isDark ? '#71717a' : '#9ca3af',
+    mutedFaintest: isDark ? '#52525b' : '#d1d5db',
+    cardBg: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+    cardBorder: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+    cardHoverBorder: isDark ? 'rgba(124,58,237,0.4)' : 'rgba(124,58,237,0.3)',
+    cardHoverShadow: isDark ? 'rgba(124,58,237,0.15)' : 'rgba(124,58,237,0.1)',
+    navBg: isDark ? 'rgba(9,9,11,0.85)' : 'rgba(255,255,255,0.9)',
+    navBorder: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+    navShadow: isDark ? '0 8px 32px rgba(0,0,0,0.5)' : '0 8px 32px rgba(0,0,0,0.08)',
+    inputBg: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
+    inputBorder: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)',
+    sectionBorder: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+    imgShadow: isDark ? '0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)' : '0 40px 80px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05)',
+    catCardBg: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
+    catCardHover: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+    browseBtnBg: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
+    browseBtnBorder: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)',
+    featureGrad: isDark ? 'linear-gradient(180deg, rgba(124,58,237,0.05) 0%, transparent 100%)' : 'linear-gradient(180deg, rgba(124,58,237,0.04) 0%, transparent 100%)',
+    logoFilter: isDark ? 'none' : 'invert(1)',
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -47,31 +74,35 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div style={{ background: '#09090b', color: '#fafafa', minHeight: '100vh', fontFamily: "'Outfit', sans-serif", overflowX: 'hidden' }}>
+    <div style={{ background: t.bg, color: t.text, minHeight: '100vh', fontFamily: "'Outfit', sans-serif", overflowX: 'hidden', transition: 'background 0.4s ease, color 0.4s ease' }}>
 
       {/* Navbar */}
       <div style={{ position: 'fixed', top: scrolled ? '12px' : '20px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 50, transition: 'all 0.3s ease' }}>
         <nav style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '10px 24px',
-          background: scrolled ? 'rgba(9,9,11,0.85)' : 'transparent',
+          background: scrolled ? t.navBg : 'transparent',
           backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-          border: scrolled ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
+          border: scrolled ? `1px solid ${t.navBorder}` : '1px solid transparent',
           borderRadius: '100px', width: '92%', maxWidth: '1300px',
-          boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.5)' : 'none',
+          boxShadow: scrolled ? t.navShadow : 'none',
           transition: 'all 0.3s ease'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Image src={vignetteLogo} alt="Logo" width={32} height={32} style={{ borderRadius: '8px' }} />
+            <Image src={vignetteLogo} alt="Logo" width={32} height={32} style={{ borderRadius: '8px', filter: t.logoFilter }} />
             <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em' }}>VignetteLab</span>
           </div>
-          <div style={{ display: 'flex', gap: '28px', fontSize: '14px', fontWeight: 500, color: '#a1a1aa' }}>
+          <div style={{ display: 'flex', gap: '28px', fontSize: '14px', fontWeight: 500, color: t.muted }}>
             {['Features', 'Templates', 'Pricing', 'Enterprise'].map(l => (
               <a key={l} href={`#${l.toLowerCase()}`} style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseOver={e => (e.currentTarget.style.color = '#fff')} onMouseOut={e => (e.currentTarget.style.color = '#a1a1aa')}>{l}</a>
+                onMouseOver={e => (e.currentTarget.style.color = t.text)} onMouseOut={e => (e.currentTarget.style.color = t.muted)}>{l}</a>
             ))}
           </div>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <motion.button onClick={() => setIsDark(!isDark)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+              style={{ background: 'none', border: 'none', color: t.text, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '50%', transition: 'color 0.3s' }}>
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            </motion.button>
             <SmartLoginButton href="/login" />
             <SmartGetStartedButton href="/register" text="Get Started Free" size="sm" />
           </div>
@@ -87,7 +118,7 @@ export default function LandingPage() {
 
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.5 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: '100px', padding: '8px 20px', fontSize: '14px', color: '#a78bfa', fontWeight: 600, marginBottom: '32px' }}>
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: isDark ? 'rgba(124,58,237,0.15)' : 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: '100px', padding: '8px 20px', fontSize: '14px', color: '#a78bfa', fontWeight: 600, marginBottom: '32px' }}>
             <Sparkles size={16} /> Now with AI-powered design tools
           </motion.div>
 
@@ -96,20 +127,20 @@ export default function LandingPage() {
             <span style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6, #10b981, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '200% 200%', animation: 'gradientShift 4s ease infinite' }}>design today?</span>
           </h1>
 
-          <p style={{ fontSize: '1.2rem', color: '#a1a1aa', lineHeight: 1.7, maxWidth: '620px', margin: '0 auto 40px', fontWeight: 400 }}>
+          <p style={{ fontSize: '1.2rem', color: t.muted, lineHeight: 1.7, maxWidth: '620px', margin: '0 auto 40px', fontWeight: 400 }}>
             VignetteLab makes it easy to create professional presentations, social media graphics, diagrams, posters, and more — with the power of AI.
           </p>
 
           {/* Search-style CTA like Canva */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
-            style={{ display: 'flex', alignItems: 'center', gap: '0', maxWidth: '560px', margin: '0 auto 28px', background: 'rgba(255,255,255,0.06)', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.12)', padding: '6px 6px 6px 24px', backdropFilter: 'blur(8px)' }}>
-            <Search size={20} style={{ color: '#71717a', flexShrink: 0 }} />
+            style={{ display: 'flex', alignItems: 'center', gap: '0', maxWidth: '560px', margin: '0 auto 28px', background: t.inputBg, borderRadius: '100px', border: `1px solid ${t.inputBorder}`, padding: '6px 6px 6px 24px', backdropFilter: 'blur(8px)' }}>
+            <Search size={20} style={{ color: t.mutedFaint, flexShrink: 0 }} />
             <input type="text" placeholder="Search for templates, designs..." readOnly
-              style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: '#fafafa', fontSize: '16px', padding: '14px 16px', fontFamily: 'inherit' }} />
+              style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: t.text, fontSize: '16px', padding: '14px 16px', fontFamily: 'inherit' }} />
             <SmartGetStartedButton href="/register" text="Start designing" size="sm" />
           </motion.div>
 
-          <p style={{ fontSize: '13px', color: '#52525b', marginBottom: '48px' }}>Free forever. No credit card required.</p>
+          <p style={{ fontSize: '13px', color: t.mutedFaintest, marginBottom: '48px' }}>Free forever. No credit card required.</p>
         </motion.div>
 
         {/* Category Carousel */}
@@ -118,9 +149,9 @@ export default function LandingPage() {
           {CATEGORIES.map((cat, i) => (
             <motion.a key={i} href="/register"
               whileHover={{ scale: 1.05, y: -4 }} whileTap={{ scale: 0.97 }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '20px 28px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', cursor: 'pointer', textDecoration: 'none', color: '#fafafa', minWidth: '130px', transition: 'all 0.3s ease', flexShrink: 0 }}
-              onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = cat.color + '60'; }}
-              onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}>
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '20px 28px', background: t.catCardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '20px', cursor: 'pointer', textDecoration: 'none', color: t.text, minWidth: '130px', transition: 'all 0.3s ease', flexShrink: 0 }}
+              onMouseOver={e => { e.currentTarget.style.background = t.catCardHover; e.currentTarget.style.borderColor = cat.color + '60'; }}
+              onMouseOut={e => { e.currentTarget.style.background = t.catCardBg; e.currentTarget.style.borderColor = t.cardBorder; }}>
               <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: `0 8px 20px ${cat.color}40` }}>
                 <cat.icon size={24} />
               </div>
@@ -133,13 +164,13 @@ export default function LandingPage() {
       {/* === HERO SHOWCASE IMAGE === */}
       <section style={{ padding: '0 40px 100px', position: 'relative', zIndex: 10 }}>
         <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
-          style={{ maxWidth: '1200px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)' }}>
+          style={{ maxWidth: '1200px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: `1px solid ${t.cardBorder}`, boxShadow: t.imgShadow }}>
           <Image src="/hero-mockup.png" alt="VignetteLab workspace" width={1200} height={675} style={{ width: '100%', height: 'auto', display: 'block' }} />
         </motion.div>
       </section>
 
       {/* === SOCIAL PROOF BAR === */}
-      <section style={{ padding: '60px 40px', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <section style={{ padding: '60px 40px', borderTop: `1px solid ${t.sectionBorder}`, borderBottom: `1px solid ${t.sectionBorder}` }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap', gap: '40px' }}>
           {[
             { num: '124,500+', label: 'Active creators' },
@@ -149,8 +180,8 @@ export default function LandingPage() {
           ].map((s, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
               style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', color: s.accent ? '#10b981' : '#fafafa' }}>{s.num}</div>
-              <div style={{ fontSize: '14px', color: '#71717a', fontWeight: 500, marginTop: '4px', textTransform: 'uppercase', letterSpacing: '1px' }}>{s.label}</div>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', color: s.accent ? '#10b981' : t.text }}>{s.num}</div>
+              <div style={{ fontSize: '14px', color: t.mutedFaint, fontWeight: 500, marginTop: '4px', textTransform: 'uppercase', letterSpacing: '1px' }}>{s.label}</div>
             </motion.div>
           ))}
         </div>
@@ -164,7 +195,7 @@ export default function LandingPage() {
             <h2 style={{ fontSize: '2.8rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px' }}>
               Start with a stunning <span style={{ background: 'linear-gradient(135deg, #7c3aed, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>template</span>
             </h2>
-            <p style={{ fontSize: '1.1rem', color: '#a1a1aa', maxWidth: '550px', margin: '0 auto' }}>Browse thousands of professional templates for every need. Customize anything with drag-and-drop simplicity.</p>
+            <p style={{ fontSize: '1.1rem', color: t.muted, maxWidth: '550px', margin: '0 auto' }}>Browse thousands of professional templates for every need. Customize anything with drag-and-drop simplicity.</p>
           </motion.div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
@@ -172,16 +203,16 @@ export default function LandingPage() {
               <motion.div key={i}
                 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.6 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                style={{ borderRadius: '20px', overflow: 'hidden', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', transition: 'all 0.3s ease' }}
-                onMouseOver={e => { e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(124,58,237,0.15)'; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                style={{ borderRadius: '20px', overflow: 'hidden', background: t.cardBg, border: `1px solid ${t.cardBorder}`, cursor: 'pointer', transition: 'all 0.3s ease' }}
+                onMouseOver={e => { e.currentTarget.style.borderColor = t.cardHoverBorder; e.currentTarget.style.boxShadow = `0 20px 40px ${t.cardHoverShadow}`; }}
+                onMouseOut={e => { e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
                 <div style={{ aspectRatio: '1', overflow: 'hidden' }}>
                   <Image src={item.img} alt={item.title} width={400} height={400} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
                     onMouseOver={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseOut={e => (e.currentTarget.style.transform = 'scale(1)')} />
                 </div>
                 <div style={{ padding: '16px 20px' }}>
                   <div style={{ fontSize: '15px', fontWeight: 600, marginBottom: '4px' }}>{item.title}</div>
-                  <div style={{ fontSize: '13px', color: '#71717a' }}>{item.cat}</div>
+                  <div style={{ fontSize: '13px', color: t.mutedFaint }}>{item.cat}</div>
                 </div>
               </motion.div>
             ))}
@@ -189,7 +220,7 @@ export default function LandingPage() {
 
           <div style={{ textAlign: 'center', marginTop: '48px' }}>
             <motion.a href="/register" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 32px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fafafa', fontSize: '15px', fontWeight: 600, textDecoration: 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 32px', borderRadius: '100px', border: `1px solid ${t.browseBtnBorder}`, background: t.browseBtnBg, color: t.text, fontSize: '15px', fontWeight: 600, textDecoration: 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
               Browse all templates <ArrowRight size={18} />
             </motion.a>
           </div>
@@ -197,14 +228,14 @@ export default function LandingPage() {
       </section>
 
       {/* === FEATURES === */}
-      <section id="features" style={{ padding: '120px 40px', background: 'linear-gradient(180deg, rgba(124,58,237,0.05) 0%, transparent 100%)' }}>
+      <section id="features" style={{ padding: '120px 40px', background: t.featureGrad }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             style={{ textAlign: 'center', marginBottom: '80px' }}>
             <h2 style={{ fontSize: '2.8rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px' }}>
               Everything you need to <span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>create</span>
             </h2>
-            <p style={{ fontSize: '1.1rem', color: '#a1a1aa', maxWidth: '550px', margin: '0 auto' }}>A complete visual workspace with powerful tools that help you go from idea to polished design in minutes.</p>
+            <p style={{ fontSize: '1.1rem', color: t.muted, maxWidth: '550px', margin: '0 auto' }}>A complete visual workspace with powerful tools that help you go from idea to polished design in minutes.</p>
           </motion.div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
@@ -212,14 +243,14 @@ export default function LandingPage() {
               <motion.div key={i}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -4 }}
-                style={{ padding: '48px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '28px', transition: 'all 0.3s ease', cursor: 'default' }}
+                style={{ padding: '48px', background: t.cardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '28px', transition: 'all 0.3s ease', cursor: 'default' }}
                 onMouseOver={e => { e.currentTarget.style.borderColor = f.color + '50'; e.currentTarget.style.boxShadow = `0 20px 40px ${f.color}15`; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                onMouseOut={e => { e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
                 <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: f.color + '15', color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${f.color}30`, marginBottom: '24px' }}>
                   <f.icon size={28} />
                 </div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '12px' }}>{f.title}</h3>
-                <p style={{ color: '#a1a1aa', lineHeight: 1.7, fontSize: '1rem', margin: 0 }}>{f.desc}</p>
+                <p style={{ color: t.muted, lineHeight: 1.7, fontSize: '1rem', margin: 0 }}>{f.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -234,7 +265,7 @@ export default function LandingPage() {
           <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '24px', lineHeight: 1.1 }}>
             Ready to bring your<br />ideas to <span style={{ background: 'linear-gradient(135deg, #7c3aed, #ec4899, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>life?</span>
           </h2>
-          <p style={{ fontSize: '1.15rem', color: '#a1a1aa', marginBottom: '40px', maxWidth: '500px', margin: '0 auto 40px', lineHeight: 1.7 }}>
+          <p style={{ fontSize: '1.15rem', color: t.muted, marginBottom: '40px', maxWidth: '500px', margin: '0 auto 40px', lineHeight: 1.7 }}>
             Join over 124,000 creators already using VignetteLab. Start for free, no credit card needed.
           </p>
           <SmartGetStartedButton href="/register" text="Start designing for free" size="lg" />
@@ -242,16 +273,16 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '60px 40px', background: '#09090b' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#52525b', fontSize: '14px', flexWrap: 'wrap', gap: '20px' }}>
+      <footer style={{ borderTop: `1px solid ${t.sectionBorder}`, padding: '60px 40px', background: t.bg }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: t.mutedFaintest, fontSize: '14px', flexWrap: 'wrap', gap: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Image src={vignetteLogo} alt="Logo" width={24} height={24} style={{ borderRadius: '6px' }} />
+            <Image src={vignetteLogo} alt="Logo" width={24} height={24} style={{ borderRadius: '6px', filter: t.logoFilter }} />
             <span style={{ fontWeight: 600 }}>© 2026 VignetteLab. All rights reserved.</span>
           </div>
           <div style={{ display: 'flex', gap: '24px' }}>
             {['Privacy', 'Terms', 'Contact', 'Blog'].map(l => (
               <a key={l} href="#" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseOver={e => (e.currentTarget.style.color = '#a1a1aa')} onMouseOut={e => (e.currentTarget.style.color = '#52525b')}>{l}</a>
+                onMouseOver={e => (e.currentTarget.style.color = t.muted)} onMouseOut={e => (e.currentTarget.style.color = t.mutedFaintest)}>{l}</a>
             ))}
           </div>
         </div>
