@@ -68,7 +68,10 @@ const SHAPES = [
 export default function Toolbar() {
   const { currentTool, setTool, currentColor, setColor, currentSize, setSize, currentFontFamily, setFontFamily, currentFontSize, setFontSize, isFilled, setIsFilled, theme, undo, redo } = useCanvasStore();
   const [showShapes, setShowShapes] = useState(false);
+  const [showPalette, setShowPalette] = useState(false);
   const shapesMenuRef = useRef<HTMLDivElement>(null);
+  const paletteRef = useRef<HTMLDivElement>(null);
+  const colorInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -86,10 +89,13 @@ export default function Toolbar() {
       if (shapesMenuRef.current && !shapesMenuRef.current.contains(e.target as Node)) {
         setShowShapes(false);
       }
+      if (paletteRef.current && !paletteRef.current.contains(e.target as Node)) {
+        setShowPalette(false);
+      }
     };
-    if (showShapes) document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showShapes]);
+  }, []);
 
   const isShapeTool = SHAPES.some(s => s.id === currentTool);
   const CurrentShapeIcon = SHAPES.find(s => s.id === currentTool)?.icon || Square;
@@ -109,25 +115,116 @@ export default function Toolbar() {
       {/* Colors & Sizes Toolbar */}
       {(currentTool === 'pen' || isShapeTool || currentTool === 'text') && (
         <div className="glass-panel" style={{ padding: '8px 16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {COLORS.map(c => (
-              <button
-                key={c}
-                onClick={() => setColor(c)}
-                style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  backgroundColor: c,
-                  border: currentColor === c ? '2px solid var(--text-primary)' : '2px solid transparent',
-                  cursor: 'pointer'
-                }}
-              />
-            ))}
+          
+          {/* Color swatch button — opens palette popover */}
+          <div ref={paletteRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setShowPalette(p => !p)}
+              title="Choose color"
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '6px',
+                backgroundColor: currentColor,
+                border: '2px solid var(--border-color)',
+                cursor: 'pointer',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.15)',
+                transition: 'transform 0.15s',
+                flexShrink: 0,
+              }}
+              onMouseOver={e => e.currentTarget.style.transform = 'scale(1.12)'}
+              onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+            />
+
+            {/* Palette Popover */}
+            {showPalette && (
+              <div style={{
+                position: 'absolute',
+                bottom: 'calc(100% + 12px)',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '12px',
+                padding: '10px',
+                boxShadow: 'var(--shadow-lg)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                animation: 'fadeIn 0.15s ease-out',
+                zIndex: 20,
+              }}>
+                {/* 6 rows × 8 cols grid */}
+                {Array.from({ length: PALETTE_ROWS }).map((_, row) => (
+                  <div key={row} style={{ display: 'flex', gap: '4px' }}>
+                    {Array.from({ length: PALETTE_COLS }).map((_, col) => {
+                      const color = COLORS[row * PALETTE_COLS + col];
+                      const isSelected = currentColor === color;
+                      return (
+                        <button
+                          key={color}
+                          onClick={() => { setColor(color); setShowPalette(false); }}
+                          title={color}
+                          style={{
+                            width: '22px',
+                            height: '22px',
+                            borderRadius: '4px',
+                            backgroundColor: color,
+                            border: isSelected
+                              ? '2px solid var(--text-primary)'
+                              : color === '#ffffff' || color === '#f5f5f5' || color === '#fef3c7' || color === '#fff7ed'
+                                ? '1px solid var(--border-color)'
+                                : '2px solid transparent',
+                            cursor: 'pointer',
+                            transition: 'transform 0.1s, box-shadow 0.1s',
+                            boxShadow: isSelected ? '0 0 0 1px var(--bg-secondary)' : 'none',
+                          }}
+                          onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.2)'; e.currentTarget.style.zIndex = '2'; }}
+                          onMouseOut={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.zIndex = '1'; }}
+                        />
+                      );
+                    })}
+                  </div>
+                ))}
+
+                {/* Divider + Custom color picker */}
+                <div style={{ height: '1px', background: 'var(--border-color)', margin: '4px 0' }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Custom</span>
+                  <div style={{ position: 'relative' }}>
+                    <button
+                      onClick={() => colorInputRef.current?.click()}
+                      title="Custom color"
+                      style={{
+                        width: '22px', height: '22px', borderRadius: '4px',
+                        background: 'conic-gradient(red, yellow, lime, cyan, blue, magenta, red)',
+                        border: '2px solid transparent', cursor: 'pointer',
+                        transition: 'transform 0.1s',
+                      }}
+                      onMouseOver={e => e.currentTarget.style.transform = 'scale(1.2)'}
+                      onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+                    />
+                    <input
+                      ref={colorInputRef}
+                      type="color"
+                      value={currentColor}
+                      onChange={e => { setColor(e.target.value); }}
+                      style={{ position: 'absolute', opacity: 0, width: 0, height: 0, pointerEvents: 'none' }}
+                    />
+                  </div>
+                  {/* Show the currently active custom color hex */}
+                  <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'monospace', letterSpacing: '0.5px' }}>
+                    {currentColor.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
+
           <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }} />
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             {currentTool === 'text' && (
+
               <>
                 <select 
                   value={currentFontFamily}

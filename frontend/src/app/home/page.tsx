@@ -44,16 +44,21 @@ const CREATE_CANVAS = gql`
   }
 `;
 
-// Helper to dynamically assign beautiful patterns and colors to user-created canvases
-const PATTERNS = ['cards_grid', 'sticky_notes', 'timeline_h', 'hierarchy', 'flowchart', 'venn', 'columns_4', 'process_arrows'];
-const COLORS = ['#4361ee', '#e03131', '#2f9e44', '#f59e0b', '#9c36b5', '#14b8a6', '#0ea5e9', '#ec4899'];
+// All available patterns
+const PATTERNS = ['cards_grid', 'sticky_notes', 'timeline_h', 'hierarchy', 'flowchart', 'venn', 'columns_4', 'process_arrows', 'kanban', 'mindmap', 'radar', 'bars', 'table', 'circle_segments', 'columns_3', 'grid_2x2'];
 
+// Generate a unique full-spectrum color from any string using HSL
+// This gives every canvas its own distinct hue across the full color wheel
 function getVisuals(str: string) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  const h = Math.abs(hash) % 360;               // Full hue wheel 0-359°
+  const s = 55 + (Math.abs(hash >> 8) % 30);   // Saturation 55-85% (vivid but not garish)
+  const l = 38 + (Math.abs(hash >> 16) % 22);  // Lightness 38-60% (rich, readable)
+  const color = `hsl(${h}, ${s}%, ${l}%)`;
   return {
     pattern: PATTERNS[Math.abs(hash) % PATTERNS.length] as any,
-    color: COLORS[Math.abs(hash) % COLORS.length]
+    color,
   };
 }
 
