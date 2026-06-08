@@ -131,10 +131,12 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     // Draw Elements
     for (const element of elements) {
       if (element.type === 'stroke') {
+        const isBrush = element.strokeType === 'brush';
         const strokePath = getStroke(element.points, {
           size: element.size,
-          smoothing: 0.5,
-          thinning: 0.5,
+          smoothing: isBrush ? 0.8 : 0.5,
+          thinning: isBrush ? 0 : 0.5,
+          simulatePressure: !isBrush,
         });
         
         const pathData = getSvgPathFromStroke(strokePath);

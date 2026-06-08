@@ -3,12 +3,13 @@ import * as Y from 'yjs';
 import { supabase } from '@/lib/supabase';
 import { SupabaseProvider } from '@/lib/yjsSupabaseProvider';
 
-export type Tool = 'select' | 'pen' | 'text' | 'eraser' | 'line' | 'rect' | 'rounded_rect' | 'ellipse' | 'triangle' | 'right_triangle' | 'diamond' | 'pentagon' | 'hexagon' | 'arrow_right' | 'arrow_left' | 'arrow_up' | 'arrow_down' | 'star_4' | 'star_5' | 'star_6' | 'heart' | 'lightning';
+export type Tool = 'select' | 'pen' | 'brush' | 'text' | 'eraser' | 'line' | 'rect' | 'rounded_rect' | 'ellipse' | 'triangle' | 'right_triangle' | 'diamond' | 'pentagon' | 'hexagon' | 'arrow_right' | 'arrow_left' | 'arrow_up' | 'arrow_down' | 'star_4' | 'star_5' | 'star_6' | 'heart' | 'lightning';
 export type Point = [number, number, number];
 
 export interface StrokeElement {
   id: string;
   type: 'stroke';
+  strokeType?: 'pen' | 'brush';
   points: Point[];
   color: string;
   size: number;
