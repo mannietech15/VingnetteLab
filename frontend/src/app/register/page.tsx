@@ -23,16 +23,54 @@ export default function RegisterPage() {
       .catch(console.error);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
+    
+    try {
+      const response = await fetch('http://localhost:4000/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+            mutation Signup($email: String!, $password: String!, $name: String, $ipAddress: String) {
+              signup(email: $email, password: $password, name: $name, ipAddress: $ipAddress) {
+                id
+                email
+                name
+              }
+            }
+          `,
+          variables: {
+            email,
+            password,
+            name,
+            ipAddress
+          }
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.errors) {
+        console.error('Signup error:', result.errors);
+        alert(result.errors[0].message || 'Error signing up');
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(false);
       setIsSuccess(true);
       setTimeout(() => {
         window.location.href = '/home';
       }, 1000);
-    }, 2000);
+    } catch (error) {
+      console.error('Error during signup:', error);
+      alert('Failed to connect to the server');
+      setIsLoading(false);
+    }
   };
 
   const getStrength = () => {

@@ -21,6 +21,9 @@ export const resolvers = {
     },
     updateCanvasThumbnail: (_: any, { id, thumbnailUrl }: { id: string, thumbnailUrl: string }) => {
       return workspaceService.updateCanvasThumbnail(id, thumbnailUrl);
+    },
+    signup: (_: any, { email, password, name, ipAddress }: { email: string, password: string, name?: string, ipAddress?: string }) => {
+      return userService.signup(email, password, name, ipAddress);
     }
   }
 };

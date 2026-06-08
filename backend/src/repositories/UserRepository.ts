@@ -22,4 +22,14 @@ export class UserRepository {
       avatarUrl: user.avatarUrl || undefined,
     }));
   }
+
+  public async create(data: { email: string, password: string, name?: string, ipAddress?: string }): Promise<User> {
+    const user = await prisma.user.create({ data });
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name || undefined,
+      avatarUrl: user.avatarUrl || undefined,
+    };
+  }
 }

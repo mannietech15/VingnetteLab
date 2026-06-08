@@ -9,6 +9,7 @@ async function main() {
     create: {
       id: 'usr_1',
       email: 'test@vignettelab.com',
+      password: 'hashed_password_placeholder',
       name: 'Test User',
     },
   });
