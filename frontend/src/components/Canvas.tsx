@@ -522,6 +522,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
       
       addElement(newShape);
     } else if (currentTool === 'eraser') {
+      setIsDrawing(true);
       // Trigger eraser check immediately on click
       handleEraser(e.clientX, e.clientY);
     }
@@ -558,12 +559,12 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
       return;
     }
 
-    if (currentTool === 'eraser' && e.buttons === 1) {
+    if (currentTool === 'eraser' && isDrawing) {
       handleEraser(e.clientX, e.clientY);
       return;
     }
 
-    if (isDrawing && currentStrokeId && currentTool === 'pen') {
+    if (isDrawing && currentStrokeId && (currentTool === 'pen' || currentTool === 'brush')) {
       
       updateElement(currentStrokeId, (el) => {
         if (el.type !== 'stroke') return el;
