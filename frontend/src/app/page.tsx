@@ -1,33 +1,44 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Sparkles, Layers, Cpu, Zap, Shield, Globe, Star, Moon, Sun } from 'lucide-react';
+import { Sparkles, Layers, Cpu, Zap, Shield, Globe, Star, Moon, Sun, ArrowRight, Play, Search, Wand2, PenTool, Type, ImageIcon, LayoutGrid, Presentation, Share2, Users } from 'lucide-react';
 import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import vignetteLab from '@/app/workspaces/vignetteLab.png';
 import { SmartGetStartedButton, SmartLoginButton } from '@/components/SmartButtons';
-import Landing3D from '@/components/Landing3D';
 
-const FEATURES = [
-  { icon: Layers, color: '#6366f1', title: 'Infinite Canvas', desc: 'An endlessly scalable workspace. Pan, zoom, draw, and think without limits.' },
-  { icon: Cpu, color: '#8b5cf6', title: 'AI-Powered Layouts', desc: 'Let Vignette AI organize your chaos into structured, beautiful diagrams instantly.' },
-  { icon: Zap, color: '#f59e0b', title: 'Real-time Sync', desc: 'CRDT-powered collaboration. Multiple cursors, zero conflicts.' },
-  { icon: Shield, color: '#10b981', title: 'Enterprise Security', desc: 'SOC 2 compliant. Your data, encrypted end-to-end.' },
-  { icon: Globe, color: '#3b82f6', title: 'Works Everywhere', desc: 'Browser, desktop, tablet. Syncs seamlessly across all devices.' },
-  { icon: Star, color: '#ec4899', title: 'Smart Templates', desc: 'Jump-start any project with 50+ professionally designed canvas templates.' },
+const CATEGORIES = [
+  { label: 'Presentations', icon: Presentation, color: '#7c3aed', bg: 'linear-gradient(135deg, #7c3aed, #a78bfa)' },
+  { label: 'Social Media', icon: Share2, color: '#ec4899', bg: 'linear-gradient(135deg, #ec4899, #f9a8d4)' },
+  { label: 'Posters', icon: ImageIcon, color: '#f59e0b', bg: 'linear-gradient(135deg, #f59e0b, #fcd34d)' },
+  { label: 'Diagrams', icon: LayoutGrid, color: '#10b981', bg: 'linear-gradient(135deg, #10b981, #6ee7b7)' },
+  { label: 'Whiteboards', icon: PenTool, color: '#3b82f6', bg: 'linear-gradient(135deg, #3b82f6, #93c5fd)' },
+  { label: 'AI Art', icon: Wand2, color: '#f43f5e', bg: 'linear-gradient(135deg, #f43f5e, #fda4af)' },
+  { label: 'Documents', icon: Type, color: '#06b6d4', bg: 'linear-gradient(135deg, #06b6d4, #67e8f9)' },
+  { label: 'Team Spaces', icon: Users, color: '#8b5cf6', bg: 'linear-gradient(135deg, #8b5cf6, #c4b5fd)' },
 ];
 
-const STEPS = [
-  { title: "Drop your ideas", desc: "Start typing, drawing, or pasting images onto the infinite canvas." },
-  { title: "Let AI structure it", desc: "Click 'Auto-Organize' and watch Vignette AI create a perfect layout." },
-  { title: "Collaborate instantly", desc: "Share a link and work with your team in real-time." }
+const SHOWCASE = [
+  { img: '/hero-mockup.png', title: 'Business Presentations', cat: 'Presentations' },
+  { img: '/showcase-social.png', title: 'Social Media Posts', cat: 'Social Media' },
+  { img: '/showcase-presentation.png', title: 'Data Dashboards', cat: 'Analytics' },
+  { img: '/showcase-poster.png', title: 'Event Posters', cat: 'Marketing' },
+];
+
+const FEATURES = [
+  { icon: Layers, color: '#6366f1', title: 'Infinite Canvas', desc: 'Pan, zoom, draw, and think without any limits on a boundless workspace.' },
+  { icon: Cpu, color: '#8b5cf6', title: 'AI-Powered Design', desc: 'Let AI organize your chaos into structured, beautiful outputs instantly.' },
+  { icon: Zap, color: '#f59e0b', title: 'Real-time Collaboration', desc: 'Multiple cursors, zero conflicts. Work together seamlessly.' },
+  { icon: Shield, color: '#10b981', title: 'Enterprise Security', desc: 'SOC 2 compliant with end-to-end encryption for all your data.' },
 ];
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -35,228 +46,224 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const theme = {
-    '--bg': isDark ? '#09090b' : '#fafafa',
-    '--text': isDark ? '#fafafa' : '#09090b',
-    '--muted': isDark ? '#a1a1aa' : '#52525b',
-    '--card-bg': isDark ? 'linear-gradient(180deg, rgba(24,24,27,0.6) 0%, rgba(9,9,11,0.8) 100%)' : 'linear-gradient(180deg, #ffffff 0%, #f4f4f5 100%)',
-    '--card-border': isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-    '--nav-bg': isDark ? 'rgba(9, 9, 11, 0.7)' : 'rgba(255, 255, 255, 0.7)',
-    '--nav-border': isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
-    '--shadow': isDark ? '0 8px 30px rgba(0,0,0,0.4)' : '0 8px 30px rgba(0,0,0,0.05)',
-  } as React.CSSProperties;
-
   return (
-    <div style={{ ...theme, background: 'var(--bg)', color: 'var(--text)', minHeight: '100vh', fontFamily: "'Outfit', var(--font-inter), sans-serif", overflowX: 'hidden', transition: 'background 0.3s ease, color 0.3s ease' }}>
-      
+    <div style={{ background: '#09090b', color: '#fafafa', minHeight: '100vh', fontFamily: "'Outfit', sans-serif", overflowX: 'hidden' }}>
+
       {/* Navbar */}
-      <div style={{ position: 'fixed', top: scrolled ? '16px' : '24px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 50, transition: 'all 0.3s ease' }}>
+      <div style={{ position: 'fixed', top: scrolled ? '12px' : '20px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 50, transition: 'all 0.3s ease' }}>
         <nav style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '12px 24px', 
-          background: scrolled ? 'var(--nav-bg)' : 'transparent',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: scrolled ? `1px solid var(--nav-border)` : '1px solid transparent',
-          borderRadius: '100px',
-          width: '90%',
-          maxWidth: '1200px',
-          boxShadow: scrolled ? 'var(--shadow)' : 'none',
+          padding: '10px 24px',
+          background: scrolled ? 'rgba(9,9,11,0.85)' : 'transparent',
+          backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          border: scrolled ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
+          borderRadius: '100px', width: '92%', maxWidth: '1300px',
+          boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.5)' : 'none',
           transition: 'all 0.3s ease'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Image src={vignetteLogo} alt="Logo" width={32} height={32} style={{ borderRadius: '8px' }} />
             <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em' }}>VignetteLab</span>
           </div>
-          
-          <div style={{ display: 'flex', gap: '32px', fontSize: '15px', fontWeight: 500, color: 'var(--muted)' }}>
-            {['Features', 'How it Works', 'Pricing'].map(l => (
-              <a key={l} href={`#${l.toLowerCase().replace(/ /g, '-')}`} style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = 'var(--text)'} onMouseOut={e => e.currentTarget.style.color = 'inherit'}>{l}</a>
+          <div style={{ display: 'flex', gap: '28px', fontSize: '14px', fontWeight: 500, color: '#a1a1aa' }}>
+            {['Features', 'Templates', 'Pricing', 'Enterprise'].map(l => (
+              <a key={l} href={`#${l.toLowerCase()}`} style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseOver={e => (e.currentTarget.style.color = '#fff')} onMouseOut={e => (e.currentTarget.style.color = '#a1a1aa')}>{l}</a>
             ))}
           </div>
-          
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <button onClick={() => setIsDark(!isDark)} style={{ background: 'none', border: 'none', color: 'var(--text)', cursor: 'pointer', display: 'flex', padding: '8px', borderRadius: '50%' }}>
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             <SmartLoginButton href="/login" />
-            <SmartGetStartedButton href="/register" text="Get Started" size="sm" />
+            <SmartGetStartedButton href="/register" text="Get Started Free" size="sm" />
           </div>
         </nav>
       </div>
 
-      {/* Hero Section */}
-      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '80px', position: 'relative', overflow: 'hidden' }}>
-        <Landing3D />
-        
-        {/* Animated Background Grid */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(var(--muted) 1px, transparent 1px)', backgroundSize: '40px 40px', opacity: 0.15, zIndex: 1 }} />
-        
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '800px', background: isDark ? 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(9,9,11,0) 70%)' : 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(250,250,250,0) 70%)', pointerEvents: 'none', zIndex: 2 }} />
+      {/* === HERO === */}
+      <motion.section ref={heroRef} style={{ opacity: heroOpacity, scale: heroScale, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingTop: '100px', paddingBottom: '60px', overflow: 'hidden' }}>
+        {/* Gradient Orbs */}
+        <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
+        <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
+        <div style={{ position: 'absolute', top: '30%', right: '20%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
 
-        {/* Floating Mockup Cards */}
-        <motion.div 
-          animate={{ y: [0, -20, 0], rotate: [0, 3, 0] }} 
-          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-          style={{ position: 'absolute', top: '25%', left: '10%', background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)', backdropFilter: 'blur(16px)', border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, padding: '20px', borderRadius: '24px', zIndex: 5, boxShadow: '0 20px 40px rgba(0,0,0,0.1)', width: '220px' }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }} />
-            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#f59e0b' }} />
-            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#10b981' }} />
-          </div>
-          <div style={{ width: '100%', height: '8px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '4px', marginBottom: '12px' }} />
-          <div style={{ width: '80%', height: '8px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '4px', marginBottom: '12px' }} />
-          <div style={{ width: '60%', height: '8px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '4px' }} />
-        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.5 }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: '100px', padding: '8px 20px', fontSize: '14px', color: '#a78bfa', fontWeight: 600, marginBottom: '32px' }}>
+            <Sparkles size={16} /> Now with AI-powered design tools
+          </motion.div>
 
-        <motion.div 
-          animate={{ y: [0, 25, 0], rotate: [0, -3, 0] }} 
-          transition={{ repeat: Infinity, duration: 7, ease: "easeInOut", delay: 1 }}
-          style={{ position: 'absolute', bottom: '25%', right: '10%', background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)', backdropFilter: 'blur(16px)', border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, padding: '24px', borderRadius: '24px', zIndex: 5, boxShadow: '0 20px 40px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', gap: '16px' }}
-        >
-          <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'linear-gradient(135deg, #3b82f6, #10b981)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-            <Cpu size={24} />
-          </div>
-          <div>
-            <div style={{ width: '120px', height: '10px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '5px', marginBottom: '10px' }} />
-            <div style={{ width: '80px', height: '10px', background: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: '5px' }} />
-          </div>
-        </motion.div>
-        
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
-          <div style={{ marginBottom: '32px' }}>
-            <Image src={vignetteLab} alt="VignetteLab" style={{ margin: '0 auto', height: '250px', width: 'auto', filter: isDark ? 'none' : 'invert(1)' }} />
-          </div>
-          <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '24px' }}>
-            Design at the speed of <br/><span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>thought.</span>
+          <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '24px' }}>
+            What will you<br />
+            <span style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6, #10b981, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '200% 200%', animation: 'gradientShift 4s ease infinite' }}>design today?</span>
           </h1>
-          <p style={{ fontSize: '1.15rem', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
-            The infinite canvas workspace that ambitious teams love. Draw, diagram, collaborate, and let AI transform your ideas into polished outputs — all in one unified place.
+
+          <p style={{ fontSize: '1.2rem', color: '#a1a1aa', lineHeight: 1.7, maxWidth: '620px', margin: '0 auto 40px', fontWeight: 400 }}>
+            VignetteLab makes it easy to create professional presentations, social media graphics, diagrams, posters, and more — with the power of AI.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
-            <SmartGetStartedButton href="/register" text="Start your free workspace" size="lg" />
-          </div>
+
+          {/* Search-style CTA like Canva */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0', maxWidth: '560px', margin: '0 auto 28px', background: 'rgba(255,255,255,0.06)', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.12)', padding: '6px 6px 6px 24px', backdropFilter: 'blur(8px)' }}>
+            <Search size={20} style={{ color: '#71717a', flexShrink: 0 }} />
+            <input type="text" placeholder="Search for templates, designs..." readOnly
+              style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: '#fafafa', fontSize: '16px', padding: '14px 16px', fontFamily: 'inherit' }} />
+            <SmartGetStartedButton href="/register" text="Start designing" size="sm" />
+          </motion.div>
+
+          <p style={{ fontSize: '13px', color: '#52525b', marginBottom: '48px' }}>Free forever. No credit card required.</p>
+        </motion.div>
+
+        {/* Category Carousel */}
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
+          style={{ display: 'flex', gap: '16px', padding: '0 40px', overflowX: 'auto', maxWidth: '100%', zIndex: 10, scrollbarWidth: 'none' }}>
+          {CATEGORIES.map((cat, i) => (
+            <motion.a key={i} href="/register"
+              whileHover={{ scale: 1.05, y: -4 }} whileTap={{ scale: 0.97 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '20px 28px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', cursor: 'pointer', textDecoration: 'none', color: '#fafafa', minWidth: '130px', transition: 'all 0.3s ease', flexShrink: 0 }}
+              onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = cat.color + '60'; }}
+              onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}>
+              <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: `0 8px 20px ${cat.color}40` }}>
+                <cat.icon size={24} />
+              </div>
+              <span style={{ fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap' }}>{cat.label}</span>
+            </motion.a>
+          ))}
+        </motion.div>
+      </motion.section>
+
+      {/* === HERO SHOWCASE IMAGE === */}
+      <section style={{ padding: '0 40px 100px', position: 'relative', zIndex: 10 }}>
+        <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
+          style={{ maxWidth: '1200px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)' }}>
+          <Image src="/hero-mockup.png" alt="VignetteLab workspace" width={1200} height={675} style={{ width: '100%', height: 'auto', display: 'block' }} />
         </motion.div>
       </section>
 
-      {/* Bento Grid Features */}
-      <section id="features" style={{ padding: '120px 40px', position: 'relative', zIndex: 10 }}>
+      {/* === SOCIAL PROOF BAR === */}
+      <section style={{ padding: '60px 40px', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap', gap: '40px' }}>
+          {[
+            { num: '124,500+', label: 'Active creators' },
+            { num: '2.4M', label: 'Designs created' },
+            { num: '50+', label: 'Template categories' },
+            { num: '99.99%', label: 'Uptime', accent: true },
+          ].map((s, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+              style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', color: s.accent ? '#10b981' : '#fafafa' }}>{s.num}</div>
+              <div style={{ fontSize: '14px', color: '#71717a', fontWeight: 500, marginTop: '4px', textTransform: 'uppercase', letterSpacing: '1px' }}>{s.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* === SHOWCASE GRID (Canva-style) === */}
+      <section id="templates" style={{ padding: '120px 40px', position: 'relative' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '16px' }}>Intelligent by design</h2>
-            <p style={{ fontSize: '1.1rem', color: 'var(--muted)', maxWidth: '600px', margin: '0 auto' }}>A meticulously engineered workspace that anticipates your needs, so you can focus entirely on your creative flow.</p>
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <h2 style={{ fontSize: '2.8rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px' }}>
+              Start with a stunning <span style={{ background: 'linear-gradient(135deg, #7c3aed, #ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>template</span>
+            </h2>
+            <p style={{ fontSize: '1.1rem', color: '#a1a1aa', maxWidth: '550px', margin: '0 auto' }}>Browse thousands of professional templates for every need. Customize anything with drag-and-drop simplicity.</p>
+          </motion.div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+            {SHOWCASE.map((item, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.6 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                style={{ borderRadius: '20px', overflow: 'hidden', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', transition: 'all 0.3s ease' }}
+                onMouseOver={e => { e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(124,58,237,0.15)'; }}
+                onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                <div style={{ aspectRatio: '1', overflow: 'hidden' }}>
+                  <Image src={item.img} alt={item.title} width={400} height={400} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
+                    onMouseOver={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseOut={e => (e.currentTarget.style.transform = 'scale(1)')} />
+                </div>
+                <div style={{ padding: '16px 20px' }}>
+                  <div style={{ fontSize: '15px', fontWeight: 600, marginBottom: '4px' }}>{item.title}</div>
+                  <div style={{ fontSize: '13px', color: '#71717a' }}>{item.cat}</div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '24px', gridAutoRows: 'minmax(280px, auto)' }}>
-            {FEATURES.map((f, i) => {
-              let colSpan = 'span 2';
-              if (i === 0) colSpan = 'span 4'; 
-              else if (i === 3) colSpan = 'span 4'; 
-              else if (i === 4) colSpan = 'span 3'; 
-              else if (i === 5) colSpan = 'span 3'; 
-              
-              return (
-                <motion.div key={i}
-                  initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.6, delay: i * 0.1 }}
-                  style={{
-                    gridColumn: colSpan,
-                    background: 'var(--card-bg)', border: '1px solid var(--card-border)',
-                    borderRadius: '28px', position: 'relative', overflow: 'hidden',
-                    boxShadow: 'var(--shadow)', display: 'flex', flexDirection: 'column'
-                  }}
-                >
-                  <div style={{ padding: '40px', flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-                      <h3 style={{ fontSize: '1.4rem', fontWeight: 700, margin: 0 }}>{f.title}</h3>
-                      <div style={{ 
-                        width: '48px', height: '48px', borderRadius: '14px', flexShrink: 0,
-                        background: isDark ? `${f.color}15` : `${f.color}20`, 
-                        color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                        border: `1px solid ${f.color}30`
-                      }}>
-                        <f.icon size={28} />
-                      </div>
-                    </div>
-                    <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '1rem', margin: 0, maxWidth: colSpan.includes('4') || colSpan.includes('3') ? '85%' : '100%' }}>{f.desc}</p>
-                  </div>
-                </motion.div>
-              )
-            })}
+
+          <div style={{ textAlign: 'center', marginTop: '48px' }}>
+            <motion.a href="/register" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 32px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.05)', color: '#fafafa', fontSize: '15px', fontWeight: 600, textDecoration: 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
+              Browse all templates <ArrowRight size={18} />
+            </motion.a>
           </div>
         </div>
       </section>
 
-      {/* How it Works */}
-      <section id="how-it-works" style={{ padding: '120px 40px', borderTop: '1px solid var(--card-border)', borderBottom: '1px solid var(--card-border)' }}>
+      {/* === FEATURES === */}
+      <section id="features" style={{ padding: '120px 40px', background: 'linear-gradient(180deg, rgba(124,58,237,0.05) 0%, transparent 100%)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '16px' }}>How VignetteLab works</h2>
-            <p style={{ fontSize: '1.1rem', color: 'var(--muted)', maxWidth: '600px', margin: '0 auto' }}>From scattered thoughts to structured brilliance in three simple steps.</p>
-          </div>
-          
-          <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {STEPS.map((step, i) => (
-              <div key={i} style={{ flex: '1 1 300px', textAlign: 'center', padding: '40px', background: 'var(--card-bg)', borderRadius: '24px', border: '1px solid var(--card-border)' }}>
-                <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(59,130,246,0.1)', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', fontWeight: 700, margin: '0 auto 24px' }}>
-                  {i + 1}
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            style={{ textAlign: 'center', marginBottom: '80px' }}>
+            <h2 style={{ fontSize: '2.8rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '16px' }}>
+              Everything you need to <span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>create</span>
+            </h2>
+            <p style={{ fontSize: '1.1rem', color: '#a1a1aa', maxWidth: '550px', margin: '0 auto' }}>A complete visual workspace with powerful tools that help you go from idea to polished design in minutes.</p>
+          </motion.div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+            {FEATURES.map((f, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -4 }}
+                style={{ padding: '48px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '28px', transition: 'all 0.3s ease', cursor: 'default' }}
+                onMouseOver={e => { e.currentTarget.style.borderColor = f.color + '50'; e.currentTarget.style.boxShadow = `0 20px 40px ${f.color}15`; }}
+                onMouseOut={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: f.color + '15', color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${f.color}30`, marginBottom: '24px' }}>
+                  <f.icon size={28} />
                 </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '12px' }}>{step.title}</h3>
-                <p style={{ color: 'var(--muted)', fontSize: '1rem', lineHeight: 1.6 }}>{step.desc}</p>
-              </div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '12px' }}>{f.title}</h3>
+                <p style={{ color: '#a1a1aa', lineHeight: 1.7, fontSize: '1rem', margin: 0 }}>{f.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section id="pricing" style={{ padding: '120px 40px', position: 'relative', zIndex: 10 }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '16px' }}>Built for global scale</h2>
-          <p style={{ fontSize: '1.1rem', color: 'var(--muted)', marginBottom: '60px' }}>Join thousands of teams already designing at the speed of thought.</p>
-          
-          <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '24px', padding: '40px 60px', display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '40px' }}>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Active Users</div>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>124,500+</div>
-            </div>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Canvases Created</div>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>2.4M</div>
-            </div>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, marginBottom: '8px' }}>Uptime</div>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: '#10b981' }}>99.99%</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section style={{ padding: '120px 40px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10, background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '40px', padding: '80px 40px', boxShadow: 'var(--shadow)' }}>
-          <h2 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '20px' }}>Ready to transform your <br/><span style={{ background: 'linear-gradient(135deg, #3b82f6, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>workflow?</span></h2>
-          <p style={{ fontSize: '1.1rem', color: 'var(--muted)', marginBottom: '40px', maxWidth: '500px', margin: '0 auto 40px' }}>Join ambitious teams using VignetteLab to design, brainstorm, and build the future.</p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
-            <SmartGetStartedButton href="/register" text="Start your free workspace" size="lg" />
-          </div>
-        </div>
+      {/* === BIG CTA SECTION === */}
+      <section style={{ padding: '140px 40px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '800px', background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(40px)' }} />
+        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10 }}>
+          <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '24px', lineHeight: 1.1 }}>
+            Ready to bring your<br />ideas to <span style={{ background: 'linear-gradient(135deg, #7c3aed, #ec4899, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>life?</span>
+          </h2>
+          <p style={{ fontSize: '1.15rem', color: '#a1a1aa', marginBottom: '40px', maxWidth: '500px', margin: '0 auto 40px', lineHeight: 1.7 }}>
+            Join over 124,000 creators already using VignetteLab. Start for free, no credit card needed.
+          </p>
+          <SmartGetStartedButton href="/register" text="Start designing for free" size="lg" />
+        </motion.div>
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--card-border)', padding: '60px 40px', background: 'var(--bg)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--muted)', fontSize: '14px' }}>
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '60px 40px', background: '#09090b' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#52525b', fontSize: '14px', flexWrap: 'wrap', gap: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Image src={vignetteLogo} alt="Logo" width={24} height={24} style={{ borderRadius: '6px', filter: isDark ? 'none' : 'invert(1)' }} />
+            <Image src={vignetteLogo} alt="Logo" width={24} height={24} style={{ borderRadius: '6px' }} />
             <span style={{ fontWeight: 600 }}>© 2026 VignetteLab. All rights reserved.</span>
           </div>
           <div style={{ display: 'flex', gap: '24px' }}>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Privacy</a>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Terms</a>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a>
+            {['Privacy', 'Terms', 'Contact', 'Blog'].map(l => (
+              <a key={l} href="#" style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseOver={e => (e.currentTarget.style.color = '#a1a1aa')} onMouseOut={e => (e.currentTarget.style.color = '#52525b')}>{l}</a>
+            ))}
           </div>
         </div>
       </footer>
+
+      <style jsx global>{`
+        @keyframes gradientShift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        ::-webkit-scrollbar { display: none; }
+      `}</style>
     </div>
   );
 }
