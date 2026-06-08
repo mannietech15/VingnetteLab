@@ -1,0 +1,38 @@
+services:
+  # Backend API Service
+  - type: web
+    name: vignettelab-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: DATABASE_URL
+        sync: false # Set this in the Render Dashboard (from Supabase)
+      - key: DIRECT_URL
+        sync: false # Set this in the Render Dashboard (from Supabase)
+      - key: SUPABASE_URL
+        sync: false # Set this in the Render Dashboard
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false # Set this in the Render Dashboard
+
+  # Frontend Next.js Service
+  - type: web
+    name: vignettelab-frontend
+    env: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_GRAPHQL_URL
+        fromService:
+          type: web
+          name: vignettelab-backend
+          envVarKey: RENDER_EXTERNAL_URL
+        # We append /graphql to the URL
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false # Set this in the Render Dashboard
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false # Set this in the Render Dashboard

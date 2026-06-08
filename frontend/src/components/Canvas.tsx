@@ -717,6 +717,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
         const screenY = textEl.y * camera.z + camera.y;
         return (
           <div
+            key={textEl.id}
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => {
