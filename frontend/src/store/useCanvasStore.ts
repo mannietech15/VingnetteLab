@@ -69,6 +69,8 @@ interface CanvasState {
   isFilled: boolean;
   theme: 'light' | 'dark' | 'system';
   
+  selectedId: string | null;
+
   // Actions
   setTool: (tool: Tool) => void;
   setColor: (color: string) => void;
@@ -78,6 +80,7 @@ interface CanvasState {
   setIsFilled: (isFilled: boolean) => void;
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
   setCamera: (updater: (prev: Camera) => Camera) => void;
+  setSelectedId: (id: string | null) => void;
   
   addElement: (element: CanvasElement) => void;
   updateElement: (id: string, updater: (el: CanvasElement) => CanvasElement) => void;
@@ -87,7 +90,7 @@ interface CanvasState {
   redo: () => void;
 }
 
-export const useCanvasStore = create<CanvasState>((set) => {
+export const useCanvasStore = create<CanvasState>((set, get) => {
   
   // Listen to Yjs changes and sync back to Zustand
   yElements.observe(() => {
@@ -105,14 +108,51 @@ export const useCanvasStore = create<CanvasState>((set) => {
     currentFontSize: 24,
     isFilled: false,
     theme: 'system',
+    selectedId: null,
 
-    setTool: (tool) => set({ currentTool: tool }),
-    setColor: (color) => set({ currentColor: color }),
-    setSize: (size) => set({ currentSize: size }),
-    setFontFamily: (fontFamily) => set({ currentFontFamily: fontFamily }),
-    setFontSize: (fontSize) => set({ currentFontSize: Math.max(8, Math.min(200, fontSize)) }),
-    setIsFilled: (isFilled) => set({ isFilled }),
+    setTool: (tool) => set({ currentTool: tool, selectedId: tool === 'select' ? get().selectedId : null }),
+    setColor: (color) => {
+      set({ currentColor: color });
+      const { selectedId, updateElement, elements } = get();
+      if (selectedId) {
+        updateElement(selectedId, (el) => ({ ...el, color }));
+      }
+    },
+    setSize: (size) => {
+      set({ currentSize: size });
+      const { selectedId, updateElement, elements } = get();
+      if (selectedId) {
+        const el = elements.find(e => e.id === selectedId);
+        if (el?.type === 'stroke') updateElement(selectedId, (e) => ({ ...e, size }));
+      }
+    },
+    setFontFamily: (fontFamily) => {
+      set({ currentFontFamily: fontFamily });
+      const { selectedId, updateElement, elements } = get();
+      if (selectedId) {
+        const el = elements.find(e => e.id === selectedId);
+        if (el?.type === 'text') updateElement(selectedId, (e) => ({ ...e, fontFamily } as TextElement));
+      }
+    },
+    setFontSize: (fontSize) => {
+      const newSize = Math.max(8, Math.min(200, fontSize));
+      set({ currentFontSize: newSize });
+      const { selectedId, updateElement, elements } = get();
+      if (selectedId) {
+        const el = elements.find(e => e.id === selectedId);
+        if (el?.type === 'text') updateElement(selectedId, (e) => ({ ...e, fontSize: newSize } as TextElement));
+      }
+    },
+    setIsFilled: (isFilled) => {
+      set({ isFilled });
+      const { selectedId, updateElement, elements } = get();
+      if (selectedId) {
+        const el = elements.find(e => e.id === selectedId);
+        if (el?.type && el.type !== 'stroke' && el.type !== 'text') updateElement(selectedId, (e) => ({ ...e, isFilled } as ShapeElement));
+      }
+    },
     setTheme: (theme) => set({ theme }),
+    setSelectedId: (id) => set({ selectedId: id }),
     
     setCamera: (updater) => set((state) => ({ camera: updater(state.camera) })),
     

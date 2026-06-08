@@ -25,6 +25,8 @@ function getSvgPathFromStroke(stroke: number[][]) {
 
 export const SHAPE_TOOLS = ['line', 'rect', 'rounded_rect', 'ellipse', 'triangle', 'right_triangle', 'diamond', 'pentagon', 'hexagon', 'arrow_right', 'arrow_left', 'arrow_up', 'arrow_down', 'star_4', 'star_5', 'star_6', 'heart', 'lightning'];
 
+const generateId = () => Date.now().toString() + Math.random().toString(36).substr(2, 5);
+
 export default function Canvas({ templateId }: { templateId?: string | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
@@ -39,7 +41,9 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     setCamera,
     addElement,
     updateElement,
-    removeElement
+    removeElement,
+    selectedId,
+    setSelectedId
   } = useCanvasStore();
 
   const template = templateId ? TEMPLATES.find(t => t.id === templateId) : null;
@@ -50,7 +54,6 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
   const [lastPanPoint, setLastPanPoint] = useState<{x: number, y: number} | null>(null);
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
 
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isDraggingElement, setIsDraggingElement] = useState(false);
   const [dragStartPoint, setDragStartPoint] = useState<{x: number, y: number} | null>(null);
 
@@ -64,7 +67,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedId, removeElement]);
+  }, [selectedId, removeElement, setSelectedId]);
 
   const getElementAtPosition = useCallback((x: number, y: number) => {
     for (let i = elements.length - 1; i >= 0; i--) {
@@ -464,7 +467,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
       if (clickedEl && clickedEl.type === 'text') {
         setEditingTextId(clickedEl.id);
       } else {
-        const id = Date.now().toString();
+        const id = generateId();
         const newText: TextElement = {
           id,
           type: 'text',
@@ -472,7 +475,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           y,
           text: '',
           fontFamily: currentFontFamily,
-          fontSize: currentSize * 6, // Base sizes 2,4,8,12,16 => 12,24,48,72,96
+          fontSize: currentFontSize,
           color: currentColor
         };
         addElement(newText);
@@ -483,7 +486,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
 
     if (currentTool === 'pen') {
       setIsDrawing(true);
-      const id = Date.now().toString(); // simple ID generator
+      const id = generateId(); // simple ID generator
       setCurrentStrokeId(id);
       
       const newStroke: StrokeElement = {
@@ -497,7 +500,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
       addElement(newStroke);
     } else if (SHAPE_TOOLS.includes(currentTool)) {
       setIsDrawing(true);
-      const id = Date.now().toString();
+      const id = generateId();
       setCurrentStrokeId(id);
       
       const { x, y } = screenToWorld(e.clientX, e.clientY);
@@ -715,13 +718,21 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => {
-              const text = e.currentTarget.innerText;
-              if (!text.trim()) removeElement(textEl.id);
-              else updateElement(textEl.id, (el) => ({ ...el, text }));
-              setEditingTextId(null);
+              // Read directly from the store to avoid stale closures if React hasn't re-rendered yet
+              const latestElements = useCanvasStore.getState().elements;
+              const latestEl = latestElements.find(el => el.id === textEl.id) as TextElement;
+              
+              if (!latestEl || !latestEl.text.trim()) {
+                useCanvasStore.getState().removeElement(textEl.id);
+              }
+              
+              // Only clear editingTextId if it hasn't already been moved to a new text element
+              setEditingTextId(prev => prev === textEl.id ? null : prev);
             }}
             onInput={(e) => {
-              updateElement(textEl.id, (el) => ({ ...el, text: e.currentTarget.innerText }));
+              // innerText preserves newlines properly for contentEditable
+              const newText = (e.currentTarget as HTMLElement).innerText || '';
+              updateElement(textEl.id, (el) => ({ ...el, text: newText }));
             }}
             onPointerDown={e => e.stopPropagation()}
             style={{
