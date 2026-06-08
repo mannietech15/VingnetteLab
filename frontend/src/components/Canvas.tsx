@@ -37,6 +37,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     currentColor, 
     currentSize,
     currentFontFamily,
+    currentFontSize,
     isFilled,
     setCamera,
     addElement,
@@ -463,6 +464,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     setSelectedId(null);
 
     if (currentTool === 'text') {
+      e.preventDefault(); // Prevent canvas from stealing focus via default mousedown
       const clickedEl = getElementAtPosition(x, y);
       if (clickedEl && clickedEl.type === 'text') {
         setEditingTextId(clickedEl.id);
@@ -742,6 +744,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
               fontSize: `${textEl.fontSize * camera.z}px`,
               fontFamily: `"${textEl.fontFamily}", sans-serif`,
               color: textEl.color,
+              caretColor: 'var(--text-primary)',
               background: 'transparent',
               border: '2px dashed var(--accent-primary)',
               borderRadius: '4px',
@@ -758,17 +761,13 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
             ref={(el) => {
               if (el && document.activeElement !== el) {
                 el.innerText = textEl.text;
-                setTimeout(() => {
-                  if (document.activeElement !== el) {
-                    el.focus();
-                    const range = document.createRange();
-                    range.selectNodeContents(el);
-                    range.collapse(false);
-                    const sel = window.getSelection();
-                    sel?.removeAllRanges();
-                    sel?.addRange(range);
-                  }
-                }, 10);
+                el.focus();
+                const range = document.createRange();
+                range.selectNodeContents(el);
+                range.collapse(false);
+                const sel = window.getSelection();
+                sel?.removeAllRanges();
+                sel?.addRange(range);
               }
             }}
           />
