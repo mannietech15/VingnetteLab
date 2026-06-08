@@ -131,7 +131,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     // Draw Elements
     for (const element of elements) {
       if (element.type === 'stroke') {
-        const isBrush = element.strokeType === 'brush';
+        const isBrush = element.strokeType === 'brush' || element.strokeType === 'eraser';
         const strokePath = getStroke(element.points, {
           size: element.size,
           smoothing: isBrush ? 0.8 : 0.5,
@@ -141,8 +141,17 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
         
         const pathData = getSvgPathFromStroke(strokePath);
         const p = new Path2D(pathData);
-        ctx.fillStyle = element.color;
+        
+        if (element.strokeType === 'eraser') {
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.fillStyle = 'rgba(0,0,0,1)';
+        } else {
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.fillStyle = element.color;
+        }
+        
         ctx.fill(p);
+        ctx.globalCompositeOperation = 'source-over';
       } else if (element.type === 'rect') {
         ctx.strokeStyle = element.color;
         ctx.fillStyle = element.color;
@@ -488,7 +497,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
       return;
     }
 
-    if (currentTool === 'pen' || currentTool === 'brush') {
+    if (currentTool === 'pen' || currentTool === 'brush' || currentTool === 'eraser') {
       setIsDrawing(true);
       const id = generateId(); // simple ID generator
       setCurrentStrokeId(id);
@@ -499,7 +508,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
         strokeType: currentTool,
         points: [[x, y, e.pressure]],
         color: currentColor,
-        size: currentSize * (currentTool === 'brush' ? 1.5 : 1) // slightly thicker for brush
+        size: currentSize * (currentTool === 'brush' || currentTool === 'eraser' ? 1.5 : 1) // slightly thicker for brush/eraser
       };
       
       addElement(newStroke);
@@ -521,10 +530,6 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
       };
       
       addElement(newShape);
-    } else if (currentTool === 'eraser') {
-      setIsDrawing(true);
-      // Trigger eraser check immediately on click
-      handleEraser(e.clientX, e.clientY);
     }
   };
 
@@ -559,12 +564,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
       return;
     }
 
-    if (currentTool === 'eraser' && isDrawing) {
-      handleEraser(e.clientX, e.clientY);
-      return;
-    }
-
-    if (isDrawing && currentStrokeId && (currentTool === 'pen' || currentTool === 'brush')) {
+    if (isDrawing && currentStrokeId && (currentTool === 'pen' || currentTool === 'brush' || currentTool === 'eraser')) {
       
       updateElement(currentStrokeId, (el) => {
         if (el.type !== 'stroke') return el;
@@ -583,36 +583,6 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           height: y - el.y
         };
       });
-    }
-  };
-
-  const handleEraser = (clientX: number, clientY: number) => {
-    const { x, y } = screenToWorld(clientX, clientY);
-    const eraseRadius = (currentSize * 2) / camera.z;
-
-    for (const el of elements) {
-      if (el.type === 'stroke') {
-        // Quick distance check against stroke points
-        for (const pt of el.points) {
-          const dx = pt[0] - x;
-          const dy = pt[1] - y;
-          if (Math.sqrt(dx * dx + dy * dy) < eraseRadius * 2) {
-            removeElement(el.id);
-            break;
-          }
-        }
-      } else if (SHAPE_TOOLS.includes(el.type)) {
-        const shape = el as ShapeElement;
-        // Basic bounding box check for shapes
-        const xMin = Math.min(shape.x, shape.x + shape.width);
-        const xMax = Math.max(shape.x, shape.x + shape.width);
-        const yMin = Math.min(shape.y, shape.y + shape.height);
-        const yMax = Math.max(shape.y, shape.y + shape.height);
-        
-        if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
-          removeElement(shape.id);
-        }
-      }
     }
   };
 

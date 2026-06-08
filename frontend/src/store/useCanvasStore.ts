@@ -9,7 +9,7 @@ export type Point = [number, number, number];
 export interface StrokeElement {
   id: string;
   type: 'stroke';
-  strokeType?: 'pen' | 'brush';
+  strokeType?: 'pen' | 'brush' | 'eraser';
   points: Point[];
   color: string;
   size: number;
