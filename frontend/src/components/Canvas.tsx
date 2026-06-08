@@ -399,7 +399,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     }
 
     ctx.restore();
-  }, [elements, camera, selectedId]);
+  }, [elements, camera, selectedId, editingTextId]);
 
   // Handle Resize
   useEffect(() => {
