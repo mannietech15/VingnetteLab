@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useCanvasStore, Tool } from '@/store/useCanvasStore';
-import { Pen, MousePointer2, Minus, Plus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp, PaintBucket, Type } from 'lucide-react';
+import { Pen, Paintbrush, MousePointer2, Minus, Plus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp, PaintBucket, Type } from 'lucide-react';
 
 const COLORS = [
   // Row 1 – Blacks, Grays, Whites
@@ -377,9 +377,16 @@ export default function Toolbar() {
         <button 
           className={`icon-btn ${currentTool === 'pen' ? 'active' : ''}`}
           onClick={() => { setTool('pen'); setShowShapes(false); }}
-          title="Draw"
+          title="Pen"
         >
           <Pen size={20} />
+        </button>
+        <button 
+          className={`icon-btn ${currentTool === 'brush' ? 'active' : ''}`}
+          onClick={() => { setTool('brush'); setShowShapes(false); }}
+          title="Paintbrush"
+        >
+          <Paintbrush size={20} />
         </button>
         <button 
           className={`icon-btn ${currentTool === 'text' ? 'active' : ''}`}

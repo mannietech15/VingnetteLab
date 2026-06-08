@@ -488,7 +488,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
       return;
     }
 
-    if (currentTool === 'pen') {
+    if (currentTool === 'pen' || currentTool === 'brush') {
       setIsDrawing(true);
       const id = generateId(); // simple ID generator
       setCurrentStrokeId(id);
@@ -496,9 +496,10 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
       const newStroke: StrokeElement = {
         id,
         type: 'stroke',
-        points: [[x, y, e.pressure || 0.5]],
+        strokeType: currentTool,
+        points: [[x, y, e.pressure]],
         color: currentColor,
-        size: currentSize
+        size: currentSize * (currentTool === 'brush' ? 1.5 : 1) // slightly thicker for brush
       };
       
       addElement(newStroke);
