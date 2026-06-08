@@ -73,6 +73,18 @@ export default function RegisterPage() {
     }
   };
 
+  const handleSocialLogin = (provider: string) => {
+    setIsLoading(true);
+    // Simulate OAuth flow
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsSuccess(true);
+      setTimeout(() => {
+        window.location.href = '/home';
+      }, 500);
+    }, 1500);
+  };
+
   const getStrength = () => {
     if (password.length === 0) return { score: 0, text: '', color: 'transparent', width: '0%' };
     if (password.length < 6) return { score: 1, text: 'Weak', color: '#ef4444', width: '33%' };
@@ -124,6 +136,8 @@ export default function RegisterPage() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
           <motion.button 
+            type="button"
+            onClick={() => handleSocialLogin('Google')}
             whileHover={{ backgroundColor: '#f9fafb' }}
             whileTap={{ scale: 0.98 }}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', width: '100%', padding: '12px', background: '#ffffff', border: '1px solid #d1d5db', borderRadius: '8px', color: '#374151', fontSize: '15px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
@@ -138,6 +152,8 @@ export default function RegisterPage() {
           </motion.button>
           
           <motion.button 
+            type="button"
+            onClick={() => handleSocialLogin('GitHub')}
             whileHover={{ backgroundColor: '#f9fafb' }}
             whileTap={{ scale: 0.98 }}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', width: '100%', padding: '12px', background: '#ffffff', border: '1px solid #d1d5db', borderRadius: '8px', color: '#374151', fontSize: '15px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
