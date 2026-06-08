@@ -4,7 +4,23 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useCanvasStore, Tool } from '@/store/useCanvasStore';
 import { Pen, MousePointer2, Minus, Plus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp, PaintBucket, Type } from 'lucide-react';
 
-const COLORS = ['#1a1a1a', '#e03131', '#2f9e44', '#1971c2', '#f08c00', '#9c36b5'];
+const COLORS = [
+  // Row 1 – Blacks, Grays, Whites
+  '#000000', '#1a1a1a', '#404040', '#737373', '#a3a3a3', '#d4d4d4', '#f5f5f5', '#ffffff',
+  // Row 2 – Reds → Oranges
+  '#7f1d1d', '#b91c1c', '#ef4444', '#f97316', '#fb923c', '#fdba74', '#fef3c7', '#fff7ed',
+  // Row 3 – Yellows → Limes
+  '#713f12', '#ca8a04', '#eab308', '#a3e635', '#84cc16', '#4ade80', '#22c55e', '#16a34a',
+  // Row 4 – Greens → Teals
+  '#14532d', '#166534', '#059669', '#10b981', '#2dd4bf', '#06b6d4', '#0891b2', '#0369a1',
+  // Row 5 – Blues → Purples
+  '#1e3a5f', '#1d4ed8', '#3b82f6', '#60a5fa', '#a78bfa', '#7c3aed', '#9333ea', '#c026d3',
+  // Row 6 – Pinks → Browns
+  '#db2777', '#f43f5e', '#fb7185', '#fda4af', '#d97706', '#92400e', '#78350f', '#451a03',
+];
+
+const PALETTE_ROWS = 6;
+const PALETTE_COLS = 8;
 const SIZES = [2, 4, 8, 12, 16];
 const FONT_GROUPS = [
   {
