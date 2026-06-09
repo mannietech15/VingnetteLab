@@ -30,7 +30,7 @@ export default function WorkspacesPage() {
   return (
     <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
       {/* Premium Header / Welcome Area */}
-      <div style={{ padding: '48px 48px 32px', background: 'linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%)', borderBottom: '1px solid var(--border-color)' }}>
+      <div className="workspaces-hero">
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '24px' }}>
             <div>
@@ -43,7 +43,7 @@ export default function WorkspacesPage() {
               </p>
             </div>
             
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div className="workspaces-header-actions">
               <div style={{ position: 'relative', width: '280px' }}>
                 <Search size={16} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
                 <input 
@@ -67,7 +67,7 @@ export default function WorkspacesPage() {
         </div>
       </div>
 
-      <div style={{ padding: '40px 48px 64px', maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+      <div className="workspaces-section">
         
         {/* Intelligent Quick Actions Bento Grid */}
         <section>
