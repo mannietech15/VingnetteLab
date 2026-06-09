@@ -94,11 +94,26 @@ html, body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Lock scroll on canvas pages */
-body.canvas-mode,
-body.canvas-mode html {
+/* Lock ALL scroll on canvas pages — every container in the chain */
+body.canvas-mode {
   overflow: hidden !important;
+  height: 100% !important;
+  max-height: 100% !important;
 }
+
+body.canvas-mode .app-container {
+  overflow: hidden !important;
+  height: 100vh !important;
+  min-height: unset !important;
+  max-height: 100vh !important;
+}
+
+body.canvas-mode .main-content {
+  overflow: hidden !important;
+  height: 100% !important;
+  max-height: 100% !important;
+}
+
 
 /* Base utility classes since we aren't using Tailwind */
 .glass-panel {

@@ -35,10 +35,31 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // Lock page scroll while on canvas
+  // Hard-lock all scrolling while on the canvas page
   useEffect(() => {
-    document.body.classList.add('canvas-mode');
-    return () => document.body.classList.remove('canvas-mode');
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const prevHtmlHeight = html.style.height;
+    const prevBodyHeight = body.style.height;
+
+    // CSS class approach (targets .app-container, .main-content etc.)
+    body.classList.add('canvas-mode');
+
+    // JS direct approach (targets html and body themselves)
+    html.style.overflow = 'hidden';
+    html.style.height = '100%';
+    body.style.overflow = 'hidden';
+    body.style.height = '100%';
+
+    return () => {
+      body.classList.remove('canvas-mode');
+      html.style.overflow = prevHtmlOverflow;
+      html.style.height = prevHtmlHeight;
+      body.style.overflow = prevBodyOverflow;
+      body.style.height = prevBodyHeight;
+    };
   }, []);
 
   const title = (data as any)?.canvas?.title || (loading ? 'Loading...' : 'Canvas Not Found');
