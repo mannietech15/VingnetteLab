@@ -716,14 +716,8 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
           z: newZ
         };
       });
-    } else {
-      // Pan
-      setCamera((prev) => ({
-        ...prev,
-        x: prev.x - e.deltaX,
-        y: prev.y - e.deltaY
-      }));
     }
+    // Removed panning via wheel (deltaX/deltaY) to prevent the "page scrollable" feeling
   }, [setCamera]);
 
   useEffect(() => {
