@@ -159,7 +159,7 @@ export default function VignetteAIPage() {
       <div className="ai-container">
         
         {/* Main Content Column */}
-        <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ flex: 1, minWidth: 0, maxWidth: '100%' }}>
           {/* Header Section */}
           <div style={{ marginBottom: '64px' }}>
             <div style={{ 
@@ -199,9 +199,11 @@ export default function VignetteAIPage() {
             marginBottom: '64px', 
             boxShadow: isInputFocused ? '0 32px 64px rgba(139, 92, 246, 0.15)' : '0 20px 40px rgba(0,0,0,0.08)',
             transition: 'box-shadow 0.4s ease, border-color 0.4s ease',
-            borderColor: isInputFocused ? 'var(--accent-primary)' : 'var(--border-color)'
+            borderColor: isInputFocused ? 'var(--accent-primary)' : 'var(--border-color)',
+            maxWidth: '100%',
+            overflow: 'hidden'
           }}>
-            <div className="ai-input-wrapper">
+            <div className="ai-input-wrapper" style={{ maxWidth: '100%' }}>
               <Image 
                 src={vignetteLogo} 
                 alt="Vignette AI Logo" 
@@ -230,7 +232,9 @@ export default function VignetteAIPage() {
                   fontSize: '18px',
                   color: 'var(--text-primary)',
                   outline: 'none',
-                  minWidth: '0'
+                  minWidth: 0,
+                  maxWidth: '100%',
+                  textOverflow: 'ellipsis'
                 }}
               />
               <button style={{
@@ -246,7 +250,10 @@ export default function VignetteAIPage() {
                 alignItems: 'center',
                 gap: '10px',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: '0 4px 12px rgba(139, 92, 246, 0.2)'
+                boxShadow: '0 4px 12px rgba(139, 92, 246, 0.2)',
+                maxWidth: '100%',
+                overflow: 'hidden',
+                justifyContent: 'center'
               }}
               onMouseOver={(e) => { 
                 e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)'; 
