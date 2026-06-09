@@ -72,6 +72,20 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedId, removeElement, setSelectedId]);
 
+  // Warn before accidental navigation/close
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // If there are elements on the canvas, warn the user to prevent accidental data loss
+      if (elements.length > 0) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes on your canvas. Are you sure you want to leave?'; 
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [elements.length]);
+
   const getElementAtPosition = useCallback((x: number, y: number) => {
     for (let i = elements.length - 1; i >= 0; i--) {
       const el = elements[i];

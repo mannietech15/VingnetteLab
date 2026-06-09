@@ -18,11 +18,15 @@
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "graphql": "^16.14.0"
+    "express-rate-limit": "^8.5.2",
+    "graphql": "^16.14.0",
+    "helmet": "^8.2.0",
+    "hpp": "^0.2.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/hpp": "^0.2.7",
     "@types/node": "^25.9.1",
     "nodemon": "^3.1.14",
     "prisma": "^5.22.0",

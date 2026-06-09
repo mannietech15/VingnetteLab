@@ -5,6 +5,9 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import hpp from 'hpp';
 import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
 
@@ -23,9 +26,32 @@ async function startApolloServer() {
   const app = express();
   const httpServer = http.createServer(app);
 
+  // --- Security Middleware ---
+  // 1. HTTP Security Headers
+  app.use(helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
+  }));
+
+  // 2. HTTP Parameter Pollution Protection
+  app.use(hpp());
+
+  // 3. Rate Limiting (Global or specific to /graphql)
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 500, // Limit each IP to 500 requests per window
+    message: 'Too many requests from this IP, please try again later.',
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use('/graphql', limiter);
+
+  const isProduction = process.env.NODE_ENV === 'production';
+
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    introspection: !isProduction, // Disable schema introspection in production
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
 
