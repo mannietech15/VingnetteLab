@@ -35,6 +35,12 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  // Lock page scroll while on canvas
+  useEffect(() => {
+    document.body.classList.add('canvas-mode');
+    return () => document.body.classList.remove('canvas-mode');
+  }, []);
+
   const title = (data as any)?.canvas?.title || (loading ? 'Loading...' : 'Canvas Not Found');
 
   return (

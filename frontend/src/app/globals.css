@@ -94,6 +94,12 @@ html, body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Lock scroll on canvas pages */
+body.canvas-mode,
+body.canvas-mode html {
+  overflow: hidden !important;
+}
+
 /* Base utility classes since we aren't using Tailwind */
 .glass-panel {
   background: var(--toolbar-glass);
@@ -152,6 +158,12 @@ html, body {
   flex-direction: column;
   overflow: auto;
   padding-bottom: 0; /* Adjusted on mobile */
+}
+
+/* Canvas page: full viewport, no scroll */
+body.canvas-mode .main-content {
+  overflow: hidden;
+  height: 100vh;
 }
 
 .sidebar-container {
