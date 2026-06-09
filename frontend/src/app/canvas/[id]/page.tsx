@@ -44,28 +44,54 @@ export default function CanvasPage({ params }: { params: Promise<{ id: string }>
     const prevHtmlHeight = html.style.height;
     const prevBodyHeight = body.style.height;
 
+    const prevHtmlPosition = html.style.position;
+    const prevHtmlWidth = html.style.width;
+    const prevBodyPosition = body.style.position;
+    const prevBodyWidth = body.style.width;
+    const prevBodyOverscroll = body.style.overscrollBehavior;
+
     // CSS class approach (targets .app-container, .main-content etc.)
     body.classList.add('canvas-mode');
 
     // JS direct approach (targets html and body themselves)
     html.style.overflow = 'hidden';
     html.style.height = '100%';
+    html.style.position = 'fixed';
+    html.style.width = '100%';
+    
     body.style.overflow = 'hidden';
     body.style.height = '100%';
+    body.style.position = 'fixed';
+    body.style.width = '100%';
+    body.style.overscrollBehavior = 'none';
+
+    // Prevent touchmove default on document to stop pull-to-refresh and rubber-banding
+    const preventTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+    document.addEventListener('touchmove', preventTouchMove, { passive: false });
 
     return () => {
       body.classList.remove('canvas-mode');
       html.style.overflow = prevHtmlOverflow;
       html.style.height = prevHtmlHeight;
+      html.style.position = prevHtmlPosition;
+      html.style.width = prevHtmlWidth;
+      
       body.style.overflow = prevBodyOverflow;
       body.style.height = prevBodyHeight;
+      body.style.position = prevBodyPosition;
+      body.style.width = prevBodyWidth;
+      body.style.overscrollBehavior = prevBodyOverscroll;
+      
+      document.removeEventListener('touchmove', preventTouchMove);
     };
   }, []);
 
   const title = (data as any)?.canvas?.title || (loading ? 'Loading...' : 'Canvas Not Found');
 
   return (
-    <main style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', flex: 1 }}>
+    <main style={{ position: 'fixed', inset: 0, width: '100vw', height: '100dvh', overflow: 'hidden', touchAction: 'none' }}>
       {/* Header/Nav overlay */}
       <div style={{
         position: 'absolute',
