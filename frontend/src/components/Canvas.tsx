@@ -58,6 +58,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
 
   const [isDraggingElement, setIsDraggingElement] = useState(false);
   const [dragStartPoint, setDragStartPoint] = useState<{x: number, y: number} | null>(null);
+  const [resizingHandle, setResizingHandle] = useState<'nw' | 'ne' | 'sw' | 'se' | null>(null);
 
   // Keyboard shortcut for deleting selected element
   useEffect(() => {
@@ -503,6 +504,28 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
         
         const pad = 4 / camera.z;
         ctx.strokeRect(minX - pad, minY - pad, w + pad * 2, h + pad * 2);
+        
+        // Draw resize handles for shapes
+        if (el.type !== 'stroke' && el.type !== 'text') {
+          const handleSize = 8 / camera.z;
+          const hOffset = handleSize / 2;
+          ctx.fillStyle = '#ffffff';
+          ctx.lineWidth = 1.5 / camera.z;
+          ctx.setLineDash([]);
+          
+          const corners = [
+            { x: minX - pad, y: minY - pad }, // nw
+            { x: minX + w + pad, y: minY - pad }, // ne
+            { x: minX - pad, y: minY + h + pad }, // sw
+            { x: minX + w + pad, y: minY + h + pad }, // se
+          ];
+          
+          for (const c of corners) {
+            ctx.fillRect(c.x - hOffset, c.y - hOffset, handleSize, handleSize);
+            ctx.strokeRect(c.x - hOffset, c.y - hOffset, handleSize, handleSize);
+          }
+        }
+        
         ctx.setLineDash([]);
       }
     }
@@ -555,6 +578,33 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     const { x, y } = screenToWorld(e.clientX, e.clientY);
 
     if (currentTool === 'select') {
+      if (selectedId) {
+        const el = elements.find(e => e.id === selectedId);
+        if (el && el.type !== 'stroke' && el.type !== 'text') {
+          const minX = Math.min(el.x, el.x + el.width);
+          const minY = Math.min(el.y, el.y + el.height);
+          const w = Math.abs(el.width);
+          const h = Math.abs(el.height);
+          const pad = 4 / camera.z;
+          const handleHitSize = 12 / camera.z; // larger hit area
+          
+          const corners = [
+            { dir: 'nw', x: minX - pad, y: minY - pad },
+            { dir: 'ne', x: minX + w + pad, y: minY - pad },
+            { dir: 'sw', x: minX - pad, y: minY + h + pad },
+            { dir: 'se', x: minX + w + pad, y: minY + h + pad },
+          ];
+          
+          for (const c of corners) {
+            if (Math.abs(x - c.x) <= handleHitSize && Math.abs(y - c.y) <= handleHitSize) {
+              setResizingHandle(c.dir as any);
+              setDragStartPoint({x, y});
+              return;
+            }
+          }
+        }
+      }
+
       const clickedEl = getElementAtPosition(x, y);
       if (clickedEl) {
         setSelectedId(clickedEl.id);
@@ -647,6 +697,39 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
 
     const { x, y } = screenToWorld(e.clientX, e.clientY);
 
+    if (resizingHandle && selectedId && dragStartPoint) {
+      const dx = x - dragStartPoint.x;
+      const dy = y - dragStartPoint.y;
+      
+      updateElement(selectedId, (el) => {
+        if (el.type === 'stroke' || el.type === 'text') return el;
+        
+        let newX = el.x;
+        let newY = el.y;
+        let newW = el.width;
+        let newH = el.height;
+        
+        if (resizingHandle.includes('w')) {
+          newX += dx;
+          newW -= dx;
+        }
+        if (resizingHandle.includes('e')) {
+          newW += dx;
+        }
+        if (resizingHandle.includes('n')) {
+          newY += dy;
+          newH -= dy;
+        }
+        if (resizingHandle.includes('s')) {
+          newH += dy;
+        }
+        
+        return { ...el, x: newX, y: newY, width: newW, height: newH };
+      });
+      setDragStartPoint({x, y});
+      return;
+    }
+
     if (isDraggingElement && selectedId && dragStartPoint) {
       const dx = x - dragStartPoint.x;
       const dy = y - dragStartPoint.y;
@@ -685,9 +768,40 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
   };
 
   const onPointerUp = () => {
+    if (currentStrokeId && SHAPE_TOOLS.includes(currentTool)) {
+      updateElement(currentStrokeId, (el) => {
+        if (el.type !== 'stroke' && el.type !== 'text') {
+          return {
+            ...el,
+            x: Math.min(el.x, el.x + el.width),
+            y: Math.min(el.y, el.y + el.height),
+            width: Math.abs(el.width),
+            height: Math.abs(el.height),
+          };
+        }
+        return el;
+      });
+    }
+
+    if (resizingHandle && selectedId) {
+      updateElement(selectedId, (el) => {
+        if (el.type !== 'stroke' && el.type !== 'text') {
+          return {
+            ...el,
+            x: Math.min(el.x, el.x + el.width),
+            y: Math.min(el.y, el.y + el.height),
+            width: Math.abs(el.width),
+            height: Math.abs(el.height),
+          };
+        }
+        return el;
+      });
+    }
+
     setIsDrawing(false);
     setIsPanning(false);
     setIsDraggingElement(false);
+    setResizingHandle(null);
     setCurrentStrokeId(null);
     setLastPanPoint(null);
     setDragStartPoint(null);
