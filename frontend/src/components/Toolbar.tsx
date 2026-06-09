@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useCanvasStore, Tool } from '@/store/useCanvasStore';
+import { useCanvasStore, Tool, BrushType } from '@/store/useCanvasStore';
 import { Pen, Paintbrush, MousePointer2, Minus, Plus, Square, AppWindow, Circle, Triangle, Play, Diamond, Pentagon, Hexagon, ArrowRight, ArrowLeft, ArrowUp, ArrowDown, Sparkle, Star, Sparkles, Heart, Zap, Eraser, Undo2, Redo2, ChevronUp, PaintBucket, Type } from 'lucide-react';
 
 const COLORS = [
@@ -44,6 +44,68 @@ const FONT_GROUPS = [
     fonts: ['Arial', 'Helvetica', 'Verdana', 'Trebuchet MS', 'Tahoma', 'Geneva', 'Arial Black', 'Impact', 'Century Gothic', 'Optima', 'Copperplate']
   }
 ];
+const BRUSHES: { id: BrushType; label: string; preview: React.ReactNode }[] = [
+  {
+    id: 'round',
+    label: 'Round',
+    preview: (
+      <svg width="52" height="28" viewBox="0 0 52 28">
+        <path d="M4 14 Q13 8 26 14 Q39 20 48 14" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    id: 'flat',
+    label: 'Flat',
+    preview: (
+      <svg width="52" height="28" viewBox="0 0 52 28">
+        <path d="M4 14 Q13 8 26 14 Q39 20 48 14" fill="none" stroke="currentColor" strokeWidth="10" strokeLinecap="square" strokeLinejoin="miter" />
+      </svg>
+    ),
+  },
+  {
+    id: 'marker',
+    label: 'Marker',
+    preview: (
+      <svg width="52" height="28" viewBox="0 0 52 28">
+        <path d="M4 14 Q13 8 26 14 Q39 20 48 14" fill="none" stroke="currentColor" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" opacity="0.45" />
+        <path d="M4 14 Q13 8 26 14 Q39 20 48 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    id: 'splatter',
+    label: 'Splatter',
+    preview: (
+      <svg width="52" height="28" viewBox="0 0 52 28">
+        {[4,10,16,22,28,34,40,46].flatMap((x, i) => [
+          <circle key={`a${i}`} cx={x} cy={14 + Math.sin(i*1.3)*5} r="1.5" fill="currentColor" />,
+          <circle key={`b${i}`} cx={x + 3} cy={14 + Math.cos(i*2.1)*4} r="1" fill="currentColor" />,
+          <circle key={`c${i}`} cx={x - 2} cy={14 + Math.sin(i*0.9)*6} r="1.2" fill="currentColor" />,
+        ])}
+      </svg>
+    ),
+  },
+  {
+    id: 'calligraphy',
+    label: 'Calligraphy',
+    preview: (
+      <svg width="52" height="28" viewBox="0 0 52 28">
+        <path d="M4 22 C12 4 24 4 32 14 C38 20 44 10 48 6" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        <path d="M4 22 C12 12 24 8 32 14 C38 20 44 14 48 6" fill="currentColor" strokeWidth="0"
+          style={{ transform: 'scaleX(1)' }}
+        />
+        {/* Calligraphy ribbon using thick angled strokes */}
+        {[4,10,16,22,28,34,40,46].map((x, i) => {
+          const y = 22 - i * 2;
+          return <ellipse key={i} cx={x} cy={y} rx={4 - i * 0.1} ry={1} transform={`rotate(-45 ${x} ${y})`} fill="currentColor" />;
+        })}
+      </svg>
+    ),
+  },
+];
+
+
 const SHAPES = [
   { id: 'line', icon: Minus, label: 'Line' },
   { id: 'rect', icon: Square, label: 'Rectangle' },
@@ -66,11 +128,13 @@ const SHAPES = [
 ] as const;
 
 export default function Toolbar() {
-  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, currentFontFamily, setFontFamily, currentFontSize, setFontSize, isFilled, setIsFilled, theme, undo, redo } = useCanvasStore();
+  const { currentTool, setTool, currentColor, setColor, currentSize, setSize, currentBrushType, setBrushType, currentFontFamily, setFontFamily, currentFontSize, setFontSize, isFilled, setIsFilled, theme, undo, redo } = useCanvasStore();
   const [showShapes, setShowShapes] = useState(false);
   const [showPalette, setShowPalette] = useState(false);
+  const [showBrushPicker, setShowBrushPicker] = useState(false);
   const shapesMenuRef = useRef<HTMLDivElement>(null);
   const paletteRef = useRef<HTMLDivElement>(null);
+  const brushPickerRef = useRef<HTMLDivElement>(null);
   const colorInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -92,6 +156,9 @@ export default function Toolbar() {
       if (paletteRef.current && !paletteRef.current.contains(e.target as Node)) {
         setShowPalette(false);
       }
+      if (brushPickerRef.current && !brushPickerRef.current.contains(e.target as Node)) {
+        setShowBrushPicker(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -112,7 +179,7 @@ export default function Toolbar() {
       gap: '12px',
       zIndex: 10,
     }}>
-      {/* Colors & Sizes Toolbar */}
+      {/* Colors & Sizes Toolbar — pen / shape / text tools */}
       {(currentTool === 'pen' || isShapeTool || currentTool === 'text') && (
         <div className="glass-panel" style={{ padding: '8px 16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
           
@@ -361,6 +428,196 @@ export default function Toolbar() {
                 ))}
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Brush Tool Toolbar — brush type + color */}
+      {currentTool === 'brush' && (
+        <div className="glass-panel" style={{ padding: '8px 14px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+
+          {/* Brush type picker button */}
+          <div ref={brushPickerRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setShowBrushPicker(p => !p)}
+              title="Choose brush"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 10px',
+                borderRadius: '8px',
+                border: '1.5px solid var(--border-color)',
+                background: showBrushPicker ? 'var(--bg-hover)' : 'transparent',
+                color: currentColor,
+                cursor: 'pointer',
+                transition: 'background 0.15s, transform 0.12s',
+                fontSize: '12px',
+                fontWeight: 600,
+              }}
+              onMouseOver={e => e.currentTarget.style.background = 'var(--bg-hover)'}
+              onMouseOut={e => e.currentTarget.style.background = showBrushPicker ? 'var(--bg-hover)' : 'transparent'}
+            >
+              {/* Preview of the current brush in the toolbar */}
+              <span style={{ color: currentColor, display: 'flex', alignItems: 'center' }}>
+                {BRUSHES.find(b => b.id === currentBrushType)?.preview}
+              </span>
+              <span style={{ color: 'var(--text-primary)', fontSize: '11px', textTransform: 'capitalize' }}>
+                {currentBrushType}
+              </span>
+              <ChevronUp size={11} style={{ color: 'var(--text-secondary)', transform: showBrushPicker ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+            </button>
+
+            {/* Brush Picker Popover */}
+            {showBrushPicker && (
+              <div style={{
+                position: 'absolute',
+                bottom: 'calc(100% + 12px)',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '14px',
+                padding: '10px 8px',
+                boxShadow: 'var(--shadow-lg)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                animation: 'fadeIn 0.15s ease-out',
+                zIndex: 20,
+                minWidth: '160px',
+              }}>
+                <span style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '0 4px 4px' }}>Brush Type</span>
+                {BRUSHES.map(brush => (
+                  <button
+                    key={brush.id}
+                    onClick={() => { setBrushType(brush.id); setShowBrushPicker(false); }}
+                    title={brush.label}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '6px 10px',
+                      borderRadius: '8px',
+                      border: currentBrushType === brush.id ? '1.5px solid var(--accent-primary)' : '1.5px solid transparent',
+                      background: currentBrushType === brush.id ? 'var(--bg-hover)' : 'transparent',
+                      cursor: 'pointer',
+                      color: currentColor,
+                      transition: 'background 0.12s, border 0.12s',
+                      width: '100%',
+                      textAlign: 'left',
+                    }}
+                    onMouseOver={e => { if (currentBrushType !== brush.id) e.currentTarget.style.background = 'var(--bg-hover)'; }}
+                    onMouseOut={e => { if (currentBrushType !== brush.id) e.currentTarget.style.background = 'transparent'; }}
+                  >
+                    <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>{brush.preview}</span>
+                    <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-primary)' }}>{brush.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }} />
+
+          {/* Color swatch for brush */}
+          <div ref={paletteRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setShowPalette(p => !p)}
+              title="Choose color"
+              style={{
+                width: '28px', height: '28px', borderRadius: '6px',
+                backgroundColor: currentColor,
+                border: '2px solid var(--border-color)',
+                cursor: 'pointer',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.15)',
+                transition: 'transform 0.15s', flexShrink: 0,
+              }}
+              onMouseOver={e => e.currentTarget.style.transform = 'scale(1.12)'}
+              onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+            />
+            {/* Palette Popover (shared) */}
+            {showPalette && (
+              <div style={{
+                position: 'absolute', bottom: 'calc(100% + 12px)', left: '50%',
+                transform: 'translateX(-50%)', background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)', borderRadius: '12px',
+                padding: '10px', boxShadow: 'var(--shadow-lg)',
+                display: 'flex', flexDirection: 'column', gap: '4px',
+                animation: 'fadeIn 0.15s ease-out', zIndex: 20,
+              }}>
+                {Array.from({ length: PALETTE_ROWS }).map((_, row) => (
+                  <div key={row} style={{ display: 'flex', gap: '4px' }}>
+                    {Array.from({ length: PALETTE_COLS }).map((_, col) => {
+                      const color = COLORS[row * PALETTE_COLS + col];
+                      const isSelected = currentColor === color;
+                      return (
+                        <button
+                          key={color}
+                          onClick={() => { setColor(color); setShowPalette(false); }}
+                          title={color}
+                          style={{
+                            width: '22px', height: '22px', borderRadius: '4px',
+                            backgroundColor: color,
+                            border: isSelected ? '2px solid var(--text-primary)'
+                              : (color === '#ffffff' || color === '#f5f5f5' || color === '#fef3c7' || color === '#fff7ed'
+                                ? '1px solid var(--border-color)' : '2px solid transparent'),
+                            cursor: 'pointer', transition: 'transform 0.1s, box-shadow 0.1s',
+                            boxShadow: isSelected ? '0 0 0 1px var(--bg-secondary)' : 'none',
+                          }}
+                          onMouseOver={e => { e.currentTarget.style.transform = 'scale(1.2)'; e.currentTarget.style.zIndex = '2'; }}
+                          onMouseOut={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.zIndex = '1'; }}
+                        />
+                      );
+                    })}
+                  </div>
+                ))}
+                <div style={{ height: '1px', background: 'var(--border-color)', margin: '4px 0' }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Custom</span>
+                  <div style={{ position: 'relative' }}>
+                    <button
+                      onClick={() => colorInputRef.current?.click()}
+                      title="Custom color"
+                      style={{
+                        width: '22px', height: '22px', borderRadius: '4px',
+                        background: 'conic-gradient(red, yellow, lime, cyan, blue, magenta, red)',
+                        border: '2px solid transparent', cursor: 'pointer', transition: 'transform 0.1s',
+                      }}
+                      onMouseOver={e => e.currentTarget.style.transform = 'scale(1.2)'}
+                      onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+                    />
+                    <input ref={colorInputRef} type="color" value={currentColor} onChange={e => setColor(e.target.value)}
+                      style={{ position: 'absolute', opacity: 0, width: 0, height: 0, pointerEvents: 'none' }} />
+                  </div>
+                  <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'monospace', letterSpacing: '0.5px' }}>
+                    {currentColor.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div style={{ width: '1px', height: '24px', background: 'var(--border-color)' }} />
+
+          {/* Size dots for brush */}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            {SIZES.map(s => (
+              <button
+                key={s}
+                onClick={() => setSize(s)}
+                style={{
+                  width: '24px', height: '24px', borderRadius: '50%',
+                  background: 'transparent', border: 'none',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+                }}
+              >
+                <div style={{
+                  width: `${s}px`, height: `${s}px`, borderRadius: '50%',
+                  backgroundColor: currentSize === s ? 'var(--text-primary)' : 'var(--text-secondary)'
+                }} />
+              </button>
+            ))}
           </div>
         </div>
       )}

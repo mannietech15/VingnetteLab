@@ -6,10 +6,13 @@ import { SupabaseProvider } from '@/lib/yjsSupabaseProvider';
 export type Tool = 'select' | 'pen' | 'brush' | 'text' | 'eraser' | 'line' | 'rect' | 'rounded_rect' | 'ellipse' | 'triangle' | 'right_triangle' | 'diamond' | 'pentagon' | 'hexagon' | 'arrow_right' | 'arrow_left' | 'arrow_up' | 'arrow_down' | 'star_4' | 'star_5' | 'star_6' | 'heart' | 'lightning';
 export type Point = [number, number, number];
 
+export type BrushType = 'round' | 'flat' | 'marker' | 'splatter' | 'calligraphy';
+
 export interface StrokeElement {
   id: string;
   type: 'stroke';
   strokeType?: 'pen' | 'brush' | 'eraser';
+  brushType?: BrushType;
   points: Point[];
   color: string;
   size: number;
@@ -65,6 +68,7 @@ interface CanvasState {
   currentTool: Tool;
   currentColor: string;
   currentSize: number;
+  currentBrushType: BrushType;
   currentFontFamily: string;
   currentFontSize: number;
   isFilled: boolean;
@@ -76,6 +80,7 @@ interface CanvasState {
   setTool: (tool: Tool) => void;
   setColor: (color: string) => void;
   setSize: (size: number) => void;
+  setBrushType: (brushType: BrushType) => void;
   setFontFamily: (fontFamily: string) => void;
   setFontSize: (fontSize: number) => void;
   setIsFilled: (isFilled: boolean) => void;
@@ -105,6 +110,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => {
     currentTool: 'pen',
     currentColor: '#1a1a1a',
     currentSize: 4,
+    currentBrushType: 'round',
     currentFontFamily: 'Inter',
     currentFontSize: 24,
     isFilled: false,
@@ -112,6 +118,7 @@ export const useCanvasStore = create<CanvasState>((set, get) => {
     selectedId: null,
 
     setTool: (tool) => set({ currentTool: tool, selectedId: tool === 'select' ? get().selectedId : null }),
+    setBrushType: (brushType) => set({ currentBrushType: brushType }),
     setColor: (color) => {
       set({ currentColor: color });
       const { selectedId, updateElement, elements } = get();

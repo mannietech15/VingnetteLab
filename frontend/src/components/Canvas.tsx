@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useCanvasStore, StrokeElement, ShapeElement, TextElement } from '@/store/useCanvasStore';
+import { useCanvasStore, StrokeElement, ShapeElement, TextElement, BrushType } from '@/store/useCanvasStore';
 import { getStroke } from 'perfect-freehand';
 import { TEMPLATES } from '@/data/templates';
 import TemplatePreview from '@/components/TemplatePreview';
@@ -36,6 +36,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     currentTool, 
     currentColor, 
     currentSize,
+    currentBrushType,
     currentFontFamily,
     currentFontSize,
     isFilled,
@@ -131,27 +132,123 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     // Draw Elements
     for (const element of elements) {
       if (element.type === 'stroke') {
-        const isBrush = element.strokeType === 'brush' || element.strokeType === 'eraser';
-        const strokePath = getStroke(element.points, {
-          size: element.size,
-          smoothing: isBrush ? 0.8 : 0.5,
-          thinning: isBrush ? 0 : 0.5,
-          simulatePressure: !isBrush,
-        });
-        
-        const pathData = getSvgPathFromStroke(strokePath);
-        const p = new Path2D(pathData);
-        
-        if (element.strokeType === 'eraser') {
+        const isBrush = element.strokeType === 'brush';
+        const isEraser = element.strokeType === 'eraser';
+        const brushType = element.brushType || 'round';
+
+        if (isEraser) {
+          // Eraser: destination-out
+          const strokePath = getStroke(element.points, {
+            size: element.size, smoothing: 0.8, thinning: 0, simulatePressure: false,
+          });
+          const pathData = getSvgPathFromStroke(strokePath);
+          const p = new Path2D(pathData);
           ctx.globalCompositeOperation = 'destination-out';
           ctx.fillStyle = 'rgba(0,0,0,1)';
-        } else {
+          ctx.fill(p);
+          ctx.globalCompositeOperation = 'source-over';
+
+        } else if (!isBrush) {
+          // Pen: perfect-freehand with pressure
+          const strokePath = getStroke(element.points, {
+            size: element.size, smoothing: 0.5, thinning: 0.5, simulatePressure: true,
+          });
+          const pathData = getSvgPathFromStroke(strokePath);
+          const p = new Path2D(pathData);
           ctx.globalCompositeOperation = 'source-over';
           ctx.fillStyle = element.color;
+          ctx.fill(p);
+
+        } else if (brushType === 'round') {
+          // Round brush: perfect-freehand, constant thickness
+          const strokePath = getStroke(element.points, {
+            size: element.size, smoothing: 0.8, thinning: 0, simulatePressure: false,
+          });
+          const pathData = getSvgPathFromStroke(strokePath);
+          const p = new Path2D(pathData);
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.fillStyle = element.color;
+          ctx.fill(p);
+
+        } else if (brushType === 'flat') {
+          // Flat brush: wide horizontal ellipses along path
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.fillStyle = element.color;
+          const pts = element.points;
+          for (let i = 0; i < pts.length; i++) {
+            const [px, py] = pts[i];
+            ctx.save();
+            ctx.translate(px, py);
+            // Calculate angle from prev point
+            if (i > 0) {
+              const [ppx, ppy] = pts[i - 1];
+              const angle = Math.atan2(py - ppy, px - ppx);
+              ctx.rotate(angle);
+            }
+            ctx.beginPath();
+            ctx.ellipse(0, 0, element.size * 1.4, element.size * 0.35, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+        } else if (brushType === 'marker') {
+          // Marker: semi-transparent wide rounded strokes
+          ctx.globalCompositeOperation = 'source-over';
+          if (element.points.length >= 2) {
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = element.color + '70'; // ~44% opacity
+            ctx.lineWidth = element.size * 2.5;
+            ctx.beginPath();
+            ctx.moveTo(element.points[0][0], element.points[0][1]);
+            for (let i = 1; i < element.points.length; i++) {
+              const [px, py] = element.points[i];
+              ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+          }
+
+        } else if (brushType === 'splatter') {
+          // Splatter: random dots scattered around each point
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.fillStyle = element.color;
+          // Use seeded positions so they don't re-randomize on each draw
+          const pts = element.points;
+          for (let i = 0; i < pts.length; i += 2) {
+            const [px, py] = pts[i];
+            // Deterministic scatter based on index
+            for (let j = 0; j < 6; j++) {
+              const angle = ((i * 7 + j * 137.5) % 360) * (Math.PI / 180);
+              const dist = ((i * 3 + j * 17) % element.size) * 1.2;
+              const dotR = 0.8 + ((i + j) % 3) * 0.8;
+              ctx.beginPath();
+              ctx.arc(
+                px + Math.cos(angle) * dist,
+                py + Math.sin(angle) * dist,
+                dotR, 0, Math.PI * 2
+              );
+              ctx.fill();
+            }
+          }
+
+        } else if (brushType === 'calligraphy') {
+          // Calligraphy: thin-to-thick nib at a fixed angle
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.fillStyle = element.color;
+          const pts = element.points;
+          const nibAngle = Math.PI / 4; // 45°
+          for (let i = 0; i < pts.length; i++) {
+            const [px, py, pressure] = pts[i];
+            const w = element.size * (0.15 + (pressure || 0.5) * 1.2);
+            ctx.save();
+            ctx.translate(px, py);
+            ctx.rotate(nibAngle);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, w, w * 0.22, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
         }
-        
-        ctx.fill(p);
-        ctx.globalCompositeOperation = 'source-over';
       } else if (element.type === 'rect') {
         ctx.strokeStyle = element.color;
         ctx.fillStyle = element.color;
@@ -506,6 +603,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
         id,
         type: 'stroke',
         strokeType: currentTool,
+        brushType: currentTool === 'brush' ? currentBrushType : undefined,
         points: [[x, y, e.pressure]],
         color: currentColor,
         size: currentSize * (currentTool === 'brush' || currentTool === 'eraser' ? 1.5 : 1) // slightly thicker for brush/eraser
