@@ -250,6 +250,14 @@ body.canvas-mode .main-content {
   display: none !important;
 }
 
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
 /* Home Page Responsiveness */
 .home-hero {
   padding: 32px 48px;
@@ -365,6 +373,14 @@ body.canvas-mode .main-content {
 
 /* Mobile Overrides */
 @media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
+
   .app-container {
     flex-direction: column;
   }

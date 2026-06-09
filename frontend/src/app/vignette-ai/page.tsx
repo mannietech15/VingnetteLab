@@ -171,14 +171,15 @@ export default function VignetteAIPage() {
             }}>
               <Sparkles size={16} style={{ color: '#8b5cf6' }} /> Introducing Vignette AI
             </div>
-            <h1 style={{ fontSize: '56px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-2px', margin: '0 0 20px', lineHeight: 1.1 }}>
-              Design at the speed of <br/>
+            <h1 style={{ fontSize: 'clamp(36px, 8vw, 56px)', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-2px', margin: '0 0 20px', lineHeight: 1.1, wordWrap: 'break-word', overflowWrap: 'break-word' }}>
+              Design at the speed of <br className="desktop-only" />
               <span style={{ 
                 background: 'linear-gradient(135deg, var(--accent-primary), #8b5cf6, #ec4899)', 
                 WebkitBackgroundClip: 'text', 
                 WebkitTextFillColor: 'transparent',
                 backgroundSize: '200% auto',
-                animation: 'gradient-shift 4s linear infinite'
+                animation: 'gradient-shift 4s linear infinite',
+                wordWrap: 'break-word'
               }}>thought.</span>
             </h1>
             <style>{`
@@ -187,7 +188,7 @@ export default function VignetteAIPage() {
                 100% { background-position: 200% center; }
               }
             `}</style>
-            <p style={{ fontSize: '18px', color: 'var(--text-secondary)', maxWidth: '600px', lineHeight: 1.6, margin: 0 }}>
+            <p style={{ fontSize: 'clamp(15px, 4vw, 18px)', color: 'var(--text-secondary)', maxWidth: '600px', lineHeight: 1.6, margin: 0, wordWrap: 'break-word' }}>
               Generate complete architectures, brainstorm ideas, and organize your infinite canvas instantly using the power of generative AI.
             </p>
           </div>
@@ -260,7 +261,7 @@ export default function VignetteAIPage() {
               </button>
             </div>
             
-            <div style={{ display: 'flex', gap: '12px', padding: '20px 16px 8px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+            <div style={{ display: 'flex', gap: '12px', padding: '20px 16px 8px', overflowX: 'auto', scrollbarWidth: 'none', maxWidth: '100%' }}>
               {['Brainstorm marketing campaign', 'Create user flow', 'Design database schema', 'Wireframe a landing page'].map(suggestion => (
                 <div key={suggestion} onClick={() => setPrompt(suggestion)} style={{
                   padding: '10px 20px',
