@@ -319,6 +319,40 @@ body.canvas-mode .main-content {
   gap: 12px;
 }
 
+/* Vignette AI Page Responsiveness */
+.ai-container {
+  display: flex;
+  gap: 48px;
+  max-width: 1500px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 64px 48px;
+  position: relative;
+  z-index: 1;
+  align-items: flex-start;
+}
+
+.ai-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--bg-primary);
+  border-radius: 20px;
+  padding: 8px 8px 8px 24px;
+  border: 1px solid var(--border-color);
+}
+
+.ai-sidebar {
+  width: 480px;
+  margin-top: 180px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 40px;
+}
+
 /* Mobile Overrides */
 @media (max-width: 768px) {
   .app-container {
@@ -473,5 +507,39 @@ body.canvas-mode .main-content {
     width: 100%;
     justify-content: center;
     padding: 12px !important;
+  }
+
+  .ai-container {
+    flex-direction: column;
+    padding: 32px 20px 80px;
+    gap: 32px;
+  }
+
+  .ai-container h1 {
+    font-size: 36px !important;
+  }
+
+  .ai-input-wrapper {
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .ai-input-wrapper input {
+    width: 100%;
+    padding: 12px 0 !important;
+  }
+
+  .ai-input-wrapper button {
+    width: 100%;
+    justify-content: center;
+    padding: 16px !important;
+  }
+
+  .ai-sidebar {
+    width: 100%;
+    margin-top: 0;
+    position: relative;
+    top: 0;
   }
 }

@@ -156,7 +156,7 @@ export default function VignetteAIPage() {
         }
       `}</style>
 
-      <div style={{ display: 'flex', gap: '48px', maxWidth: '1500px', width: '100%', margin: '0 auto', padding: '64px 48px', position: 'relative', zIndex: 1, alignItems: 'flex-start' }}>
+      <div className="ai-container">
         
         {/* Main Content Column */}
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -200,7 +200,7 @@ export default function VignetteAIPage() {
             transition: 'box-shadow 0.4s ease, border-color 0.4s ease',
             borderColor: isInputFocused ? 'var(--accent-primary)' : 'var(--border-color)'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-primary)', borderRadius: '20px', padding: '8px 8px 8px 24px', border: '1px solid var(--border-color)' }}>
+            <div className="ai-input-wrapper">
               <Image 
                 src={vignetteLogo} 
                 alt="Vignette AI Logo" 
@@ -325,17 +325,7 @@ export default function VignetteAIPage() {
         </div>
 
         {/* Recent Chats Sidebar */}
-        <div className="ai-glass-panel" style={{
-          width: '480px',
-          marginTop: '180px',
-          padding: '32px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '28px',
-          boxShadow: 'var(--shadow-md)',
-          position: 'sticky',
-          top: '40px',
-        }}>
+        <div className="ai-glass-panel ai-sidebar">
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-primary)' }}>
             <div style={{ padding: '8px', background: 'var(--bg-primary)', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
               <Clock size={20} style={{ color: 'var(--accent-primary)' }} />
