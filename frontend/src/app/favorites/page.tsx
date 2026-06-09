@@ -56,7 +56,7 @@ export default function FavouritesPage() {
     <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
 
       {/* Hero Banner */}
-      <div style={{ padding: '32px 48px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
+      <div className="favorites-hero">
 
         {/* Animated star-field background */}
         <div style={{ position: 'absolute', inset: '-100%', opacity: 0.08, pointerEvents: 'none', backgroundImage: 'radial-gradient(circle at 2px 2px, #f59e0b 1.5px, transparent 0)', backgroundSize: '64px 64px', animation: 'pan-stars 60s linear infinite', zIndex: 0 }} />
@@ -115,7 +115,7 @@ export default function FavouritesPage() {
       </div>
 
       {/* Controls Bar */}
-      <div style={{ padding: '24px 48px 0', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+      <div className="favorites-controls">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
 
           {/* Filter Tabs */}
@@ -138,8 +138,8 @@ export default function FavouritesPage() {
           </div>
 
           {/* Search + View Toggle */}
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <div style={{ position: 'relative', width: '240px' }}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
+            <div className="favorites-search-wrapper" style={{ flex: 1, minWidth: '200px' }}>
               <Search size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
               <input
                 type="text"
@@ -165,7 +165,7 @@ export default function FavouritesPage() {
       </div>
 
       {/* Content Area */}
-      <div style={{ padding: '24px 48px 64px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+      <div className="favorites-content">
 
         {filtered.length === 0 ? (
           /* Empty State */
@@ -196,7 +196,7 @@ export default function FavouritesPage() {
           /* Grid View */
           <motion.div
             layout
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', marginTop: '8px' }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px', marginTop: '8px' }}
           >
             <AnimatePresence>
               {filtered.map((item, index) => (

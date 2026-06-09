@@ -327,6 +327,34 @@ body.canvas-mode .main-content {
   gap: 12px;
 }
 
+/* Favorites Page Responsiveness */
+.favorites-hero {
+  padding: 32px 48px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.favorites-controls {
+  padding: 24px 48px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.favorites-content {
+  padding: 24px 48px 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.favorites-search-wrapper {
+  position: relative;
+  width: 240px;
+}
+
 /* Vignette AI Page Responsiveness */
 .ai-container {
   display: flex;
@@ -379,6 +407,10 @@ body.canvas-mode .main-content {
 
   .mobile-only {
     display: block !important;
+  }
+
+  .hide-on-mobile {
+    display: none !important;
   }
 
   .app-container {
@@ -533,6 +565,22 @@ body.canvas-mode .main-content {
     width: 100%;
     justify-content: center;
     padding: 12px !important;
+  }
+
+  .favorites-hero {
+    padding: 24px 20px !important;
+  }
+
+  .favorites-controls {
+    padding: 20px 20px 0 !important;
+  }
+
+  .favorites-content {
+    padding: 24px 20px 80px !important;
+  }
+
+  .favorites-search-wrapper {
+    width: 100% !important;
   }
 
   .ai-container {
