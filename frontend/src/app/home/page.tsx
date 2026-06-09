@@ -109,7 +109,7 @@ export default function Dashboard() {
   return (
     <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
       {/* Hero Banner */}
-      <div style={{ padding: '32px 48px', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
+      <div className="home-hero">
         
         {/* Animated Infinite Canvas Dot Grid */}
         <div style={{
@@ -180,16 +180,16 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div style={{ padding: '40px 48px 64px', maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+      <div className="home-section">
         
         {/* Workspace Creation */}
         <section>
-          <div style={{ background: 'var(--bg-secondary)', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px', boxShadow: 'var(--shadow-sm)' }}>
+          <div className="home-create-workspace">
             <div>
               <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 4px' }}>Create New Workspace</h2>
               <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Organize your canvases into dedicated team or project folders.</p>
             </div>
-            <form onSubmit={handleCreateWorkspace} style={{ display: 'flex', gap: '12px', flex: 1, minWidth: '280px', maxWidth: '400px' }}>
+            <form onSubmit={handleCreateWorkspace} className="home-create-form">
               <input 
                 type="text" 
                 placeholder="E.g. Marketing Team" 
@@ -241,7 +241,7 @@ export default function Dashboard() {
             workspaces.map((ws: any) => (
               <div key={ws.id}>
                 {/* Workspace Header */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px solid var(--border-color)' }}>
+                <div className="home-workspace-header">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--accent-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Folder size={16} />
