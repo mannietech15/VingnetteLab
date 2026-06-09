@@ -333,15 +333,7 @@ export default function VignetteAIPage() {
             <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0 }}>Recent Chats</h2>
           </div>
 
-          <div className="empty-state-container" style={{
-            flex: 1,
-            position: 'relative',
-            minHeight: '600px',
-            margin: '0 -32px -32px -32px',
-            borderBottomLeftRadius: '24px',
-            borderBottomRightRadius: '24px',
-            overflow: 'hidden'
-          }}>
+          <div className="ai-empty-state">
             <style>{`
               .theme-img-dark { display: block; }
               .theme-img-light { display: none; }
