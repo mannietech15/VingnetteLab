@@ -7,6 +7,7 @@ import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import vignetteLab from '@/app/workspaces/vignetteLab.png';
 import { SmartGetStartedButton, SmartLoginButton } from '@/components/SmartButtons';
+import ColorBends from '@/components/ColorBends';
 
 const CATEGORIES = [
   { label: 'Presentations', icon: Presentation, color: '#7c3aed', bg: 'linear-gradient(135deg, #7c3aed, #a78bfa)' },
@@ -144,14 +145,24 @@ export default function LandingPage() {
 
       {/* === HERO === */}
       <motion.section ref={heroRef} className="hero-section" style={{ opacity: heroOpacity, scale: heroScale, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingTop: '100px', paddingBottom: '60px', overflow: 'hidden' }}>
-        {/* Gradient Orbs */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: isDark ? 'radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)' : 'radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px', pointerEvents: 'none', opacity: 0.5 }} />
-        <motion.div animate={{ x: [0, 30, -20, 0], y: [0, -40, 20, 0] }} transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-          style={{ position: 'absolute', top: '-20%', left: '-10%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
-        <motion.div animate={{ x: [0, -40, 30, 0], y: [0, 30, -30, 0] }} transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-          style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
-        <motion.div animate={{ x: [0, 20, -40, 0], y: [0, 40, -20, 0] }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          style={{ position: 'absolute', top: '30%', right: '20%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
+        {/* ColorBends Background */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: isDark ? 0.7 : 0.4 }}>
+          <ColorBends
+            colors={["#7c3aed", "#3b82f6", "#ec4899", "#10b981"]}
+            rotation={45}
+            speed={0.15}
+            scale={1.2}
+            frequency={1.5}
+            warpStrength={1.2}
+            mouseInfluence={1}
+            noise={0.1}
+            parallax={0.5}
+            iterations={1}
+            intensity={1.2}
+            bandWidth={6}
+            transparent
+          />
+        </div>
 
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.5 }}

@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
@@ -127,7 +126,7 @@ void main() {
 `;
 
 export default function ColorBends({
-  className = "",
+  className,
   style,
   rotation = 90,
   speed = 0.2,
