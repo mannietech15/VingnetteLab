@@ -196,7 +196,7 @@ export default function LandingPage() {
 
       {/* === HERO SHOWCASE IMAGE === */}
       <section className="section-pad hero-showcase-section" style={{ padding: '0 40px 100px', position: 'relative', zIndex: 10, perspective: '1200px' }}>
-        <motion.div style={{ rotateX: mockupRotateX, scale: mockupScale, transformStyle: 'preserve-3d', maxWidth: '1200px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: `1px solid ${t.cardBorder}`, boxShadow: t.imgShadow }}>
+        <motion.div style={{ rotateX: mockupRotateX, scale: mockupScale, transformStyle: 'preserve-3d', maxWidth: '960px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: `1px solid ${t.cardBorder}`, boxShadow: t.imgShadow }}>
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.05), transparent)', zIndex: 10, pointerEvents: 'none' }} />
           <Image src="/hero-mockup.png" alt="VignetteLab workspace" width={1200} height={675} style={{ width: '100%', height: 'auto', display: 'block' }} />
         </motion.div>
