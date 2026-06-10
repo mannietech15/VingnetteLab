@@ -143,9 +143,13 @@ export default function LandingPage() {
       {/* === HERO === */}
       <motion.section ref={heroRef} className="hero-section" style={{ opacity: heroOpacity, scale: heroScale, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingTop: '100px', paddingBottom: '60px', overflow: 'hidden' }}>
         {/* Gradient Orbs */}
-        <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
-        <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
-        <div style={{ position: 'absolute', top: '30%', right: '20%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: isDark ? 'radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)' : 'radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px', pointerEvents: 'none', opacity: 0.5 }} />
+        <motion.div animate={{ x: [0, 30, -20, 0], y: [0, -40, 20, 0] }} transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+          style={{ position: 'absolute', top: '-20%', left: '-10%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
+        <motion.div animate={{ x: [0, -40, 30, 0], y: [0, 30, -30, 0] }} transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+          style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
+        <motion.div animate={{ x: [0, 20, -40, 0], y: [0, 40, -20, 0] }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          style={{ position: 'absolute', top: '30%', right: '20%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
 
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.5 }}
@@ -153,18 +157,18 @@ export default function LandingPage() {
             <Sparkles size={16} /> Now with AI-powered design tools
           </motion.div>
 
-          <h1 className="hero-title" style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '24px' }}>
+          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }} className="hero-title" style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '24px' }}>
             What will you<br />
             <span style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6, #10b981, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '200% 200%', animation: 'gradientShift 4s ease infinite' }}>design today?</span>
-          </h1>
+          </motion.h1>
 
-          <p className="hero-subtitle" style={{ fontSize: '1.2rem', color: t.muted, lineHeight: 1.7, maxWidth: '620px', margin: '0 auto 40px', fontWeight: 400 }}>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }} className="hero-subtitle" style={{ fontSize: '1.2rem', color: t.muted, lineHeight: 1.7, maxWidth: '620px', margin: '0 auto 40px', fontWeight: 400 }}>
             VignetteLab makes it easy to create professional presentations, social media graphics, diagrams, posters, and more — with the power of AI.
-          </p>
+          </motion.p>
 
           {/* Search-style CTA like Canva */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
-            className="search-cta" style={{ display: 'flex', alignItems: 'center', gap: '0', maxWidth: '560px', margin: '0 auto 28px', background: t.inputBg, borderRadius: '100px', border: `1px solid ${t.inputBorder}`, padding: '6px 6px 6px 24px', backdropFilter: 'blur(8px)' }}>
+            className="search-cta pulse-glow-border" style={{ display: 'flex', alignItems: 'center', gap: '0', maxWidth: '560px', margin: '0 auto 28px', background: t.inputBg, borderRadius: '100px', border: `1px solid ${t.inputBorder}`, padding: '6px 6px 6px 24px', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
             <div className="search-input-wrapper" style={{ display: 'flex', alignItems: 'center', flex: 1, gap: '8px' }}>
               <Search size={20} style={{ color: t.mutedFaint, flexShrink: 0 }} />
               <input type="text" placeholder="Search for templates, designs..." readOnly
@@ -183,13 +187,13 @@ export default function LandingPage() {
           className="cat-carousel" style={{ display: 'flex', gap: '16px', padding: '0 40px', overflowX: 'auto', maxWidth: '100%', zIndex: 10, scrollbarWidth: 'none' }}>
           {CATEGORIES.map((cat, i) => (
             <motion.a key={i} href="/register" className="cat-item"
-              whileHover={{ scale: 1.05, y: -4 }} whileTap={{ scale: 0.97 }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '20px 28px', background: t.catCardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '20px', cursor: 'pointer', textDecoration: 'none', color: t.text, minWidth: '130px', transition: 'all 0.3s ease', flexShrink: 0 }}
-              onMouseOver={e => { e.currentTarget.style.background = t.catCardHover; e.currentTarget.style.borderColor = cat.color + '60'; }}
-              onMouseOut={e => { e.currentTarget.style.background = t.catCardBg; e.currentTarget.style.borderColor = t.cardBorder; }}>
-              <div className="cat-item-icon" style={{ width: '52px', height: '52px', borderRadius: '16px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: `0 8px 20px ${cat.color}40` }}>
+              whileHover={{ scale: 1.05, y: -8 }} whileTap={{ scale: 0.97 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '20px 28px', background: t.catCardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '20px', cursor: 'pointer', textDecoration: 'none', color: t.text, minWidth: '130px', transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', flexShrink: 0, backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+              onMouseOver={e => { e.currentTarget.style.background = t.catCardHover; e.currentTarget.style.borderColor = cat.color + '80'; e.currentTarget.style.boxShadow = `0 15px 35px ${cat.color}25`; }}
+              onMouseOut={e => { e.currentTarget.style.background = t.catCardBg; e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
+              <motion.div whileHover={{ rotate: [0, -5, 5, 0] }} transition={{ duration: 0.4 }} className="cat-item-icon" style={{ width: '52px', height: '52px', borderRadius: '16px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: `0 8px 20px ${cat.color}40` }}>
                 <cat.icon className="cat-icon-svg" size={24} />
-              </div>
+              </motion.div>
               <span className="cat-item-text" style={{ fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap' }}>{cat.label}</span>
             </motion.a>
           ))}
@@ -236,14 +240,15 @@ export default function LandingPage() {
           <div className="showcase-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
             {SHOWCASE.map((item, i) => (
               <motion.div key={i}
-                initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.6 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                style={{ borderRadius: '20px', overflow: 'hidden', background: t.cardBg, border: `1px solid ${t.cardBorder}`, cursor: 'pointer', transition: 'all 0.3s ease' }}
+                initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ delay: i * 0.15, duration: 0.8, ease: "easeOut" }}
+                whileHover={{ y: -10 }}
+                className="showcase-card"
+                style={{ borderRadius: '20px', overflow: 'hidden', background: t.cardBg, border: `1px solid ${t.cardBorder}`, cursor: 'pointer', transition: 'all 0.4s ease', position: 'relative' }}
                 onMouseOver={e => { e.currentTarget.style.borderColor = t.cardHoverBorder; e.currentTarget.style.boxShadow = `0 20px 40px ${t.cardHoverShadow}`; }}
                 onMouseOut={e => { e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
-                <div style={{ aspectRatio: '1', overflow: 'hidden' }}>
-                  <Image src={item.img} alt={item.title} width={400} height={400} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
-                    onMouseOver={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseOut={e => (e.currentTarget.style.transform = 'scale(1)')} />
+                <div style={{ aspectRatio: '1', overflow: 'hidden', position: 'relative' }}>
+                  <Image src={item.img} alt={item.title} width={400} height={400} className="showcase-img" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)' }} />
+                  <div className="showcase-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%)', opacity: 0, transition: 'opacity 0.4s ease', pointerEvents: 'none' }} />
                 </div>
                 <div style={{ padding: '16px 20px' }}>
                   <div style={{ fontSize: '15px', fontWeight: 600, marginBottom: '4px' }}>{item.title}</div>
@@ -281,9 +286,9 @@ export default function LandingPage() {
                 className="feature-card" style={{ padding: '48px', background: t.cardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '28px', transition: 'all 0.3s ease', cursor: 'default' }}
                 onMouseOver={e => { e.currentTarget.style.borderColor = f.color + '50'; e.currentTarget.style.boxShadow = `0 20px 40px ${f.color}15`; }}
                 onMouseOut={e => { e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: f.color + '15', color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${f.color}30`, marginBottom: '24px' }}>
+                <motion.div whileHover={{ scale: 1.1, rotate: 5 }} transition={{ type: "spring", stiffness: 400, damping: 10 }} style={{ width: '56px', height: '56px', borderRadius: '16px', background: f.color + '15', color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${f.color}30`, marginBottom: '24px' }}>
                   <f.icon size={28} />
-                </div>
+                </motion.div>
                 <h3 className="feature-title" style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '12px' }}>{f.title}</h3>
                 <p style={{ color: t.muted, lineHeight: 1.7, fontSize: '1rem', margin: 0 }}>{f.desc}</p>
               </motion.div>
@@ -330,6 +335,14 @@ export default function LandingPage() {
         }
         ::-webkit-scrollbar { display: none; }
         
+        @keyframes pulseGlow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+          50% { box-shadow: 0 0 30px 0 rgba(124, 58, 237, 0.3); }
+        }
+        .pulse-glow-border { animation: pulseGlow 4s infinite ease-in-out; }
+        .showcase-card:hover .showcase-img { transform: scale(1.08) !important; }
+        .showcase-card:hover .showcase-overlay { opacity: 1 !important; }
+
         /* Mobile First Responsive Styles */
         .desktop-nav-links { display: none !important; }
         .desktop-nav-actions { display: none !important; }
