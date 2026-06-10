@@ -42,6 +42,8 @@ export default function LandingPage() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+  const mockupRotateX = useTransform(scrollYProgress, [0, 0.5], [15, 0]);
+  const mockupScale = useTransform(scrollYProgress, [0, 0.5], [0.9, 1]);
 
   // Theme tokens
   const t = {
@@ -201,9 +203,9 @@ export default function LandingPage() {
       </motion.section>
 
       {/* === HERO SHOWCASE IMAGE === */}
-      <section className="section-pad hero-showcase-section" style={{ padding: '0 40px 100px', position: 'relative', zIndex: 10 }}>
-        <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
-          style={{ maxWidth: '1200px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: `1px solid ${t.cardBorder}`, boxShadow: t.imgShadow }}>
+      <section className="section-pad hero-showcase-section" style={{ padding: '0 40px 100px', position: 'relative', zIndex: 10, perspective: '1200px' }}>
+        <motion.div style={{ rotateX: mockupRotateX, scale: mockupScale, transformStyle: 'preserve-3d', maxWidth: '1200px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: `1px solid ${t.cardBorder}`, boxShadow: t.imgShadow }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.05), transparent)', zIndex: 10, pointerEvents: 'none' }} />
           <Image src="/hero-mockup.png" alt="VignetteLab workspace" width={1200} height={675} style={{ width: '100%', height: 'auto', display: 'block' }} />
         </motion.div>
       </section>
@@ -278,21 +280,25 @@ export default function LandingPage() {
             <p style={{ fontSize: '1.1rem', color: t.muted, maxWidth: '550px', margin: '0 auto' }}>A complete visual workspace with powerful tools that help you go from idea to polished design in minutes.</p>
           </motion.div>
 
-          <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
-            {FEATURES.map((f, i) => (
-              <motion.div key={i}
-                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -4 }}
-                className="feature-card" style={{ padding: '48px', background: t.cardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '28px', transition: 'all 0.3s ease', cursor: 'default' }}
-                onMouseOver={e => { e.currentTarget.style.borderColor = f.color + '50'; e.currentTarget.style.boxShadow = `0 20px 40px ${f.color}15`; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
-                <motion.div whileHover={{ scale: 1.1, rotate: 5 }} transition={{ type: "spring", stiffness: 400, damping: 10 }} style={{ width: '56px', height: '56px', borderRadius: '16px', background: f.color + '15', color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${f.color}30`, marginBottom: '24px' }}>
-                  <f.icon size={28} />
+          <div className="features-bento">
+            {FEATURES.map((f, i) => {
+              const isLarge = i === 0 || i === 3;
+              return (
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ delay: i * 0.1, duration: 0.7, ease: "easeOut" }}
+                  whileHover={{ y: -5, scale: 1.01 }}
+                  className={`feature-card bento-${i} group`} style={{ position: 'relative', overflow: 'hidden', padding: '48px', background: t.cardBg, backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: `1px solid ${t.cardBorder}`, borderRadius: '32px', transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', cursor: 'default', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}
+                  onMouseOver={e => { e.currentTarget.style.borderColor = f.color + '60'; e.currentTarget.style.boxShadow = `0 30px 60px ${f.color}15`; }}
+                  onMouseOut={e => { e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
+                  <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: `radial-gradient(circle, ${f.color}10 0%, transparent 50%)`, opacity: 0, transition: 'opacity 0.5s', pointerEvents: 'none' }} className="bento-glow" />
+                  <motion.div whileHover={{ scale: 1.15, rotate: 8 }} transition={{ type: "spring", stiffness: 400, damping: 10 }} style={{ width: '64px', height: '64px', borderRadius: '20px', background: f.color + '15', color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${f.color}30`, marginBottom: '32px', zIndex: 2 }}>
+                    <f.icon size={32} />
+                  </motion.div>
+                  <h3 className="feature-title" style={{ fontSize: isLarge ? '2rem' : '1.5rem', fontWeight: 800, marginBottom: '16px', zIndex: 2, letterSpacing: '-0.02em' }}>{f.title}</h3>
+                  <p style={{ color: t.muted, lineHeight: 1.7, fontSize: '1.1rem', margin: 0, zIndex: 2, maxWidth: isLarge ? '80%' : '100%' }}>{f.desc}</p>
                 </motion.div>
-                <h3 className="feature-title" style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '12px' }}>{f.title}</h3>
-                <p style={{ color: t.muted, lineHeight: 1.7, fontSize: '1rem', margin: 0 }}>{f.desc}</p>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -342,6 +348,13 @@ export default function LandingPage() {
         .pulse-glow-border { animation: pulseGlow 4s infinite ease-in-out; }
         .showcase-card:hover .showcase-img { transform: scale(1.08) !important; }
         .showcase-card:hover .showcase-overlay { opacity: 1 !important; }
+        .feature-card:hover .bento-glow { opacity: 1 !important; }
+
+        .features-bento { display: grid; grid-template-columns: repeat(1, 1fr); gap: 24px; }
+        .bento-0 { grid-column: span 1; }
+        .bento-1 { grid-column: span 1; }
+        .bento-2 { grid-column: span 1; }
+        .bento-3 { grid-column: span 1; }
 
         /* Mobile First Responsive Styles */
         .desktop-nav-links { display: none !important; }
@@ -430,6 +443,12 @@ export default function LandingPage() {
           .cat-item { min-width: 130px !important; padding: 20px 28px !important; }
           .cat-item-icon { width: 52px !important; height: 52px !important; border-radius: 16px !important; }
           .cat-item-text { white-space: nowrap !important; }
+          
+          .features-bento { grid-template-columns: repeat(6, 1fr); }
+          .bento-0 { grid-column: span 4; }
+          .bento-1 { grid-column: span 2; }
+          .bento-2 { grid-column: span 2; }
+          .bento-3 { grid-column: span 4; }
         }
       `}</style>
     </div>
