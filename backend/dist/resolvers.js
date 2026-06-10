@@ -22,6 +22,9 @@ exports.resolvers = {
         },
         updateCanvasThumbnail: (_, { id, thumbnailUrl }) => {
             return workspaceService.updateCanvasThumbnail(id, thumbnailUrl);
+        },
+        signup: (_, { email, password, name, ipAddress }) => {
+            return userService.signup(email, password, name, ipAddress);
         }
     }
 };

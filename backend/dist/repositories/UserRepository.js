@@ -1,14 +1,36 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
-const JsonDatabase_1 = require("../infrastructure/JsonDatabase");
+const prismaClient_1 = require("../infrastructure/prismaClient");
 class UserRepository {
-    db = JsonDatabase_1.JsonDatabase.getInstance();
-    findById(id) {
-        return this.db.getData().users.find((u) => u.id === id);
+    async findById(id) {
+        const user = await prismaClient_1.prisma.user.findUnique({ where: { id } });
+        if (!user)
+            return undefined;
+        return {
+            id: user.id,
+            email: user.email,
+            name: user.name || undefined,
+            avatarUrl: user.avatarUrl || undefined,
+        };
     }
-    findAll() {
-        return this.db.getData().users;
+    async findAll() {
+        const users = await prismaClient_1.prisma.user.findMany();
+        return users.map(user => ({
+            id: user.id,
+            email: user.email,
+            name: user.name || undefined,
+            avatarUrl: user.avatarUrl || undefined,
+        }));
+    }
+    async create(data) {
+        const user = await prismaClient_1.prisma.user.create({ data });
+        return {
+            id: user.id,
+            email: user.email,
+            name: user.name || undefined,
+            avatarUrl: user.avatarUrl || undefined,
+        };
     }
 }
 exports.UserRepository = UserRepository;
