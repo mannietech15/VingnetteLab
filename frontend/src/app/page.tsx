@@ -17,6 +17,7 @@ const CATEGORIES = [
   { label: 'AI Art', icon: Wand2, color: '#f43f5e', bg: 'linear-gradient(135deg, #f43f5e, #fda4af)' },
   { label: 'Documents', icon: Type, color: '#06b6d4', bg: 'linear-gradient(135deg, #06b6d4, #67e8f9)' },
   { label: 'Team Spaces', icon: Users, color: '#8b5cf6', bg: 'linear-gradient(135deg, #8b5cf6, #c4b5fd)' },
+  { label: 'Websites', icon: Globe, color: '#14b8a6', bg: 'linear-gradient(135deg, #14b8a6, #5eead4)' },
 ];
 
 const SHOWCASE = [
