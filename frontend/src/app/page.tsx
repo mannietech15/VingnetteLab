@@ -349,28 +349,32 @@ export default function LandingPage() {
         .nav-wrapper { width: 95% !important; padding: 8px 16px !important; }
         .cat-carousel { 
           display: grid !important; 
-          grid-template-columns: repeat(2, 1fr) !important; 
-          gap: 12px !important;
-          padding: 0 20px !important;
+          grid-template-columns: repeat(3, 1fr) !important; 
+          gap: 10px !important;
+          padding: 0 16px !important;
           overflow: visible !important;
         }
         .cat-item {
           min-width: 0 !important;
-          padding: 16px 12px !important;
-          gap: 10px !important;
+          padding: 12px 8px !important;
+          gap: 8px !important;
         }
         .cat-item-icon {
-          width: 40px !important; height: 40px !important; border-radius: 12px !important;
+          width: 36px !important; height: 36px !important; border-radius: 10px !important;
         }
-        .cat-icon-svg { width: 20px !important; height: 20px !important; }
-        .cat-item-text { font-size: 12px !important; white-space: normal !important; text-align: center !important; }
+        .cat-icon-svg { width: 18px !important; height: 18px !important; }
+        .cat-item-text { font-size: 11px !important; white-space: normal !important; text-align: center !important; line-height: 1.2 !important; }
         .footer-content { flex-direction: column !important; gap: 24px !important; text-align: center !important; justify-content: center !important; }
         .feature-card { padding: 32px 24px !important; }
         .feature-title { font-size: 1.2rem !important; }
         .footer-section { padding: 40px 20px !important; }
         
         @media (min-width: 480px) {
-          .cat-carousel { grid-template-columns: repeat(3, 1fr) !important; }
+          .cat-carousel { gap: 12px !important; padding: 0 20px !important; }
+          .cat-item { padding: 16px 12px !important; gap: 10px !important; }
+          .cat-item-icon { width: 40px !important; height: 40px !important; border-radius: 12px !important; }
+          .cat-icon-svg { width: 20px !important; height: 20px !important; }
+          .cat-item-text { font-size: 12px !important; }
         }
 
         @media (min-width: 640px) {
