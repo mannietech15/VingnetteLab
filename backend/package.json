@@ -23,7 +23,10 @@
     "graphql": "^16.14.0",
     "helmet": "^8.2.0",
     "hpp": "^0.2.3",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
+    "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -32,6 +35,9 @@
     "@types/hpp": "^0.2.7",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.9.1",
+    "@types/passport": "^1.0.17",
+    "@types/passport-github2": "^1.2.9",
+    "@types/passport-google-oauth20": "^2.0.17",
     "nodemon": "^3.1.14",
     "prisma": "^5.22.0",
     "ts-node": "^10.9.2",

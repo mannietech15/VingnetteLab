@@ -68,11 +68,7 @@ export default function LoginPage() {
 
   const handleSocialLogin = (provider: string) => {
     setIsLoading(true);
-    // Simulate OAuth flow
-    setTimeout(() => {
-      setIsLoading(false);
-      window.location.href = '/home';
-    }, 1500);
+    window.location.href = `http://localhost:4000/auth/${provider.toLowerCase()}`;
   };
 
   return (

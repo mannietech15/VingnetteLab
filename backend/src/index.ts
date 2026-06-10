@@ -10,6 +10,9 @@ import rateLimit from 'express-rate-limit';
 import hpp from 'hpp';
 import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
+import passport from 'passport';
+import './auth';
+import { generateOAuthToken } from './auth';
 
 import { prisma } from './infrastructure/prismaClient';
 
@@ -45,6 +48,29 @@ async function startApolloServer() {
     legacyHeaders: false,
   });
   app.use('/graphql', limiter);
+
+  // --- OAuth Routes ---
+  app.use(passport.initialize());
+
+  app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+  
+  app.get('/auth/google/callback', 
+    passport.authenticate('google', { session: false, failureRedirect: 'http://localhost:9800/login?error=true' }),
+    function(req, res) {
+      const token = generateOAuthToken(req.user);
+      res.redirect(`http://localhost:9800/oauth-callback?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`);
+    }
+  );
+
+  app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+  app.get('/auth/github/callback', 
+    passport.authenticate('github', { session: false, failureRedirect: 'http://localhost:9800/login?error=true' }),
+    function(req, res) {
+      const token = generateOAuthToken(req.user);
+      res.redirect(`http://localhost:9800/oauth-callback?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`);
+    }
+  );
 
   const isProduction = process.env.NODE_ENV === 'production';
 
