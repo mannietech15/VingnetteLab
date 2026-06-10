@@ -181,15 +181,15 @@ export default function LandingPage() {
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
           className="cat-carousel" style={{ display: 'flex', gap: '16px', padding: '0 40px', overflowX: 'auto', maxWidth: '100%', zIndex: 10, scrollbarWidth: 'none' }}>
           {CATEGORIES.map((cat, i) => (
-            <motion.a key={i} href="/register"
+            <motion.a key={i} href="/register" className="cat-item"
               whileHover={{ scale: 1.05, y: -4 }} whileTap={{ scale: 0.97 }}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '20px 28px', background: t.catCardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '20px', cursor: 'pointer', textDecoration: 'none', color: t.text, minWidth: '130px', transition: 'all 0.3s ease', flexShrink: 0 }}
               onMouseOver={e => { e.currentTarget.style.background = t.catCardHover; e.currentTarget.style.borderColor = cat.color + '60'; }}
               onMouseOut={e => { e.currentTarget.style.background = t.catCardBg; e.currentTarget.style.borderColor = t.cardBorder; }}>
-              <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: `0 8px 20px ${cat.color}40` }}>
-                <cat.icon size={24} />
+              <div className="cat-item-icon" style={{ width: '52px', height: '52px', borderRadius: '16px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: `0 8px 20px ${cat.color}40` }}>
+                <cat.icon className="cat-icon-svg" size={24} />
               </div>
-              <span style={{ fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap' }}>{cat.label}</span>
+              <span className="cat-item-text" style={{ fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap' }}>{cat.label}</span>
             </motion.a>
           ))}
         </motion.div>
@@ -347,15 +347,40 @@ export default function LandingPage() {
         .features-grid { grid-template-columns: repeat(1, 1fr) !important; gap: 20px !important; }
         .stats-container { flex-direction: column !important; gap: 32px !important; }
         .nav-wrapper { width: 95% !important; padding: 8px 16px !important; }
-        .cat-carousel { padding: 0 20px !important; }
+        .cat-carousel { 
+          display: grid !important; 
+          grid-template-columns: repeat(2, 1fr) !important; 
+          gap: 12px !important;
+          padding: 0 20px !important;
+          overflow: visible !important;
+        }
+        .cat-item {
+          min-width: 0 !important;
+          padding: 16px 12px !important;
+          gap: 10px !important;
+        }
+        .cat-item-icon {
+          width: 40px !important; height: 40px !important; border-radius: 12px !important;
+        }
+        .cat-icon-svg { width: 20px !important; height: 20px !important; }
+        .cat-item-text { font-size: 12px !important; white-space: normal !important; text-align: center !important; }
         .footer-content { flex-direction: column !important; gap: 24px !important; text-align: center !important; justify-content: center !important; }
         .feature-card { padding: 32px 24px !important; }
         .feature-title { font-size: 1.2rem !important; }
         .footer-section { padding: 40px 20px !important; }
         
+        @media (min-width: 480px) {
+          .cat-carousel { grid-template-columns: repeat(3, 1fr) !important; }
+        }
+
         @media (min-width: 640px) {
           .stats-container { flex-direction: row !important; flex-wrap: wrap !important; }
           .footer-content { flex-direction: row !important; text-align: left !important; justify-content: space-between !important; }
+          .cat-carousel { grid-template-columns: repeat(4, 1fr) !important; gap: 16px !important; }
+          .cat-item { padding: 20px 16px !important; }
+          .cat-item-icon { width: 48px !important; height: 48px !important; border-radius: 14px !important; }
+          .cat-icon-svg { width: 24px !important; height: 24px !important; }
+          .cat-item-text { font-size: 13px !important; }
         }
         
         @media (min-width: 768px) {
@@ -383,6 +408,10 @@ export default function LandingPage() {
         @media (min-width: 1024px) {
           .showcase-grid { grid-template-columns: repeat(4, 1fr) !important; }
           .section-pad { padding: 120px 40px !important; }
+          .cat-carousel { display: flex !important; flex-wrap: nowrap !important; overflow-x: auto !important; justify-content: center !important; padding: 0 40px !important; gap: 16px !important; }
+          .cat-item { min-width: 130px !important; padding: 20px 28px !important; }
+          .cat-item-icon { width: 52px !important; height: 52px !important; border-radius: 16px !important; }
+          .cat-item-text { white-space: nowrap !important; }
         }
       `}</style>
     </div>
