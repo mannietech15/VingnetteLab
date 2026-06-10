@@ -13,6 +13,18 @@ export class UserRepository {
     };
   }
 
+  public async findByEmail(email: string): Promise<User | undefined> {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return undefined;
+    return {
+      id: user.id,
+      email: user.email,
+      password: user.password,
+      name: user.name || undefined,
+      avatarUrl: user.avatarUrl || undefined,
+    };
+  }
+
   public async findAll(): Promise<User[]> {
     const users = await prisma.user.findMany();
     return users.map(user => ({

@@ -13,13 +13,57 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      const response = await fetch('http://localhost:4000/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+            mutation Login($email: String!, $password: String!) {
+              login(email: $email, password: $password) {
+                token
+                user {
+                  id
+                  email
+                  name
+                }
+              }
+            }
+          `,
+          variables: {
+            email,
+            password
+          }
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.errors) {
+        console.error('Login error:', result.errors);
+        alert(result.errors[0].message || 'Error logging in');
+        setIsLoading(false);
+        return;
+      }
+
+      if (result.data?.login?.token) {
+        localStorage.setItem('token', result.data.login.token);
+        localStorage.setItem('user', JSON.stringify(result.data.login.user));
+      }
+
       setIsLoading(false);
       window.location.href = '/home';
-    }, 1500);
+    } catch (error) {
+      console.error('Error during login:', error);
+      alert('Failed to connect to the server');
+      setIsLoading(false);
+    }
   };
 
   const handleSocialLogin = (provider: string) => {

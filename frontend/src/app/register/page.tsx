@@ -37,9 +37,12 @@ export default function RegisterPage() {
           query: `
             mutation Signup($email: String!, $password: String!, $name: String, $ipAddress: String) {
               signup(email: $email, password: $password, name: $name, ipAddress: $ipAddress) {
-                id
-                email
-                name
+                token
+                user {
+                  id
+                  email
+                  name
+                }
               }
             }
           `,
@@ -59,6 +62,11 @@ export default function RegisterPage() {
         alert(result.errors[0].message || 'Error signing up');
         setIsLoading(false);
         return;
+      }
+
+      if (result.data?.signup?.token) {
+        localStorage.setItem('token', result.data.signup.token);
+        localStorage.setItem('user', JSON.stringify(result.data.signup.user));
       }
 
       setIsLoading(false);

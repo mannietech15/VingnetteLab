@@ -6,6 +6,11 @@ export const typeDefs = `#graphql
     avatarUrl: String
   }
 
+  type AuthPayload {
+    token: String!
+    user: User!
+  }
+
   type Workspace {
     id: ID!
     name: String!
@@ -35,6 +40,7 @@ export const typeDefs = `#graphql
     createWorkspace(name: String!): Workspace!
     createCanvas(workspaceId: ID!, title: String!): CanvasMetadata!
     updateCanvasThumbnail(id: ID!, thumbnailUrl: String!): CanvasMetadata!
-    signup(email: String!, password: String!, name: String, ipAddress: String): User!
+    signup(email: String!, password: String!, name: String, ipAddress: String): AuthPayload!
+    login(email: String!, password: String!): AuthPayload!
   }
 `;

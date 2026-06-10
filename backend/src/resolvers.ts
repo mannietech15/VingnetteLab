@@ -24,6 +24,9 @@ export const resolvers = {
     },
     signup: (_: any, { email, password, name, ipAddress }: { email: string, password: string, name?: string, ipAddress?: string }) => {
       return userService.signup(email, password, name, ipAddress);
+    },
+    login: (_: any, { email, password }: { email: string, password: string }) => {
+      return userService.login(email, password);
     }
   }
 };
