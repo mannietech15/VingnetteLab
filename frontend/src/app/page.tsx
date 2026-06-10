@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
-import { Sparkles, Layers, Cpu, Zap, Shield, Globe, Star, Moon, Sun, ArrowRight, Play, Search, Wand2, PenTool, Type, ImageIcon, LayoutGrid, Presentation, Share2, Users } from 'lucide-react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+import { Menu, X, Sparkles, Layers, Cpu, Zap, Shield, Globe, Star, Moon, Sun, ArrowRight, Play, Search, Wand2, PenTool, Type, ImageIcon, LayoutGrid, Presentation, Share2, Users } from 'lucide-react';
 import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import vignetteLab from '@/app/workspaces/vignetteLab.png';
@@ -36,6 +36,7 @@ const FEATURES = [
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const [isDark, setIsDark] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
@@ -92,13 +93,15 @@ export default function LandingPage() {
             <Image src={vignetteLogo} alt="Logo" width={32} height={32} style={{ borderRadius: '8px', filter: t.logoFilter }} />
             <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em' }}>VignetteLab</span>
           </div>
+          
           <div className="desktop-nav-links" style={{ display: 'flex', gap: '28px', fontSize: '14px', fontWeight: 500, color: t.muted }}>
             {['Features', 'Templates', 'Pricing', 'Enterprise'].map(l => (
               <a key={l} href={`#${l.toLowerCase()}`} style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}
                 onMouseOver={e => (e.currentTarget.style.color = t.text)} onMouseOut={e => (e.currentTarget.style.color = t.muted)}>{l}</a>
             ))}
           </div>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+
+          <div className="desktop-nav-actions" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             <motion.button onClick={() => setIsDark(!isDark)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
               style={{ background: 'none', border: 'none', color: t.text, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '50%', transition: 'color 0.3s' }}>
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
@@ -106,7 +109,34 @@ export default function LandingPage() {
             <SmartLoginButton href="/login" />
             <SmartGetStartedButton href="/register" text="Get Started Free" size="sm" />
           </div>
+
+          <div className="mobile-nav-toggle" style={{ display: 'none', alignItems: 'center', gap: '8px' }}>
+            <motion.button onClick={() => setIsDark(!isDark)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+              style={{ background: 'none', border: 'none', color: t.text, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '50%', transition: 'color 0.3s' }}>
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            </motion.button>
+            <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'none', border: 'none', color: t.text, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px' }}>
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </nav>
+
+        {/* Mobile Dropdown Menu */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div initial={{ opacity: 0, y: -10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -10, scale: 0.95 }} transition={{ duration: 0.2 }}
+              style={{ position: 'absolute', top: 'calc(100% + 12px)', left: '16px', right: '16px', background: t.navBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: `1px solid ${t.navBorder}`, borderRadius: '24px', padding: '24px', zIndex: 40, display: 'flex', flexDirection: 'column', gap: '20px', boxShadow: t.navShadow }}>
+              {['Features', 'Templates', 'Pricing', 'Enterprise'].map(l => (
+                <a key={l} href={`#${l.toLowerCase()}`} onClick={() => setMenuOpen(false)} style={{ color: t.text, textDecoration: 'none', fontSize: '18px', fontWeight: 600 }}>{l}</a>
+              ))}
+              <hr style={{ border: 'none', borderTop: `1px solid ${t.navBorder}`, margin: '4px 0' }} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <SmartLoginButton href="/login" />
+                <SmartGetStartedButton href="/register" text="Get Started Free" size="lg" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* === HERO === */}
@@ -301,6 +331,8 @@ export default function LandingPage() {
         
         /* Mobile First Responsive Styles */
         .desktop-nav-links { display: none !important; }
+        .desktop-nav-actions { display: none !important; }
+        .mobile-nav-toggle { display: flex !important; }
         .hero-title { font-size: clamp(2.2rem, 8vw, 5rem) !important; }
         .hero-section { padding-top: 100px !important; padding-bottom: 40px !important; }
         .hero-subtitle { font-size: 1rem !important; margin-bottom: 24px !important; }
@@ -328,6 +360,8 @@ export default function LandingPage() {
         
         @media (min-width: 768px) {
           .desktop-nav-links { display: flex !important; }
+          .desktop-nav-actions { display: flex !important; }
+          .mobile-nav-toggle { display: none !important; }
           .hero-title { font-size: clamp(2.8rem, 6vw, 5rem) !important; }
           .hero-section { padding-top: 120px !important; padding-bottom: 60px !important; }
           .hero-subtitle { font-size: 1.2rem !important; margin-bottom: 40px !important; }
