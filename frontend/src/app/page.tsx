@@ -78,7 +78,7 @@ export default function LandingPage() {
 
       {/* Navbar */}
       <div style={{ position: 'fixed', top: scrolled ? '12px' : '20px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 50, transition: 'all 0.3s ease' }}>
-        <nav style={{
+        <nav className="nav-wrapper" style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '10px 24px',
           background: scrolled ? t.navBg : 'transparent',
@@ -92,7 +92,7 @@ export default function LandingPage() {
             <Image src={vignetteLogo} alt="Logo" width={32} height={32} style={{ borderRadius: '8px', filter: t.logoFilter }} />
             <span style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em' }}>VignetteLab</span>
           </div>
-          <div style={{ display: 'flex', gap: '28px', fontSize: '14px', fontWeight: 500, color: t.muted }}>
+          <div className="desktop-nav-links" style={{ display: 'flex', gap: '28px', fontSize: '14px', fontWeight: 500, color: t.muted }}>
             {['Features', 'Templates', 'Pricing', 'Enterprise'].map(l => (
               <a key={l} href={`#${l.toLowerCase()}`} style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }}
                 onMouseOver={e => (e.currentTarget.style.color = t.text)} onMouseOut={e => (e.currentTarget.style.color = t.muted)}>{l}</a>
@@ -110,7 +110,7 @@ export default function LandingPage() {
       </div>
 
       {/* === HERO === */}
-      <motion.section ref={heroRef} style={{ opacity: heroOpacity, scale: heroScale, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingTop: '100px', paddingBottom: '60px', overflow: 'hidden' }}>
+      <motion.section ref={heroRef} className="hero-section" style={{ opacity: heroOpacity, scale: heroScale, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingTop: '100px', paddingBottom: '60px', overflow: 'hidden' }}>
         {/* Gradient Orbs */}
         <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
         <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(60px)' }} />
@@ -122,22 +122,26 @@ export default function LandingPage() {
             <Sparkles size={16} /> Now with AI-powered design tools
           </motion.div>
 
-          <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '24px' }}>
+          <h1 className="hero-title" style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '24px' }}>
             What will you<br />
             <span style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6, #10b981, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '200% 200%', animation: 'gradientShift 4s ease infinite' }}>design today?</span>
           </h1>
 
-          <p style={{ fontSize: '1.2rem', color: t.muted, lineHeight: 1.7, maxWidth: '620px', margin: '0 auto 40px', fontWeight: 400 }}>
+          <p className="hero-subtitle" style={{ fontSize: '1.2rem', color: t.muted, lineHeight: 1.7, maxWidth: '620px', margin: '0 auto 40px', fontWeight: 400 }}>
             VignetteLab makes it easy to create professional presentations, social media graphics, diagrams, posters, and more — with the power of AI.
           </p>
 
           {/* Search-style CTA like Canva */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
-            style={{ display: 'flex', alignItems: 'center', gap: '0', maxWidth: '560px', margin: '0 auto 28px', background: t.inputBg, borderRadius: '100px', border: `1px solid ${t.inputBorder}`, padding: '6px 6px 6px 24px', backdropFilter: 'blur(8px)' }}>
-            <Search size={20} style={{ color: t.mutedFaint, flexShrink: 0 }} />
-            <input type="text" placeholder="Search for templates, designs..." readOnly
-              style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: t.text, fontSize: '16px', padding: '14px 16px', fontFamily: 'inherit' }} />
-            <SmartGetStartedButton href="/register" text="Start designing" size="sm" />
+            className="search-cta" style={{ display: 'flex', alignItems: 'center', gap: '0', maxWidth: '560px', margin: '0 auto 28px', background: t.inputBg, borderRadius: '100px', border: `1px solid ${t.inputBorder}`, padding: '6px 6px 6px 24px', backdropFilter: 'blur(8px)' }}>
+            <div className="search-input-wrapper" style={{ display: 'flex', alignItems: 'center', flex: 1, gap: '8px' }}>
+              <Search size={20} style={{ color: t.mutedFaint, flexShrink: 0 }} />
+              <input type="text" placeholder="Search for templates, designs..." readOnly
+                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: t.text, fontSize: '16px', padding: '14px 16px', fontFamily: 'inherit', minWidth: 0 }} />
+            </div>
+            <div className="search-btn-wrapper">
+              <SmartGetStartedButton href="/register" text="Start designing" size="sm" />
+            </div>
           </motion.div>
 
           <p style={{ fontSize: '13px', color: t.mutedFaintest, marginBottom: '48px' }}>Free forever. No credit card required.</p>
@@ -145,7 +149,7 @@ export default function LandingPage() {
 
         {/* Category Carousel */}
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
-          style={{ display: 'flex', gap: '16px', padding: '0 40px', overflowX: 'auto', maxWidth: '100%', zIndex: 10, scrollbarWidth: 'none' }}>
+          className="cat-carousel" style={{ display: 'flex', gap: '16px', padding: '0 40px', overflowX: 'auto', maxWidth: '100%', zIndex: 10, scrollbarWidth: 'none' }}>
           {CATEGORIES.map((cat, i) => (
             <motion.a key={i} href="/register"
               whileHover={{ scale: 1.05, y: -4 }} whileTap={{ scale: 0.97 }}
@@ -162,7 +166,7 @@ export default function LandingPage() {
       </motion.section>
 
       {/* === HERO SHOWCASE IMAGE === */}
-      <section style={{ padding: '0 40px 100px', position: 'relative', zIndex: 10 }}>
+      <section className="section-pad hero-showcase-section" style={{ padding: '0 40px 100px', position: 'relative', zIndex: 10 }}>
         <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
           style={{ maxWidth: '1200px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: `1px solid ${t.cardBorder}`, boxShadow: t.imgShadow }}>
           <Image src="/hero-mockup.png" alt="VignetteLab workspace" width={1200} height={675} style={{ width: '100%', height: 'auto', display: 'block' }} />
@@ -170,8 +174,8 @@ export default function LandingPage() {
       </section>
 
       {/* === SOCIAL PROOF BAR === */}
-      <section style={{ padding: '60px 40px', borderTop: `1px solid ${t.sectionBorder}`, borderBottom: `1px solid ${t.sectionBorder}` }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap', gap: '40px' }}>
+      <section className="section-pad" style={{ padding: '60px 40px', borderTop: `1px solid ${t.sectionBorder}`, borderBottom: `1px solid ${t.sectionBorder}` }}>
+        <div className="stats-container" style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap', gap: '40px' }}>
           {[
             { num: '124,500+', label: 'Active creators' },
             { num: '2.4M', label: 'Designs created' },
@@ -188,7 +192,7 @@ export default function LandingPage() {
       </section>
 
       {/* === SHOWCASE GRID (Canva-style) === */}
-      <section id="templates" style={{ padding: '120px 40px', position: 'relative' }}>
+      <section id="templates" className="section-pad" style={{ padding: '120px 40px', position: 'relative' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             style={{ textAlign: 'center', marginBottom: '60px' }}>
@@ -198,7 +202,7 @@ export default function LandingPage() {
             <p style={{ fontSize: '1.1rem', color: t.muted, maxWidth: '550px', margin: '0 auto' }}>Browse thousands of professional templates for every need. Customize anything with drag-and-drop simplicity.</p>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+          <div className="showcase-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
             {SHOWCASE.map((item, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.6 }}
@@ -228,7 +232,7 @@ export default function LandingPage() {
       </section>
 
       {/* === FEATURES === */}
-      <section id="features" style={{ padding: '120px 40px', background: t.featureGrad }}>
+      <section id="features" className="section-pad" style={{ padding: '120px 40px', background: t.featureGrad }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             style={{ textAlign: 'center', marginBottom: '80px' }}>
@@ -238,18 +242,18 @@ export default function LandingPage() {
             <p style={{ fontSize: '1.1rem', color: t.muted, maxWidth: '550px', margin: '0 auto' }}>A complete visual workspace with powerful tools that help you go from idea to polished design in minutes.</p>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+          <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
             {FEATURES.map((f, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -4 }}
-                style={{ padding: '48px', background: t.cardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '28px', transition: 'all 0.3s ease', cursor: 'default' }}
+                className="feature-card" style={{ padding: '48px', background: t.cardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '28px', transition: 'all 0.3s ease', cursor: 'default' }}
                 onMouseOver={e => { e.currentTarget.style.borderColor = f.color + '50'; e.currentTarget.style.boxShadow = `0 20px 40px ${f.color}15`; }}
                 onMouseOut={e => { e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
                 <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: f.color + '15', color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${f.color}30`, marginBottom: '24px' }}>
                   <f.icon size={28} />
                 </div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '12px' }}>{f.title}</h3>
+                <h3 className="feature-title" style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '12px' }}>{f.title}</h3>
                 <p style={{ color: t.muted, lineHeight: 1.7, fontSize: '1rem', margin: 0 }}>{f.desc}</p>
               </motion.div>
             ))}
@@ -258,7 +262,7 @@ export default function LandingPage() {
       </section>
 
       {/* === BIG CTA SECTION === */}
-      <section style={{ padding: '140px 40px', position: 'relative', overflow: 'hidden' }}>
+      <section className="section-pad" style={{ padding: '140px 40px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '800px', background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(40px)' }} />
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10 }}>
@@ -273,8 +277,8 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: `1px solid ${t.sectionBorder}`, padding: '60px 40px', background: t.bg }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: t.mutedFaintest, fontSize: '14px', flexWrap: 'wrap', gap: '20px' }}>
+      <footer className="section-pad footer-section" style={{ borderTop: `1px solid ${t.sectionBorder}`, padding: '60px 40px', background: t.bg }}>
+        <div className="footer-content" style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: t.mutedFaintest, fontSize: '14px', flexWrap: 'wrap', gap: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Image src={vignetteLogo} alt="Logo" width={24} height={24} style={{ borderRadius: '6px', filter: t.logoFilter }} />
             <span style={{ fontWeight: 600 }}>© 2026 VignetteLab. All rights reserved.</span>
@@ -294,6 +298,58 @@ export default function LandingPage() {
           50% { background-position: 100% 50%; }
         }
         ::-webkit-scrollbar { display: none; }
+        
+        /* Mobile First Responsive Styles */
+        .desktop-nav-links { display: none !important; }
+        .hero-title { font-size: clamp(2.2rem, 8vw, 5rem) !important; }
+        .hero-section { padding-top: 100px !important; padding-bottom: 40px !important; }
+        .hero-subtitle { font-size: 1rem !important; margin-bottom: 24px !important; }
+        .search-cta { flex-direction: column !important; gap: 12px !important; padding: 12px !important; border-radius: 24px !important; }
+        .search-input-wrapper { width: 100% !important; padding: 0 !important; }
+        .search-btn-wrapper { width: 100% !important; }
+        .search-btn-wrapper > a { width: 100% !important; justify-content: center !important; }
+        
+        .section-pad { padding: 60px 20px !important; }
+        .hero-showcase-section { padding: 0 20px 60px !important; }
+        .showcase-grid { grid-template-columns: repeat(1, 1fr) !important; gap: 16px !important; }
+        .features-grid { grid-template-columns: repeat(1, 1fr) !important; gap: 20px !important; }
+        .stats-container { flex-direction: column !important; gap: 32px !important; }
+        .nav-wrapper { width: 95% !important; padding: 8px 16px !important; }
+        .cat-carousel { padding: 0 20px !important; }
+        .footer-content { flex-direction: column !important; gap: 24px !important; text-align: center !important; justify-content: center !important; }
+        .feature-card { padding: 32px 24px !important; }
+        .feature-title { font-size: 1.2rem !important; }
+        .footer-section { padding: 40px 20px !important; }
+        
+        @media (min-width: 640px) {
+          .stats-container { flex-direction: row !important; flex-wrap: wrap !important; }
+          .footer-content { flex-direction: row !important; text-align: left !important; justify-content: space-between !important; }
+        }
+        
+        @media (min-width: 768px) {
+          .desktop-nav-links { display: flex !important; }
+          .hero-title { font-size: clamp(2.8rem, 6vw, 5rem) !important; }
+          .hero-section { padding-top: 120px !important; padding-bottom: 60px !important; }
+          .hero-subtitle { font-size: 1.2rem !important; margin-bottom: 40px !important; }
+          .search-cta { flex-direction: row !important; gap: 0 !important; padding: 6px 6px 6px 24px !important; border-radius: 100px !important; }
+          .search-btn-wrapper { width: auto !important; }
+          .search-btn-wrapper > a { width: auto !important; }
+          
+          .section-pad { padding: 100px 40px !important; }
+          .hero-showcase-section { padding: 0 40px 100px !important; }
+          .showcase-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
+          .features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
+          .nav-wrapper { width: 92% !important; padding: 10px 24px !important; }
+          .cat-carousel { padding: 0 40px !important; }
+          .feature-card { padding: 48px !important; }
+          .feature-title { font-size: 1.4rem !important; }
+          .footer-section { padding: 60px 40px !important; }
+        }
+        
+        @media (min-width: 1024px) {
+          .showcase-grid { grid-template-columns: repeat(4, 1fr) !important; }
+          .section-pad { padding: 120px 40px !important; }
+        }
       `}</style>
     </div>
   );
