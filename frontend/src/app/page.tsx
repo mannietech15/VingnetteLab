@@ -170,7 +170,7 @@ export default function LandingPage() {
             </div>
           </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }} className="hero-title" style={{ fontSize: 'clamp(2.8rem, 7vw, 7rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.05em', marginBottom: '24px' }}>
+          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }} className="hero-title" style={{ fontSize: 'clamp(2rem, 4vw, 4rem)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.04em', marginBottom: '20px' }}>
             What will you<br />
             <span style={{ background: 'linear-gradient(135deg, #a78bfa, #60a5fa, #34d399, #fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '300% 300%', animation: 'gradientShift 5s ease infinite' }}>design today?</span>
           </motion.h1>
@@ -430,7 +430,7 @@ export default function LandingPage() {
         .desktop-nav-links { display: none !important; }
         .desktop-nav-actions { display: none !important; }
         .mobile-nav-toggle { display: flex !important; }
-        .hero-title { font-size: clamp(2.2rem, 8vw, 4rem) !important; }
+        .hero-title { font-size: clamp(1.8rem, 7vw, 2.8rem) !important; }
         .hero-section { padding-top: 100px !important; padding-bottom: 40px !important; }
         .hero-subtitle { font-size: 1rem !important; margin-bottom: 24px !important; }
         .search-cta { flex-direction: column !important; gap: 12px !important; padding: 12px !important; border-radius: 24px !important; }
@@ -488,7 +488,7 @@ export default function LandingPage() {
           .desktop-nav-links { display: flex !important; }
           .desktop-nav-actions { display: flex !important; }
           .mobile-nav-toggle { display: none !important; }
-          .hero-title { font-size: clamp(3.2rem, 6vw, 5.5rem) !important; }
+          .hero-title { font-size: clamp(2.2rem, 4vw, 3.2rem) !important; }
           .hero-section { padding-top: 120px !important; padding-bottom: 60px !important; }
           .hero-subtitle { font-size: 1.2rem !important; margin-bottom: 40px !important; }
           .search-cta { flex-direction: row !important; gap: 0 !important; padding: 6px 6px 6px 24px !important; border-radius: 100px !important; }
@@ -514,7 +514,7 @@ export default function LandingPage() {
           .cat-item-icon { width: 60px !important; height: 60px !important; border-radius: 18px !important; }
           .cat-icon-svg { width: 28px !important; height: 28px !important; }
           .cat-item-text { white-space: nowrap !important; font-size: 13px !important; }
-          .hero-title { font-size: clamp(4rem, 6.5vw, 6.5rem) !important; }
+          .hero-title { font-size: clamp(2.8rem, 4vw, 4rem) !important; }
           .hero-subtitle { font-size: 1.3rem !important; }
           .hero-content { padding: 0 60px !important; }
           
@@ -526,7 +526,7 @@ export default function LandingPage() {
         }
 
         @media (min-width: 1280px) {
-          .hero-title { font-size: clamp(5rem, 6vw, 7rem) !important; letter-spacing: -0.055em !important; }
+          .hero-title { font-size: clamp(3rem, 3.5vw, 4.5rem) !important; letter-spacing: -0.045em !important; }
           .hero-subtitle { font-size: 1.35rem !important; max-width: 700px !important; }
           .hero-content { max-width: 1200px !important; }
           .cat-carousel { gap: 20px !important; padding: 0 80px !important; }
@@ -539,7 +539,7 @@ export default function LandingPage() {
         }
 
         @media (min-width: 1440px) {
-          .hero-title { font-size: 7rem !important; }
+          .hero-title { font-size: 4.5rem !important; }
           .hero-content { max-width: 1300px !important; padding: 0 80px !important; }
           .cat-item { padding: 26px 36px !important; min-width: 160px !important; }
           .cat-item-icon { width: 68px !important; height: 68px !important; }
