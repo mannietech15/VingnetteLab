@@ -145,6 +145,9 @@ export default function LandingPage() {
       {/* === HERO === */}
       <motion.section ref={heroRef} className="hero-section" style={{ opacity: heroOpacity, scale: heroScale, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingTop: '100px', paddingBottom: '60px', overflow: 'hidden' }}>
 
+        {/* Dot grid texture */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: isDark ? 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)' : 'radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none', zIndex: 0 }} />
+
         {/* Ambient Background Orbs */}
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
           <div style={{ position: 'absolute', top: '10%', left: '15%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 65%)', filter: 'blur(60px)', animation: 'floatOrb1 8s ease-in-out infinite' }} />
@@ -153,7 +156,7 @@ export default function LandingPage() {
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '900px', height: '900px', background: 'radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
         </div>
 
-        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
+        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="hero-content" style={{ textAlign: 'center', maxWidth: '1100px', width: '100%', padding: '0 40px', zIndex: 10 }}>
           
           {/* Animated Shimmer Badge */}
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.5 }}
@@ -167,18 +170,18 @@ export default function LandingPage() {
             </div>
           </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }} className="hero-title" style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '20px' }}>
+          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }} className="hero-title" style={{ fontSize: 'clamp(2.8rem, 7vw, 7rem)', fontWeight: 900, lineHeight: 1.0, letterSpacing: '-0.05em', marginBottom: '24px' }}>
             What will you<br />
             <span style={{ background: 'linear-gradient(135deg, #a78bfa, #60a5fa, #34d399, #fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '300% 300%', animation: 'gradientShift 5s ease infinite' }}>design today?</span>
           </motion.h1>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }} className="hero-subtitle" style={{ fontSize: '1.15rem', color: t.muted, lineHeight: 1.75, maxWidth: '560px', margin: '0 auto 36px', fontWeight: 400 }}>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }} className="hero-subtitle" style={{ fontSize: '1.25rem', color: t.muted, lineHeight: 1.75, maxWidth: '640px', margin: '0 auto 36px', fontWeight: 400 }}>
             From polished presentations to social graphics — create anything with <strong style={{ color: t.text, fontWeight: 600 }}>AI-powered tools</strong> and a drag-and-drop canvas.
           </motion.p>
 
           {/* Premium Search CTA */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.6 }}
-            className="search-cta-wrapper" style={{ position: 'relative', maxWidth: '580px', margin: '0 auto 20px' }}>
+            className="search-cta-wrapper" style={{ position: 'relative', maxWidth: '660px', margin: '0 auto 20px' }}>
             <div className="search-cta-glow" />
             <div className="search-cta pulse-glow-border" style={{ display: 'flex', alignItems: 'center', gap: '0', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', borderRadius: '100px', border: isDark ? '1px solid rgba(255,255,255,0.14)' : '1px solid rgba(0,0,0,0.1)', padding: '6px 6px 6px 22px', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
               <div className="search-input-wrapper" style={{ display: 'flex', alignItems: 'center', flex: 1, gap: '10px' }}>
@@ -427,7 +430,7 @@ export default function LandingPage() {
         .desktop-nav-links { display: none !important; }
         .desktop-nav-actions { display: none !important; }
         .mobile-nav-toggle { display: flex !important; }
-        .hero-title { font-size: clamp(2.2rem, 8vw, 5rem) !important; }
+        .hero-title { font-size: clamp(2.2rem, 8vw, 4rem) !important; }
         .hero-section { padding-top: 100px !important; padding-bottom: 40px !important; }
         .hero-subtitle { font-size: 1rem !important; margin-bottom: 24px !important; }
         .search-cta { flex-direction: column !important; gap: 12px !important; padding: 12px !important; border-radius: 24px !important; }
@@ -485,7 +488,7 @@ export default function LandingPage() {
           .desktop-nav-links { display: flex !important; }
           .desktop-nav-actions { display: flex !important; }
           .mobile-nav-toggle { display: none !important; }
-          .hero-title { font-size: clamp(2.8rem, 6vw, 5rem) !important; }
+          .hero-title { font-size: clamp(3.2rem, 6vw, 5.5rem) !important; }
           .hero-section { padding-top: 120px !important; padding-bottom: 60px !important; }
           .hero-subtitle { font-size: 1.2rem !important; margin-bottom: 40px !important; }
           .search-cta { flex-direction: row !important; gap: 0 !important; padding: 6px 6px 6px 24px !important; border-radius: 100px !important; }
@@ -505,17 +508,43 @@ export default function LandingPage() {
         
         @media (min-width: 1024px) {
           .showcase-grid { grid-template-columns: repeat(4, 1fr) !important; }
-          .section-pad { padding: 120px 40px !important; }
-          .cat-carousel { display: flex !important; flex-wrap: nowrap !important; overflow-x: auto !important; justify-content: center !important; padding: 0 40px !important; gap: 16px !important; }
-          .cat-item { min-width: 130px !important; padding: 20px 28px !important; }
-          .cat-item-icon { width: 52px !important; height: 52px !important; border-radius: 16px !important; }
-          .cat-item-text { white-space: nowrap !important; }
+          .section-pad { padding: 120px 60px !important; }
+          .cat-carousel { display: flex !important; flex-wrap: nowrap !important; overflow-x: auto !important; justify-content: center !important; padding: 0 60px !important; gap: 16px !important; }
+          .cat-item { min-width: 140px !important; padding: 22px 28px !important; }
+          .cat-item-icon { width: 60px !important; height: 60px !important; border-radius: 18px !important; }
+          .cat-icon-svg { width: 28px !important; height: 28px !important; }
+          .cat-item-text { white-space: nowrap !important; font-size: 13px !important; }
+          .hero-title { font-size: clamp(4rem, 6.5vw, 6.5rem) !important; }
+          .hero-subtitle { font-size: 1.3rem !important; }
+          .hero-content { padding: 0 60px !important; }
           
           .features-bento { grid-template-columns: repeat(6, 1fr); }
           .bento-0 { grid-column: span 4; }
           .bento-1 { grid-column: span 2; }
           .bento-2 { grid-column: span 2; }
           .bento-3 { grid-column: span 4; }
+        }
+
+        @media (min-width: 1280px) {
+          .hero-title { font-size: clamp(5rem, 6vw, 7rem) !important; letter-spacing: -0.055em !important; }
+          .hero-subtitle { font-size: 1.35rem !important; max-width: 700px !important; }
+          .hero-content { max-width: 1200px !important; }
+          .cat-carousel { gap: 20px !important; padding: 0 80px !important; }
+          .cat-item { min-width: 150px !important; padding: 24px 32px !important; gap: 14px !important; }
+          .cat-item-icon { width: 64px !important; height: 64px !important; border-radius: 20px !important; }
+          .cat-icon-svg { width: 30px !important; height: 30px !important; }
+          .cat-item-text { font-size: 14px !important; }
+          .section-pad { padding: 140px 80px !important; }
+          .hero-showcase-section { padding: 0 80px 120px !important; }
+        }
+
+        @media (min-width: 1440px) {
+          .hero-title { font-size: 7rem !important; }
+          .hero-content { max-width: 1300px !important; padding: 0 80px !important; }
+          .cat-item { padding: 26px 36px !important; min-width: 160px !important; }
+          .cat-item-icon { width: 68px !important; height: 68px !important; }
+          .cat-icon-svg { width: 32px !important; height: 32px !important; }
+          .cat-item-text { font-size: 14.5px !important; }
         }
       `}</style>
     </div>
