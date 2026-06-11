@@ -145,60 +145,100 @@ export default function LandingPage() {
       {/* === HERO === */}
       <motion.section ref={heroRef} className="hero-section" style={{ opacity: heroOpacity, scale: heroScale, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingTop: '100px', paddingBottom: '60px', overflow: 'hidden' }}>
 
+        {/* Ambient Background Orbs */}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+          <div style={{ position: 'absolute', top: '10%', left: '15%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 65%)', filter: 'blur(60px)', animation: 'floatOrb1 8s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', top: '20%', right: '10%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(59,130,246,0.14) 0%, transparent 65%)', filter: 'blur(60px)', animation: 'floatOrb2 10s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', bottom: '20%', left: '30%', width: '350px', height: '350px', background: 'radial-gradient(circle, rgba(16,185,129,0.10) 0%, transparent 65%)', filter: 'blur(60px)', animation: 'floatOrb3 12s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '900px', height: '900px', background: 'radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        </div>
+
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} style={{ textAlign: 'center', maxWidth: '900px', padding: '0 24px', zIndex: 10 }}>
+          
+          {/* Animated Shimmer Badge */}
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.5 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: isDark ? 'rgba(124,58,237,0.15)' : 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: '100px', padding: '8px 20px', fontSize: '14px', color: '#a78bfa', fontWeight: 600, marginBottom: '32px' }}>
-            <Sparkles size={16} /> Now with AI-powered design tools
+            className="hero-badge"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', position: 'relative', borderRadius: '100px', padding: '8px 20px', fontSize: '14px', color: '#c4b5fd', fontWeight: 600, marginBottom: '28px', background: isDark ? 'rgba(124,58,237,0.12)' : 'rgba(124,58,237,0.08)', overflow: 'hidden', cursor: 'default' }}>
+            <div className="badge-shimmer" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
+              <Sparkles size={15} style={{ color: '#a78bfa' }} />
+              <span>Now with AI-powered design tools</span>
+              <span style={{ background: 'linear-gradient(90deg, #7c3aed, #3b82f6)', borderRadius: '100px', padding: '2px 10px', fontSize: '11px', color: '#fff', fontWeight: 700, letterSpacing: '0.02em' }}>NEW</span>
+            </div>
           </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }} className="hero-title" style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '24px' }}>
+          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }} className="hero-title" style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '20px' }}>
             What will you<br />
-            <span style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6, #10b981, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '200% 200%', animation: 'gradientShift 4s ease infinite' }}>design today?</span>
+            <span style={{ background: 'linear-gradient(135deg, #a78bfa, #60a5fa, #34d399, #fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '300% 300%', animation: 'gradientShift 5s ease infinite' }}>design today?</span>
           </motion.h1>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }} className="hero-subtitle" style={{ fontSize: '1.2rem', color: t.muted, lineHeight: 1.7, maxWidth: '620px', margin: '0 auto 40px', fontWeight: 400 }}>
-            VignetteLab makes it easy to create professional presentations, social media graphics, diagrams, posters, and more — with the power of AI.
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }} className="hero-subtitle" style={{ fontSize: '1.15rem', color: t.muted, lineHeight: 1.75, maxWidth: '560px', margin: '0 auto 36px', fontWeight: 400 }}>
+            From polished presentations to social graphics — create anything with <strong style={{ color: t.text, fontWeight: 600 }}>AI-powered tools</strong> and a drag-and-drop canvas.
           </motion.p>
 
-          {/* Search-style CTA like Canva */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
-            className="search-cta pulse-glow-border" style={{ display: 'flex', alignItems: 'center', gap: '0', maxWidth: '560px', margin: '0 auto 28px', background: t.inputBg, borderRadius: '100px', border: `1px solid ${t.inputBorder}`, padding: '6px 6px 6px 24px', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
-            <div className="search-input-wrapper" style={{ display: 'flex', alignItems: 'center', flex: 1, gap: '8px' }}>
-              <Search size={20} style={{ color: t.mutedFaint, flexShrink: 0 }} />
-              <input type="text" placeholder="Search for templates, designs..." readOnly
-                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: t.text, fontSize: '16px', padding: '14px 16px', fontFamily: 'inherit', minWidth: 0 }} />
-            </div>
-            <div className="search-btn-wrapper">
-              <SmartGetStartedButton href="/register" text="Start designing" size="sm" />
+          {/* Premium Search CTA */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.6 }}
+            className="search-cta-wrapper" style={{ position: 'relative', maxWidth: '580px', margin: '0 auto 20px' }}>
+            <div className="search-cta-glow" />
+            <div className="search-cta pulse-glow-border" style={{ display: 'flex', alignItems: 'center', gap: '0', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', borderRadius: '100px', border: isDark ? '1px solid rgba(255,255,255,0.14)' : '1px solid rgba(0,0,0,0.1)', padding: '6px 6px 6px 22px', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
+              <div className="search-input-wrapper" style={{ display: 'flex', alignItems: 'center', flex: 1, gap: '10px' }}>
+                <Search size={18} style={{ color: t.mutedFaint, flexShrink: 0 }} />
+                <input type="text" placeholder="Search for templates, designs..." readOnly
+                  style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: t.text, fontSize: '15px', padding: '13px 12px', fontFamily: 'inherit', minWidth: 0 }} />
+              </div>
+              <div className="search-btn-wrapper">
+                <SmartGetStartedButton href="/register" text="Start designing" size="sm" />
+              </div>
             </div>
           </motion.div>
 
-          <p style={{ fontSize: '13px', color: t.mutedFaintest, marginBottom: '48px' }}>Free forever. No credit card required.</p>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
+            style={{ fontSize: '13px', color: t.mutedFaintest, marginBottom: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+            <span>✓ Free forever</span>
+            <span style={{ opacity: 0.4 }}>·</span>
+            <span>✓ No credit card required</span>
+            <span style={{ opacity: 0.4 }}>·</span>
+            <span>✓ Instant access</span>
+          </motion.p>
         </motion.div>
 
-        {/* Category Carousel */}
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
-          className="cat-carousel" style={{ display: 'flex', gap: '16px', padding: '0 40px', overflowX: 'auto', maxWidth: '100%', zIndex: 10, scrollbarWidth: 'none' }}>
+        {/* Category Carousel - staggered entrance */}
+        <div className="cat-carousel" style={{ display: 'flex', gap: '16px', padding: '0 40px', overflowX: 'auto', maxWidth: '100%', zIndex: 10, scrollbarWidth: 'none' }}>
           {CATEGORIES.map((cat, i) => (
             <motion.a key={i} href="/register" className="cat-item"
-              whileHover={{ scale: 1.05, y: -8 }} whileTap={{ scale: 0.97 }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '20px 28px', background: t.catCardBg, border: `1px solid ${t.cardBorder}`, borderRadius: '20px', cursor: 'pointer', textDecoration: 'none', color: t.text, minWidth: '130px', transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', flexShrink: 0, backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
-              onMouseOver={e => { e.currentTarget.style.background = t.catCardHover; e.currentTarget.style.borderColor = cat.color + '80'; e.currentTarget.style.boxShadow = `0 15px 35px ${cat.color}25`; }}
-              onMouseOut={e => { e.currentTarget.style.background = t.catCardBg; e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
-              <motion.div whileHover={{ rotate: [0, -5, 5, 0] }} transition={{ duration: 0.4 }} className="cat-item-icon" style={{ width: '52px', height: '52px', borderRadius: '16px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: `0 8px 20px ${cat.color}40` }}>
-                <cat.icon className="cat-icon-svg" size={24} />
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 + i * 0.07, duration: 0.5, ease: 'easeOut' }}
+              whileHover={{ scale: 1.06, y: -10 }} whileTap={{ scale: 0.97 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', padding: '18px 22px', background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)', border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.08)', borderRadius: '22px', cursor: 'pointer', textDecoration: 'none', color: t.text, minWidth: '118px', transition: 'all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)', flexShrink: 0, backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', position: 'relative', overflow: 'hidden' }}
+              onMouseOver={e => {
+                e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.06)';
+                e.currentTarget.style.borderColor = cat.color + '90';
+                e.currentTarget.style.boxShadow = `0 20px 40px ${cat.color}30, 0 0 0 1px ${cat.color}20`;
+              }}
+              onMouseOut={e => {
+                e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
+                e.currentTarget.style.borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}>
+              <motion.div
+                whileHover={{ scale: 1.15, rotate: 5 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 12 }}
+                className="cat-item-icon"
+                style={{ width: '52px', height: '52px', borderRadius: '16px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: `0 8px 24px ${cat.color}50, inset 0 1px 0 rgba(255,255,255,0.2)` }}>
+                <cat.icon className="cat-icon-svg" size={22} strokeWidth={2} />
               </motion.div>
-              <span className="cat-item-text" style={{ fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap' }}>{cat.label}</span>
+              <span className="cat-item-text" style={{ fontSize: '12.5px', fontWeight: 600, whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>{cat.label}</span>
             </motion.a>
           ))}
-        </motion.div>
+        </div>
       </motion.section>
 
       {/* === HERO SHOWCASE IMAGE === */}
       <section className="section-pad hero-showcase-section" style={{ padding: '0 40px 100px', position: 'relative', zIndex: 10, perspective: '1200px' }}>
-        <motion.div style={{ rotateX: mockupRotateX, scale: mockupScale, transformStyle: 'preserve-3d', maxWidth: '960px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: `1px solid ${t.cardBorder}`, boxShadow: t.imgShadow }}>
+        <motion.div style={{ rotateX: mockupRotateX, scale: mockupScale, transformStyle: 'preserve-3d', maxWidth: '960px', margin: '0 auto', borderRadius: '24px', overflow: 'hidden', border: `1px solid ${t.cardBorder}`, boxShadow: t.imgShadow, maxHeight: '500px', position: 'relative' }}>
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.05), transparent)', zIndex: 10, pointerEvents: 'none' }} />
-          <Image src="/hero-mockup.png" alt="VignetteLab workspace" width={1200} height={675} style={{ width: '100%', height: 'auto', display: 'block' }} />
+          <Image src="/hero-mockup.png" alt="VignetteLab workspace" width={1200} height={675} style={{ width: '100%', height: '500px', objectFit: 'cover', objectPosition: 'top', display: 'block' }} />
         </motion.div>
       </section>
 
@@ -331,16 +371,51 @@ export default function LandingPage() {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
         }
+        @keyframes floatOrb1 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(30px, -40px) scale(1.08); }
+        }
+        @keyframes floatOrb2 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(-25px, 30px) scale(1.05); }
+        }
+        @keyframes floatOrb3 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(20px, -20px) scale(1.1); }
+        }
+        @keyframes badgeShimmer {
+          0% { transform: translateX(-100%) skewX(-20deg); }
+          100% { transform: translateX(300%) skewX(-20deg); }
+        }
         ::-webkit-scrollbar { display: none; }
         
         @keyframes pulseGlow {
           0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
-          50% { box-shadow: 0 0 30px 0 rgba(124, 58, 237, 0.3); }
+          50% { box-shadow: 0 0 40px 0 rgba(124, 58, 237, 0.35), 0 0 80px 0 rgba(59, 130, 246, 0.1); }
         }
         .pulse-glow-border { animation: pulseGlow 4s infinite ease-in-out; }
         .showcase-card:hover .showcase-img { transform: scale(1.08) !important; }
         .showcase-card:hover .showcase-overlay { opacity: 1 !important; }
         .feature-card:hover .bento-glow { opacity: 1 !important; }
+
+        /* Hero Badge */
+        .hero-badge { border: 1px solid rgba(124,58,237,0.35); }
+        .badge-shimmer {
+          position: absolute; inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(167,139,250,0.25), transparent);
+          animation: badgeShimmer 3.5s ease-in-out infinite;
+        }
+
+        /* Search CTA glow */
+        .search-cta-wrapper { position: relative; }
+        .search-cta-glow {
+          position: absolute; inset: -2px; border-radius: 100px;
+          background: linear-gradient(135deg, rgba(124,58,237,0.5), rgba(59,130,246,0.4), rgba(16,185,129,0.3));
+          opacity: 0; filter: blur(8px);
+          transition: opacity 0.4s ease;
+          z-index: -1;
+        }
+        .search-cta-wrapper:hover .search-cta-glow { opacity: 1; }
 
         .features-bento { display: grid; grid-template-columns: repeat(1, 1fr); gap: 24px; }
         .bento-0 { grid-column: span 1; }
