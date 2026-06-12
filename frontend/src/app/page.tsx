@@ -7,7 +7,6 @@ import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import vignetteLab from '@/app/workspaces/vignetteLab.png';
 import { SmartGetStartedButton, SmartLoginButton } from '@/components/SmartButtons';
-import OrbitImages from '@/components/OrbitImages';
 
 const CATEGORIES = [
   { label: 'Presentations', icon: Presentation, color: '#7c3aed', bg: 'linear-gradient(135deg, #7c3aed, #a78bfa)' },
@@ -294,31 +293,67 @@ export default function LandingPage() {
             <p style={{ fontSize: '1.1rem', color: t.muted, maxWidth: '550px', margin: '0 auto' }}>Browse thousands of professional templates for every need. Customize anything with drag-and-drop simplicity.</p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
-            style={{ width: '100%', maxWidth: '900px', margin: '0 auto', marginBottom: '60px' }}>
-            <OrbitImages
-              images={[
-                ...SHOWCASE.map(s => s.img),
-                ...SHOWCASE.map(s => s.img)
-              ]}
-              shape="ellipse"
-              radiusX={550}
-              radiusY={200}
-              rotation={25}
-              duration={45}
-              itemSize={180}
-              responsive={true}
-              showPath={true}
-              pathColor={isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}
-              centerContent={
-                <div style={{ textAlign: 'center', zIndex: 20, pointerEvents: 'none' }}>
-                  <motion.div whileHover={{ scale: 1.05 }} style={{ width: '80px', height: '80px', borderRadius: '24px', background: 'linear-gradient(135deg, #7c3aed, #ec4899)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 20px 40px rgba(124,58,237,0.3)', pointerEvents: 'auto', cursor: 'pointer' }}>
-                    <Sparkles size={32} color="white" />
-                  </motion.div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px', marginBottom: '60px' }}>
+            {SHOWCASE.map((item, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                whileHover={{ y: -8 }}
+                style={{
+                  background: t.cardBg,
+                  borderRadius: '20px',
+                  border: `1px solid ${t.cardBorder}`,
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseOver={e => {
+                  e.currentTarget.style.borderColor = t.cardHoverBorder;
+                  e.currentTarget.style.boxShadow = t.cardHoverShadow;
+                }}
+                onMouseOut={e => {
+                  e.currentTarget.style.borderColor = t.cardBorder;
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ position: 'relative', width: '100%', paddingTop: '65%', overflow: 'hidden' }}>
+                  <Image 
+                    src={item.img} 
+                    alt={item.title} 
+                    fill 
+                    style={{ objectFit: 'cover', transition: 'transform 0.5s ease' }} 
+                    className="template-image"
+                  />
+                  <div style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    background: 'rgba(0,0,0,0.6)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    color: 'white',
+                    padding: '4px 10px',
+                    borderRadius: '100px',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase'
+                  }}>
+                    {item.cat}
+                  </div>
                 </div>
-              }
-            />
-          </motion.div>
+                <div style={{ padding: '20px' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: t.text, marginBottom: '6px' }}>{item.title}</h3>
+                  <p style={{ fontSize: '0.9rem', color: t.mutedFaint, margin: 0 }}>Fully customizable</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
 
           <div style={{ textAlign: 'center', marginTop: '16px' }}>
             <motion.a href="/register" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
