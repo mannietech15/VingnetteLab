@@ -6,11 +6,12 @@ import { prisma } from './infrastructure/prismaClient';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-for-dev';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:9800';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:4000';
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID',
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'YOUR_GOOGLE_CLIENT_SECRET',
-    callbackURL: "/auth/google/callback"
+    callbackURL: `${BACKEND_URL}/auth/google/callback`
   },
   async function(accessToken, refreshToken, profile, cb) {
     try {
@@ -38,7 +39,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID || 'YOUR_GITHUB_CLIENT_ID',
     clientSecret: process.env.GITHUB_CLIENT_SECRET || 'YOUR_GITHUB_CLIENT_SECRET',
-    callbackURL: "/auth/github/callback",
+    callbackURL: `${BACKEND_URL}/auth/github/callback`,
     scope: ['user:email']
   },
   async function(accessToken: string, refreshToken: string, profile: any, cb: any) {

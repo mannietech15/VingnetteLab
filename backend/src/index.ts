@@ -52,23 +52,25 @@ async function startApolloServer() {
   // --- OAuth Routes ---
   app.use(passport.initialize());
 
+  const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:9800';
+
   app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
   
   app.get('/auth/google/callback', 
-    passport.authenticate('google', { session: false, failureRedirect: 'http://localhost:9800/login?error=true' }),
+    passport.authenticate('google', { session: false, failureRedirect: `${FRONTEND_URL}/login?error=true` }),
     function(req, res) {
       const token = generateOAuthToken(req.user);
-      res.redirect(`http://localhost:9800/oauth-callback?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`);
+      res.redirect(`${FRONTEND_URL}/oauth-callback?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`);
     }
   );
 
   app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
   app.get('/auth/github/callback', 
-    passport.authenticate('github', { session: false, failureRedirect: 'http://localhost:9800/login?error=true' }),
+    passport.authenticate('github', { session: false, failureRedirect: `${FRONTEND_URL}/login?error=true` }),
     function(req, res) {
       const token = generateOAuthToken(req.user);
-      res.redirect(`http://localhost:9800/oauth-callback?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`);
+      res.redirect(`${FRONTEND_URL}/oauth-callback?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`);
     }
   );
 
