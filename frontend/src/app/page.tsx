@@ -20,6 +20,8 @@ const CATEGORIES = [
   { label: 'Websites', icon: Globe, color: '#14b8a6', bg: 'linear-gradient(135deg, #14b8a6, #5eead4)' },
 ];
 
+const ROTATING_WORDS = ['design', 'present', 'create', 'build', 'launch'];
+
 const SHOWCASE = [
   { img: '/hero-mockup.png', title: 'Business Presentations', cat: 'Presentations' },
   { img: '/showcase-social.png', title: 'Social Media Posts', cat: 'Social Media' },
@@ -38,6 +40,7 @@ export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [rotatingWord, setRotatingWord] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
@@ -75,6 +78,13 @@ export default function LandingPage() {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRotatingWord(prev => (prev + 1) % ROTATING_WORDS.length);
+    }, 2200);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -143,98 +153,107 @@ export default function LandingPage() {
       </div>
 
       {/* === HERO === */}
-      <motion.section ref={heroRef} className="hero-section" style={{ opacity: heroOpacity, scale: heroScale, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingTop: '100px', paddingBottom: '60px', overflow: 'hidden' }}>
+      <motion.section ref={heroRef} className="hero-section" style={{ opacity: heroOpacity, scale: heroScale, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', paddingTop: '120px', paddingBottom: '80px', overflow: 'hidden' }}>
 
-        {/* Dot grid texture */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: isDark ? 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)' : 'radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none', zIndex: 0 }} />
+        {/* Single tasteful background atmosphere — not floating orbs */}
+        <div style={{ position: 'absolute', top: '35%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '600px', background: isDark ? 'radial-gradient(ellipse, rgba(109,40,217,0.11) 0%, rgba(59,130,246,0.04) 45%, transparent 70%)' : 'radial-gradient(ellipse, rgba(109,40,217,0.05) 0%, transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
 
-        {/* Ambient Background Orbs */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
-          <div style={{ position: 'absolute', top: '10%', left: '15%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 65%)', filter: 'blur(60px)', animation: 'floatOrb1 8s ease-in-out infinite' }} />
-          <div style={{ position: 'absolute', top: '20%', right: '10%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(59,130,246,0.14) 0%, transparent 65%)', filter: 'blur(60px)', animation: 'floatOrb2 10s ease-in-out infinite' }} />
-          <div style={{ position: 'absolute', bottom: '20%', left: '30%', width: '350px', height: '350px', background: 'radial-gradient(circle, rgba(16,185,129,0.10) 0%, transparent 65%)', filter: 'blur(60px)', animation: 'floatOrb3 12s ease-in-out infinite' }} />
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '900px', height: '900px', background: 'radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        </div>
+        {/* Hero content */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="hero-content" style={{ textAlign: 'center', maxWidth: '1100px', width: '100%', padding: '0 40px', zIndex: 10 }}>
 
-        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="hero-content" style={{ textAlign: 'center', maxWidth: '1100px', width: '100%', padding: '0 40px', zIndex: 10 }}>
-          
-          {/* Animated Shimmer Badge */}
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.5 }}
-            className="hero-badge"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', position: 'relative', borderRadius: '100px', padding: '8px 20px', fontSize: '14px', color: '#c4b5fd', fontWeight: 600, marginBottom: '28px', background: isDark ? 'rgba(124,58,237,0.12)' : 'rgba(124,58,237,0.08)', overflow: 'hidden', cursor: 'default' }}>
-            <div className="badge-shimmer" />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
-              <Sparkles size={15} style={{ color: '#a78bfa' }} />
-              <span>Now with AI-powered design tools</span>
-              <span style={{ background: 'linear-gradient(90deg, #7c3aed, #3b82f6)', borderRadius: '100px', padding: '2px 10px', fontSize: '11px', color: '#fff', fontWeight: 700, letterSpacing: '0.02em' }}>NEW</span>
-            </div>
-          </motion.div>
-
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }} className="hero-title" style={{ fontSize: 'clamp(2rem, 4vw, 4rem)', fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.04em', marginBottom: '20px' }}>
-            What will you<br />
-            <span style={{ background: 'linear-gradient(135deg, #a78bfa, #60a5fa, #34d399, #fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundSize: '300% 300%', animation: 'gradientShift 5s ease infinite' }}>design today?</span>
-          </motion.h1>
-
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }} className="hero-subtitle" style={{ fontSize: '1.25rem', color: t.muted, lineHeight: 1.75, maxWidth: '640px', margin: '0 auto 36px', fontWeight: 400 }}>
-            From polished presentations to social graphics — create anything with <strong style={{ color: t.text, fontWeight: 600 }}>AI-powered tools</strong> and a drag-and-drop canvas.
+          {/* Eyebrow label — minimal, no gimmicks */}
+          <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}
+            style={{ fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: t.mutedFaint, fontWeight: 500, marginBottom: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+            <span style={{ display: 'inline-block', width: '20px', height: '1px', background: t.mutedFaintest }} />
+            Professional design for teams
+            <span style={{ display: 'inline-block', width: '20px', height: '1px', background: t.mutedFaintest }} />
           </motion.p>
 
-          {/* Premium Search CTA */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.6 }}
-            className="search-cta-wrapper" style={{ position: 'relative', maxWidth: '660px', margin: '0 auto 20px' }}>
-            <div className="search-cta-glow" />
-            <div className="search-cta pulse-glow-border" style={{ display: 'flex', alignItems: 'center', gap: '0', background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)', borderRadius: '100px', border: isDark ? '1px solid rgba(255,255,255,0.14)' : '1px solid rgba(0,0,0,0.1)', padding: '6px 6px 6px 22px', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-              <div className="search-input-wrapper" style={{ display: 'flex', alignItems: 'center', flex: 1, gap: '10px' }}>
-                <Search size={18} style={{ color: t.mutedFaint, flexShrink: 0 }} />
-                <input type="text" placeholder="Search for templates, designs..." readOnly
-                  style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: t.text, fontSize: '15px', padding: '13px 12px', fontFamily: 'inherit', minWidth: 0 }} />
-              </div>
-              <div className="search-btn-wrapper">
-                <SmartGetStartedButton href="/register" text="Start designing" size="sm" />
-              </div>
-            </div>
+          {/* Headline with rotating verb */}
+          <h1 className="hero-title" style={{ fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: '24px', color: t.text }}>
+            {['What', 'will', 'you'].map((word, i) => (
+              <motion.span key={word}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 + i * 0.07, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                style={{ display: 'inline-block', marginRight: '0.22em' }}>
+                {word}
+              </motion.span>
+            ))}
+            <br />
+            <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: '0.22em' }}>
+              <span className="rotating-word-wrap">
+                <AnimatePresence mode="wait">
+                  <motion.span key={rotatingWord}
+                    initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: -18, filter: 'blur(6px)' }}
+                    transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
+                    style={{ display: 'inline-block', color: '#7c3aed' }}>
+                    {ROTATING_WORDS[rotatingWord]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>today?</motion.span>
+            </span>
+          </h1>
+
+          {/* Subtitle — confident, not generic */}
+          <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.5 }}
+            className="hero-subtitle" style={{ color: t.muted, lineHeight: 1.7, maxWidth: '500px', margin: '0 auto 40px', fontWeight: 400 }}>
+            A professional canvas for presentations, graphics, diagrams, and more — powered by AI, built for teams.
+          </motion.p>
+
+          {/* Two clean CTAs */}
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.5 }}
+            className="hero-ctas" style={{ display: 'flex', gap: '12px', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', marginBottom: '48px' }}>
+            <SmartGetStartedButton href="/register" text="Start for free" size="lg" />
+            <motion.a href="#features"
+              whileHover={{ x: 3 }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '14px 22px', fontSize: '15px', fontWeight: 500, color: t.muted, textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '-0.01em' }}
+              onMouseOver={e => e.currentTarget.style.color = t.text}
+              onMouseOut={e => e.currentTarget.style.color = t.muted}>
+              See how it works <ArrowRight size={15} />
+            </motion.a>
           </motion.div>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
-            style={{ fontSize: '13px', color: t.mutedFaintest, marginBottom: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-            <span>✓ Free forever</span>
-            <span style={{ opacity: 0.4 }}>·</span>
-            <span>✓ No credit card required</span>
-            <span style={{ opacity: 0.4 }}>·</span>
-            <span>✓ Instant access</span>
-          </motion.p>
+          {/* Social proof — numbers, not checkboxes */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.5 }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0', marginBottom: '72px', flexWrap: 'wrap' }}>
+            {[
+              { val: '124K+', lbl: 'creators' },
+              { val: '2.4M+', lbl: 'designs made' },
+              { val: '4.9★', lbl: 'avg. rating' },
+            ].map((s, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
+                {i > 0 && <span style={{ width: '1px', height: '28px', background: t.mutedFaintest, margin: '0 28px', opacity: 0.5 }} />}
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '1.05rem', fontWeight: 700, color: t.text, letterSpacing: '-0.02em' }}>{s.val}</div>
+                  <div style={{ fontSize: '11.5px', color: t.mutedFaint, marginTop: '1px', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{s.lbl}</div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
         </motion.div>
 
-        {/* Category Carousel - staggered entrance */}
-        <div className="cat-carousel" style={{ display: 'flex', gap: '16px', padding: '0 40px', overflowX: 'auto', maxWidth: '100%', zIndex: 10, scrollbarWidth: 'none' }}>
-          {CATEGORIES.map((cat, i) => (
-            <motion.a key={i} href="/register" className="cat-item"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 + i * 0.07, duration: 0.5, ease: 'easeOut' }}
-              whileHover={{ scale: 1.06, y: -10 }} whileTap={{ scale: 0.97 }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', padding: '18px 22px', background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)', border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.08)', borderRadius: '22px', cursor: 'pointer', textDecoration: 'none', color: t.text, minWidth: '118px', transition: 'all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)', flexShrink: 0, backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', position: 'relative', overflow: 'hidden' }}
-              onMouseOver={e => {
-                e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.06)';
-                e.currentTarget.style.borderColor = cat.color + '90';
-                e.currentTarget.style.boxShadow = `0 20px 40px ${cat.color}30, 0 0 0 1px ${cat.color}20`;
-              }}
-              onMouseOut={e => {
-                e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
-                e.currentTarget.style.borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}>
-              <motion.div
-                whileHover={{ scale: 1.15, rotate: 5 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 12 }}
-                className="cat-item-icon"
-                style={{ width: '52px', height: '52px', borderRadius: '16px', background: cat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: `0 8px 24px ${cat.color}50, inset 0 1px 0 rgba(255,255,255,0.2)` }}>
-                <cat.icon className="cat-icon-svg" size={22} strokeWidth={2} />
-              </motion.div>
-              <span className="cat-item-text" style={{ fontSize: '12.5px', fontWeight: 600, whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>{cat.label}</span>
-            </motion.a>
-          ))}
-        </div>
+        {/* Auto-scrolling category marquee */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
+          style={{ width: '100%', overflow: 'hidden', position: 'relative', zIndex: 10 }}>
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '120px', background: `linear-gradient(to right, ${t.bg}, transparent)`, zIndex: 2, pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '120px', background: `linear-gradient(to left, ${t.bg}, transparent)`, zIndex: 2, pointerEvents: 'none' }} />
+          <div className="marquee-track" style={{ display: 'flex', gap: '10px' }}>
+            {[...CATEGORIES, ...CATEGORIES, ...CATEGORIES].map((cat, i) => (
+              <a key={i} href="/register"
+                className="marquee-chip"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', padding: '9px 18px', borderRadius: '100px', border: `1px solid ${isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.09)'}`, background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)', fontSize: '13px', fontWeight: 500, color: t.muted, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.2s' }}
+                onMouseOver={e => { e.currentTarget.style.color = t.text; e.currentTarget.style.borderColor = cat.color + '70'; e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)'; }}
+                onMouseOut={e => { e.currentTarget.style.color = t.muted; e.currentTarget.style.borderColor = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.09)'; e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'; }}>
+                <cat.icon size={13} style={{ color: cat.color, flexShrink: 0 }} />
+                {cat.label}
+              </a>
+            ))}
+          </div>
+        </motion.div>
       </motion.section>
 
       {/* === HERO SHOWCASE IMAGE === */}
@@ -370,55 +389,32 @@ export default function LandingPage() {
       </footer>
 
       <style jsx global>{`
-        @keyframes gradientShift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        @keyframes floatOrb1 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(30px, -40px) scale(1.08); }
-        }
-        @keyframes floatOrb2 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(-25px, 30px) scale(1.05); }
-        }
-        @keyframes floatOrb3 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(20px, -20px) scale(1.1); }
-        }
-        @keyframes badgeShimmer {
-          0% { transform: translateX(-100%) skewX(-20deg); }
-          100% { transform: translateX(300%) skewX(-20deg); }
-        }
         ::-webkit-scrollbar { display: none; }
-        
-        @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
-          50% { box-shadow: 0 0 40px 0 rgba(124, 58, 237, 0.35), 0 0 80px 0 rgba(59, 130, 246, 0.1); }
+
+        /* Marquee animation */
+        @keyframes marqueeScroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-33.333%); }
         }
-        .pulse-glow-border { animation: pulseGlow 4s infinite ease-in-out; }
+        .marquee-track {
+          animation: marqueeScroll 30s linear infinite;
+          will-change: transform;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+
+        /* Rotating word container — fixed width to prevent layout shift */
+        .rotating-word-wrap {
+          display: inline-block;
+          position: relative;
+          min-width: 7ch;
+          text-align: left;
+        }
+
         .showcase-card:hover .showcase-img { transform: scale(1.08) !important; }
         .showcase-card:hover .showcase-overlay { opacity: 1 !important; }
         .feature-card:hover .bento-glow { opacity: 1 !important; }
-
-        /* Hero Badge */
-        .hero-badge { border: 1px solid rgba(124,58,237,0.35); }
-        .badge-shimmer {
-          position: absolute; inset: 0;
-          background: linear-gradient(90deg, transparent, rgba(167,139,250,0.25), transparent);
-          animation: badgeShimmer 3.5s ease-in-out infinite;
-        }
-
-        /* Search CTA glow */
-        .search-cta-wrapper { position: relative; }
-        .search-cta-glow {
-          position: absolute; inset: -2px; border-radius: 100px;
-          background: linear-gradient(135deg, rgba(124,58,237,0.5), rgba(59,130,246,0.4), rgba(16,185,129,0.3));
-          opacity: 0; filter: blur(8px);
-          transition: opacity 0.4s ease;
-          z-index: -1;
-        }
-        .search-cta-wrapper:hover .search-cta-glow { opacity: 1; }
+        .hero-ctas { flex-direction: column; }
+        @media (min-width: 480px) { .hero-ctas { flex-direction: row !important; } }
 
         .features-bento { display: grid; grid-template-columns: repeat(1, 1fr); gap: 24px; }
         .bento-0 { grid-column: span 1; }
