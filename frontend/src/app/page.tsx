@@ -7,6 +7,7 @@ import Image from 'next/image';
 import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import vignetteLab from '@/app/workspaces/vignetteLab.png';
 import { SmartGetStartedButton, SmartLoginButton } from '@/components/SmartButtons';
+import OrbitImages from '@/components/OrbitImages';
 
 const CATEGORIES = [
   { label: 'Presentations', icon: Presentation, color: '#7c3aed', bg: 'linear-gradient(135deg, #7c3aed, #a78bfa)' },
@@ -293,28 +294,33 @@ export default function LandingPage() {
             <p style={{ fontSize: '1.1rem', color: t.muted, maxWidth: '550px', margin: '0 auto' }}>Browse thousands of professional templates for every need. Customize anything with drag-and-drop simplicity.</p>
           </motion.div>
 
-          <div className="showcase-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
-            {SHOWCASE.map((item, i) => (
-              <motion.div key={i}
-                initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ delay: i * 0.15, duration: 0.8, ease: "easeOut" }}
-                whileHover={{ y: -10 }}
-                className="showcase-card"
-                style={{ borderRadius: '20px', overflow: 'hidden', background: t.cardBg, border: `1px solid ${t.cardBorder}`, cursor: 'pointer', transition: 'all 0.4s ease', position: 'relative' }}
-                onMouseOver={e => { e.currentTarget.style.borderColor = t.cardHoverBorder; e.currentTarget.style.boxShadow = `0 20px 40px ${t.cardHoverShadow}`; }}
-                onMouseOut={e => { e.currentTarget.style.borderColor = t.cardBorder; e.currentTarget.style.boxShadow = 'none'; }}>
-                <div style={{ aspectRatio: '1', overflow: 'hidden', position: 'relative' }}>
-                  <Image src={item.img} alt={item.title} width={400} height={400} className="showcase-img" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)' }} />
-                  <div className="showcase-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%)', opacity: 0, transition: 'opacity 0.4s ease', pointerEvents: 'none' }} />
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }}
+            style={{ width: '100%', maxWidth: '900px', margin: '0 auto', marginBottom: '60px' }}>
+            <OrbitImages
+              images={[
+                ...SHOWCASE.map(s => s.img),
+                ...SHOWCASE.map(s => s.img)
+              ]}
+              shape="ellipse"
+              radiusX={550}
+              radiusY={200}
+              rotation={25}
+              duration={45}
+              itemSize={180}
+              responsive={true}
+              showPath={true}
+              pathColor={isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}
+              centerContent={
+                <div style={{ textAlign: 'center', zIndex: 20, pointerEvents: 'none' }}>
+                  <motion.div whileHover={{ scale: 1.05 }} style={{ width: '80px', height: '80px', borderRadius: '24px', background: 'linear-gradient(135deg, #7c3aed, #ec4899)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 20px 40px rgba(124,58,237,0.3)', pointerEvents: 'auto', cursor: 'pointer' }}>
+                    <Sparkles size={32} color="white" />
+                  </motion.div>
                 </div>
-                <div style={{ padding: '16px 20px' }}>
-                  <div style={{ fontSize: '15px', fontWeight: 600, marginBottom: '4px' }}>{item.title}</div>
-                  <div style={{ fontSize: '13px', color: t.mutedFaint }}>{item.cat}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              }
+            />
+          </motion.div>
 
-          <div style={{ textAlign: 'center', marginTop: '48px' }}>
+          <div style={{ textAlign: 'center', marginTop: '16px' }}>
             <motion.a href="/register" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
               style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 32px', borderRadius: '100px', border: `1px solid ${t.browseBtnBorder}`, background: t.browseBtnBg, color: t.text, fontSize: '15px', fontWeight: 600, textDecoration: 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
               Browse all templates <ArrowRight size={18} />
