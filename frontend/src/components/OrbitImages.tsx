@@ -126,7 +126,7 @@ function OrbitItem({ item, index, totalItems, path, itemSize, rotation, progress
 
   const offsetDistance = useTransform(progress, (p: number) => {
     const offset = (((p + itemOffset) % 100) + 100) % 100;
-    return \`\${offset}%\`;
+    return `${offset}%`;
   });
 
   return (
@@ -135,13 +135,13 @@ function OrbitItem({ item, index, totalItems, path, itemSize, rotation, progress
       style={{
         width: itemSize,
         height: itemSize,
-        offsetPath: \`path("\${path}")\`,
+        offsetPath: `path("${path}")`,
         offsetRotate: '0deg',
         offsetAnchor: 'center center',
         offsetDistance,
       }}
     >
-      <div style={{ transform: \`rotate(\${-rotation}deg)\` }} className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/20">
+      <div style={{ transform: `rotate(${-rotation}deg)` }} className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/20">
         {item}
       </div>
     </motion.div>
@@ -238,9 +238,9 @@ export default function OrbitImages({
 
   const items = images.map((src, index) => (
     <img
-      key={\`\${src}-\${index}\`}
+      key={`${src}-${index}`}
       src={src}
-      alt={\`\${altPrefix} \${index + 1}\`}
+      alt={`${altPrefix} ${index + 1}`}
       draggable={false}
       className="w-full h-full object-cover"
     />
@@ -249,7 +249,7 @@ export default function OrbitImages({
   return (
     <div
       ref={containerRef}
-      className={\`relative mx-auto \${className}\`}
+      className={`relative mx-auto ${className}`}
       style={{
         width: containerWidth,
         height: containerHeight,
@@ -262,7 +262,7 @@ export default function OrbitImages({
         style={{
           width: responsive ? baseWidth : '100%',
           height: responsive ? baseWidth : '100%',
-          transform: responsive && scale !== null ? \`translate(-50%, -50%) scale(\${scale})\` : undefined,
+          transform: responsive && scale !== null ? `translate(-50%, -50%) scale(${scale})` : undefined,
           visibility: responsive && scale === null ? 'hidden' : undefined,
           transformOrigin: 'center center',
         }}
@@ -270,7 +270,7 @@ export default function OrbitImages({
         <div
           className="relative w-full h-full"
           style={{
-            transform: \`rotate(\${rotation}deg)\`,
+            transform: `rotate(${rotation}deg)`,
             transformOrigin: 'center center',
           }}
         >
@@ -278,7 +278,7 @@ export default function OrbitImages({
             <svg
               width="100%"
               height="100%"
-              viewBox={\`0 0 \${baseWidth} \${baseWidth}\`}
+              viewBox={`0 0 ${baseWidth} ${baseWidth}`}
               className="absolute inset-0 pointer-events-none"
             >
               <path d={path} fill="none" stroke={pathColor} strokeWidth={pathWidth / (scale ?? 1)} />
