@@ -293,66 +293,74 @@ export default function LandingPage() {
             <p style={{ fontSize: '1.1rem', color: t.muted, maxWidth: '550px', margin: '0 auto' }}>Browse thousands of professional templates for every need. Customize anything with drag-and-drop simplicity.</p>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px', marginBottom: '60px' }}>
-            {SHOWCASE.map((item, i) => (
-              <motion.div key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                whileHover={{ y: -8 }}
-                style={{
-                  background: t.cardBg,
-                  borderRadius: '20px',
-                  border: `1px solid ${t.cardBorder}`,
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseOver={e => {
-                  e.currentTarget.style.borderColor = t.cardHoverBorder;
-                  e.currentTarget.style.boxShadow = t.cardHoverShadow;
-                }}
-                onMouseOut={e => {
-                  e.currentTarget.style.borderColor = t.cardBorder;
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                <div style={{ position: 'relative', width: '100%', paddingTop: '65%', overflow: 'hidden' }}>
-                  <Image 
-                    src={item.img} 
-                    alt={item.title} 
-                    fill 
-                    style={{ objectFit: 'cover', transition: 'transform 0.5s ease' }} 
-                    className="template-image"
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    background: 'rgba(0,0,0,0.6)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    color: 'white',
-                    padding: '4px 10px',
-                    borderRadius: '100px',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    letterSpacing: '0.05em',
-                    textTransform: 'uppercase'
-                  }}>
-                    {item.cat}
+          <div style={{ position: 'relative', width: '100%', padding: '40px 0', overflow: 'hidden', marginBottom: '60px' }}>
+            {/* Fade edges */}
+            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '100px', background: `linear-gradient(to right, ${t.bg}, transparent)`, zIndex: 10, pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '100px', background: `linear-gradient(to left, ${t.bg}, transparent)`, zIndex: 10, pointerEvents: 'none' }} />
+            
+            <motion.div 
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, ease: "linear", duration: 40 }}
+              style={{ display: 'flex', gap: '24px', width: 'max-content', padding: '20px 0' }}
+            >
+              {[...SHOWCASE, ...SHOWCASE, ...SHOWCASE, ...SHOWCASE].map((item, i) => (
+                <motion.div key={i}
+                  animate={{ y: i % 2 === 0 ? [15, -15, 15] : [-15, 15, -15] }}
+                  transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                  whileHover={{ scale: 1.02 }}
+                  style={{
+                    width: '300px',
+                    flexShrink: 0,
+                    background: t.cardBg,
+                    borderRadius: '20px',
+                    border: `1px solid ${t.cardBorder}`,
+                    overflow: 'hidden',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    boxShadow: t.imgShadow
+                  }}
+                  onMouseOver={e => {
+                    e.currentTarget.style.borderColor = t.cardHoverBorder;
+                  }}
+                  onMouseOut={e => {
+                    e.currentTarget.style.borderColor = t.cardBorder;
+                  }}
+                >
+                  <div style={{ position: 'relative', width: '100%', paddingTop: '65%', overflow: 'hidden' }}>
+                    <Image 
+                      src={item.img} 
+                      alt={item.title} 
+                      fill 
+                      style={{ objectFit: 'cover' }} 
+                      className="template-image"
+                    />
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      left: '12px',
+                      background: 'rgba(0,0,0,0.6)',
+                      backdropFilter: 'blur(8px)',
+                      WebkitBackdropFilter: 'blur(8px)',
+                      color: 'white',
+                      padding: '4px 10px',
+                      borderRadius: '100px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      letterSpacing: '0.05em',
+                      textTransform: 'uppercase'
+                    }}>
+                      {item.cat}
+                    </div>
                   </div>
-                </div>
-                <div style={{ padding: '20px' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: t.text, marginBottom: '6px' }}>{item.title}</h3>
-                  <p style={{ fontSize: '0.9rem', color: t.mutedFaint, margin: 0 }}>Fully customizable</p>
-                </div>
-              </motion.div>
-            ))}
+                  <div style={{ padding: '20px' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: t.text, marginBottom: '6px' }}>{item.title}</h3>
+                    <p style={{ fontSize: '0.9rem', color: t.mutedFaint, margin: 0 }}>Fully customizable</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '16px' }}>
