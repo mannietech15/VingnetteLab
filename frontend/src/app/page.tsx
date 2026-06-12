@@ -183,7 +183,7 @@ export default function LandingPage() {
             <br />
             <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: '0.22em' }}>
               <span className="rotating-word-wrap">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                   <motion.span key={rotatingWord}
                     initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
                     animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -194,7 +194,7 @@ export default function LandingPage() {
                   </motion.span>
                 </AnimatePresence>
               </span>
-              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>today?</motion.span>
+              <motion.span layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>today?</motion.span>
             </span>
           </h1>
 
@@ -402,12 +402,10 @@ export default function LandingPage() {
         }
         .marquee-track:hover { animation-play-state: paused; }
 
-        /* Rotating word container — fixed width to prevent layout shift */
+        /* Rotating word container — flexible width for smooth layout shift */
         .rotating-word-wrap {
-          display: inline-block;
+          display: inline-flex;
           position: relative;
-          min-width: 7ch;
-          text-align: left;
         }
 
         .showcase-card:hover .showcase-img { transform: scale(1.08) !important; }
