@@ -2,7 +2,7 @@
 // https://x.com/dominikkoch
 
 import { useMemo, useEffect, useLayoutEffect, useRef, useState, ReactNode } from 'react';
-import { motion, useMotionValue, useTransform, animate, MotionValue } from 'motion/react';
+import { motion } from 'motion/react';
 
 type OrbitShape =
   | 'ellipse'
@@ -51,7 +51,8 @@ interface OrbitItemProps {
   path: string;
   itemSize: number;
   rotation: number;
-  progress: MotionValue<number>;
+  direction: 'normal' | 'reverse';
+  duration: number;
   fill: boolean;
 }
 
@@ -121,24 +122,28 @@ function generateWavePath(cx: number, cy: number, w: number, amplitude: number, 
   return pts.join(' ') + ' Z';
 }
 
-function OrbitItem({ item, index, totalItems, path, itemSize, rotation, progress, fill }: OrbitItemProps) {
+function OrbitItem({ item, index, totalItems, path, itemSize, rotation, direction, duration, fill }: OrbitItemProps) {
   const itemOffset = fill ? (index / totalItems) * 100 : 0;
-
-  const offsetDistance = useTransform(progress, (p: number) => {
-    const offset = (((p + itemOffset) % 100) + 100) % 100;
-    return `${offset}%`;
-  });
+  const startDistance = direction === 'reverse' ? itemOffset : itemOffset;
+  const endDistance = direction === 'reverse' ? itemOffset - 100 : itemOffset + 100;
 
   return (
     <motion.div
-      className="absolute will-change-transform select-none"
+      className="absolute top-0 left-0 will-change-transform select-none"
       style={{
         width: itemSize,
         height: itemSize,
         offsetPath: `path("${path}")`,
         offsetRotate: '0deg',
         offsetAnchor: 'center center',
-        offsetDistance,
+      }}
+      initial={{ offsetDistance: `${startDistance}%` }}
+      animate={{ offsetDistance: [`${startDistance}%`, `${endDistance}%`] }}
+      transition={{
+        duration,
+        ease: 'linear',
+        repeat: Infinity,
+        repeatType: 'loop',
       }}
     >
       <div style={{ transform: `rotate(${-rotation}deg)` }} className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/20">
@@ -176,7 +181,8 @@ export default function OrbitImages({
   responsive = false,
 }: OrbitImagesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState<number | null>(null);
+  const [scale, setScale] = useState<number>(1);
+  const [isMounted, setIsMounted] = useState(false);
 
   const designCenterX = baseWidth / 2;
   const designCenterY = baseWidth / 2;
@@ -209,6 +215,7 @@ export default function OrbitImages({
   }, [shape, customPath, designCenterX, designCenterY, radiusX, radiusY, radius, starPoints, starInnerRatio]);
 
   useLayoutEffect(() => {
+    setIsMounted(true);
     if (!responsive || !containerRef.current) return;
     const updateScale = () => {
       if (!containerRef.current) return;
@@ -219,19 +226,6 @@ export default function OrbitImages({
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, [responsive, baseWidth]);
-
-  const progress = useMotionValue(0);
-
-  useEffect(() => {
-    if (paused) return;
-    const controls = animate(progress, direction === 'reverse' ? -100 : 100, {
-      duration,
-      ease: easing,
-      repeat: Infinity,
-      repeatType: 'loop',
-    });
-    return () => controls.stop();
-  }, [progress, duration, easing, direction, paused]);
 
   const containerWidth = responsive ? '100%' : (typeof width === 'number' ? width : '100%');
   const containerHeight = responsive ? 'auto' : (typeof height === 'number' ? height : (typeof width === 'number' ? width : 'auto'));
@@ -262,8 +256,8 @@ export default function OrbitImages({
         style={{
           width: responsive ? baseWidth : '100%',
           height: responsive ? baseWidth : '100%',
-          transform: responsive && scale !== null ? `translate(-50%, -50%) scale(${scale})` : undefined,
-          visibility: responsive && scale === null ? 'hidden' : undefined,
+          transform: isMounted && responsive ? `translate(-50%, -50%) scale(${scale})` : 'translate(-50%, -50%) scale(0.6)',
+          visibility: !isMounted && responsive ? 'hidden' : 'visible',
           transformOrigin: 'center center',
         }}
       >
@@ -294,7 +288,8 @@ export default function OrbitImages({
               path={path}
               itemSize={itemSize}
               rotation={rotation}
-              progress={progress}
+              direction={direction}
+              duration={duration}
               fill={fill}
             />
           ))}
