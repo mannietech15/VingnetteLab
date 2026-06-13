@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Providers } from './components/Providers';
 import ClientLayout from './components/ClientLayout';
+import { ErrorBoundary } from './ErrorBoundary';
 
 import LandingPage from './pages/LandingPage';
 import CanvasPage from './pages/CanvasPage';
@@ -20,19 +21,21 @@ function App() {
     <Router>
       <Providers>
         <ClientLayout>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/canvas/:id" element={<CanvasPage />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/oauth-callback" element={<OAuthCallbackPage />} />
-            <Route path="/recent" element={<RecentPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/templates" element={<TemplatesPage />} />
-            <Route path="/vignette-ai" element={<VignetteAIPage />} />
-            <Route path="/workspaces" element={<WorkspacesPage />} />
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/canvas/:id" element={<CanvasPage />} />
+              <Route path="/favorites" element={<FavoritesPage />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/oauth-callback" element={<OAuthCallbackPage />} />
+              <Route path="/recent" element={<RecentPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/templates" element={<TemplatesPage />} />
+              <Route path="/vignette-ai" element={<VignetteAIPage />} />
+              <Route path="/workspaces" element={<WorkspacesPage />} />
+            </Routes>
+          </ErrorBoundary>
         </ClientLayout>
       </Providers>
     </Router>

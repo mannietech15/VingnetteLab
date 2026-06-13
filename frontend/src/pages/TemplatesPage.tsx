@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-const Image = ({ src, alt, width, height, className, fill, ...props }: any) => <img src={src} alt={alt} width={width} height={height} className={className} style={fill ? { width: '100%', height: '100%', objectFit: 'cover' } : {}} {...props} />;
 import { useNavigate } from 'react-router-dom';
 import { Search, Sparkles, Users, Briefcase, Code, Palette, TrendingUp, ArrowRight, Star, Eye, Loader2 } from 'lucide-react';
 import { TEMPLATES, Template } from '@/data/templates';
 import TemplatePreview from '@/components/TemplatePreview';
-import { motion, useMotionValue, useSpring } from 'motion/react';
+import { motion, useSpring } from 'motion/react';
 import type { SpringOptions } from 'motion/react';
 import { gql } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
+
+const Image = ({ src, alt, width, height, className, fill, ...props }: any) => <img src={src} alt={alt} width={width} height={height} className={className} style={fill ? { width: '100%', height: '100%', objectFit: 'cover' } : {}} {...props} />;
 
 const GET_WORKSPACES = gql`
   query GetWorkspaces {
@@ -66,8 +67,8 @@ function TemplateCard({ t, isFeatured, onUseTemplate, isCreating }: { t: Templat
 
   // --- 3D Tilt Animation Physics (from React Bits TiltedCard) ---
   const tiltRef = useRef<HTMLDivElement>(null);
-  const rotateX = useSpring(useMotionValue(0), tiltSpring);
-  const rotateY = useSpring(useMotionValue(0), tiltSpring);
+  const rotateX = useSpring(0, tiltSpring);
+  const rotateY = useSpring(0, tiltSpring);
   const scale = useSpring(1, tiltSpring);
   const rotateAmplitude = 19;
 
