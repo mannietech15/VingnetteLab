@@ -309,7 +309,7 @@ export default function LandingPage() {
                   transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                   whileHover={{ scale: 1.02 }}
                   style={{
-                    width: '300px',
+                    width: '380px',
                     flexShrink: 0,
                     background: t.cardBg,
                     borderRadius: '20px',
@@ -328,12 +328,11 @@ export default function LandingPage() {
                     e.currentTarget.style.borderColor = t.cardBorder;
                   }}
                 >
-                  <div style={{ position: 'relative', width: '100%', paddingTop: '65%', overflow: 'hidden' }}>
-                    <Image 
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16/10', overflow: 'hidden' }}>
+                    <img 
                       src={item.img} 
                       alt={item.title} 
-                      fill 
-                      style={{ objectFit: 'cover' }} 
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
                       className="template-image"
                     />
                     <div style={{
