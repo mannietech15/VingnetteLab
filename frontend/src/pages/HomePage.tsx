@@ -4,7 +4,8 @@ import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { Plus, Folder, FileText, ArrowRight, Sparkles, LayoutTemplate, Settings, Clock, Users } from 'lucide-react';
+import { Plus, Folder, FileText, ArrowRight, Sparkles, LayoutTemplate, Settings, Clock, Users, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import TemplatePreview from '@/components/TemplatePreview';
 import TiltedCard from '@/components/TiltedCard';
 
@@ -68,6 +69,7 @@ export default function Dashboard() {
   const [createCanvas] = useMutation(CREATE_CANVAS);
   const [newWsName, setNewWsName] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+  const [notification, setNotification] = useState<{ message: string, id: number } | null>(null);
 
   if (loading) return (
     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)', flexDirection: 'column', gap: '16px' }}>
@@ -90,10 +92,18 @@ export default function Dashboard() {
     e.preventDefault();
     if (!newWsName.trim()) return;
     setIsCreating(true);
-    await createWorkspace({ variables: { name: newWsName } });
-    setNewWsName('');
-    setIsCreating(false);
-    refetch();
+    const workspaceName = newWsName;
+    try {
+      await createWorkspace({ variables: { name: workspaceName } });
+      setNotification({ message: `Workspace "${workspaceName}" created successfully!`, id: Date.now() });
+      setNewWsName('');
+      setTimeout(() => setNotification(null), 4000);
+      refetch();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const handleCreateCanvas = async (workspaceId: string) => {
@@ -335,6 +345,39 @@ export default function Dashboard() {
         </section>
 
       </div>
+
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            key={notification.id}
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            style={{
+              position: 'fixed',
+              bottom: '24px',
+              right: '24px',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              boxShadow: 'var(--shadow-lg)',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              zIndex: 100,
+            }}
+          >
+            <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#10b98120', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Check size={14} strokeWidth={3} />
+            </div>
+            <p style={{ margin: 0, fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>
+              {notification.message}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
