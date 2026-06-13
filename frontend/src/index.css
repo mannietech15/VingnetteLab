@@ -666,4 +666,20 @@ body.canvas-mode .main-content {
     min-height: 300px;
     margin: 0 -20px -24px -20px;
   }
+
+  /* Login Page Mobile Responsive */
+  .login-container {
+    flex-direction: column !important;
+  }
+
+  .login-left-panel {
+    display: none !important;
+  }
+
+  .login-right-panel {
+    flex: 1 1 auto !important;
+    padding: 40px 20px !important;
+    justify-content: center !important;
+  }
 }
+

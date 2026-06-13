@@ -72,10 +72,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#09090b', color: '#fafafa', fontFamily: 'var(--font-inter), sans-serif' }}>
+    <div className="login-container" style={{ display: 'flex', minHeight: '100vh', background: '#09090b', color: '#fafafa', fontFamily: 'var(--font-inter), sans-serif' }}>
       
       {/* Left Panel (60%) */}
-      <div style={{ flex: '0 0 60%', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '60px', borderRight: '1px solid rgba(255,255,255,0.05)' }}>
+      <div className="login-left-panel" style={{ flex: '0 0 60%', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '60px', borderRight: '1px solid rgba(255,255,255,0.05)' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 0% 0%, rgba(16,185,129,0.15) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(59,130,246,0.1) 0%, transparent 50%)', zIndex: 0 }} />
         
         <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'auto' }}>
@@ -107,7 +107,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right Panel (40%) */}
-      <div style={{ flex: '0 0 40%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '40px 40px 40px 20px', position: 'relative', zIndex: 10, background: '#09090b' }}>
+      <div className="login-right-panel" style={{ flex: '0 0 40%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '40px 40px 40px 20px', position: 'relative', zIndex: 10, background: '#09090b' }}>
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} style={{ width: '100%', maxWidth: '400px' }}>
           
           <div style={{ marginBottom: '40px' }}>
