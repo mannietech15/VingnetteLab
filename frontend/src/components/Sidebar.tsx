@@ -91,7 +91,7 @@ export default function Sidebar() {
                   if (!isActive) e.currentTarget.style.background = 'transparent';
                 }}
               >
-                <item.icon size={18} style={{ color: isActive ? 'var(--accent-primary)' : 'inherit' }} />
+                <item.icon size={18} style={{ color: isActive ? 'var(--accent-primary)' : 'inherit' }} fill={isActive ? 'currentColor' : 'none'} />
                 <span className="sidebar-nav-label">{item.label}</span>
               </div>
             </Link>
