@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-const Image = ({ src, alt, width, height, className, fill, ...props }: any) => <img src={src} alt={alt} width={width} height={height} className={className} style={fill ? { width: '100%', height: '100%', objectFit: 'cover' } : {}} {...props} />;
-import vignetteLogo from '@/assets/vignetteLogo.png';
+import Link from 'next/link';
+import Image from 'next/image';
+import vignetteLogo from '@/app/workspaces/vignetteLogo.png';
 import { Home, LayoutGrid, Clock, Star, LayoutTemplate, Settings, Search, Sun, Moon, Sparkles } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { useCanvasStore } from '@/store/useCanvasStore';
 
 const NAV_ITEMS = [
@@ -18,8 +18,7 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar() {
-  const location = useLocation();
-  const pathname = location.pathname;
+  const pathname = usePathname();
   const { theme, setTheme } = useCanvasStore();
   const [mounted, setMounted] = useState(false);
   
@@ -77,7 +76,7 @@ export default function Sidebar() {
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href;
           return (
-            <Link key={item.label} to={item.href} style={{ textDecoration: 'none' }}>
+            <Link key={item.label} href={item.href} style={{ textDecoration: 'none' }}>
               <div 
                 className="sidebar-nav-item"
                 style={{

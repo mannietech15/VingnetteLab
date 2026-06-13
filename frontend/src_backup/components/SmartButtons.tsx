@@ -3,7 +3,7 @@
 import React, { useRef, useState } from 'react';
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'motion/react';
 import { ArrowRight, Loader2, Check } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 export const MagneticWrapper = ({ children, className = '', disabled = false }: any) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -49,7 +49,7 @@ export const SmartGetStartedButton = ({
 }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const navigate = useNavigate();
+  const router = useRouter();
   const [state, setState] = useState<'idle' | 'loading' | 'success'>('idle');
 
   function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
@@ -68,7 +68,7 @@ export const SmartGetStartedButton = ({
     setTimeout(() => {
       setState('success');
       setTimeout(() => {
-        navigate(href);
+        router.push(href);
       }, 500);
     }, 800);
   };
@@ -164,13 +164,13 @@ export const SmartGetStartedButton = ({
 };
 
 export const SmartLoginButton = ({ href = '/login' }: { href?: string }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <MagneticWrapper>
       <motion.button
-        onClick={() => navigate(href)}
+        onClick={() => router.push(href)}
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
         whileHover={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff' }}
