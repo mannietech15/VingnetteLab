@@ -65,30 +65,18 @@ function TemplateCard({ t, isFeatured, onUseTemplate, isCreating }: { t: Templat
   const height = isFeatured ? '180px' : '160px';
   const preview = t.image ? t.image : <TemplatePreview pattern={t.pattern} color={t.color} width={400} height={isFeatured ? 270 : 240} />;
 
-  // --- 3D Tilt Animation Physics (from React Bits TiltedCard) ---
   const tiltRef = useRef<HTMLDivElement>(null);
-  const rotateX = useSpring(0, tiltSpring);
-  const rotateY = useSpring(0, tiltSpring);
-  const scale = useSpring(1, tiltSpring);
-  const rotateAmplitude = 19;
 
   function handleTiltMove(e: React.MouseEvent<HTMLDivElement>) {
-    if (!tiltRef.current) return;
-    const rect = tiltRef.current.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left - rect.width / 2;
-    const offsetY = e.clientY - rect.top - rect.height / 2;
-    rotateX.set((offsetY / (rect.height / 2)) * -rotateAmplitude);
-    rotateY.set((offsetX / (rect.width / 2)) * rotateAmplitude);
+    // Disabled
   }
 
   function handleTiltEnter() {
-    scale.set(1.05);
+    // Disabled
   }
 
   function handleTiltLeave() {
-    scale.set(1);
-    rotateX.set(0);
-    rotateY.set(0);
+    // Disabled
   }
   // --- End 3D Tilt Animation Physics ---
 
@@ -107,7 +95,6 @@ function TemplateCard({ t, isFeatured, onUseTemplate, isCreating }: { t: Templat
         boxShadow: isHovered ? 'var(--shadow-lg)' : 'none',
         borderColor: isHovered ? t.color + '66' : 'var(--border-color)',
         opacity: isCreating ? 0.7 : 1,
-        // IMPORTANT: No 'overflow: hidden' here! It clips 3D transforms.
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -116,22 +103,11 @@ function TemplateCard({ t, isFeatured, onUseTemplate, isCreating }: { t: Templat
       {isFeatured && <div style={{ height: '6px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${t.color}, ${t.color}88)` }} />}
       
       <div style={{ padding: '16px', zIndex: isHovered ? 20 : 1 }}>
-        {/* 3D Tilt wrapper — only adds animation, does NOT change visuals */}
         <div
           ref={tiltRef}
-          onMouseMove={handleTiltMove}
-          onMouseEnter={handleTiltEnter}
-          onMouseLeave={handleTiltLeave}
           style={{ perspective: '800px' }}
         >
-          <motion.div
-            style={{
-              rotateX,
-              rotateY,
-              scale,
-              transformStyle: 'preserve-3d',
-            }}
-          >
+          <div>
             {/* === UNTOUCHED IMAGE CONTAINER BELOW === */}
             <div style={{ 
               position: 'relative', 
@@ -203,7 +179,7 @@ function TemplateCard({ t, isFeatured, onUseTemplate, isCreating }: { t: Templat
               </div>
             </div>
             {/* === END UNTOUCHED IMAGE CONTAINER === */}
-          </motion.div>
+          </div>
         </div>
       </div>
 
