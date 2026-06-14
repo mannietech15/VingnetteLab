@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Sparkles, Users, Briefcase, Code, Palette, TrendingUp, ArrowRight, Star, Eye, Loader2 } from 'lucide-react';
 import { TEMPLATES, Template } from '@/data/templates';
@@ -219,6 +219,11 @@ export default function TemplatesPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [creatingTemplateId, setCreatingTemplateId] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(24);
+
+  useEffect(() => {
+    setVisibleCount(24);
+  }, [searchQuery, activeCategory]);
 
   const { data: workspacesData } = useQuery(GET_WORKSPACES);
   const [createWorkspace] = useMutation(CREATE_WORKSPACE);
@@ -260,14 +265,16 @@ export default function TemplatesPage() {
     }
   }
 
-  const filtered = TEMPLATES.filter((t) => {
+  const filtered = useMemo(() => TEMPLATES.filter((t) => {
     const matchesCategory = activeCategory === 'all' || t.category === activeCategory;
     const matchesSearch = searchQuery === '' ||
       t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
-  });
+  }), [activeCategory, searchQuery]);
+
+  const displayedTemplates = filtered.slice(0, visibleCount);
 
   const featured = TEMPLATES.filter((t) => t.isFeatured);
 
@@ -335,11 +342,37 @@ export default function TemplatesPage() {
             <p style={{ fontSize: '14px' }}>Try adjusting your search or filter criteria.</p>
           </div>
         ) : (
-          <div className="templates-grid">
-            {filtered.map((t) => (
-              <TemplateCard key={t.id} t={t} onUseTemplate={handleUseTemplate} isCreating={creatingTemplateId === t.id} />
-            ))}
-          </div>
+          <>
+            <div className="templates-grid">
+              {displayedTemplates.map((t) => (
+                <TemplateCard key={t.id} t={t} onUseTemplate={handleUseTemplate} isCreating={creatingTemplateId === t.id} />
+              ))}
+            </div>
+            
+            {visibleCount < filtered.length && (
+              <div style={{ textAlign: 'center', marginTop: '40px', marginBottom: '20px' }}>
+                <button 
+                  onClick={() => setVisibleCount(v => v + 24)} 
+                  style={{ 
+                    padding: '12px 24px', 
+                    borderRadius: '12px', 
+                    background: 'var(--bg-secondary)', 
+                    color: 'var(--text-primary)', 
+                    border: '1px solid var(--border-color)', 
+                    cursor: 'pointer', 
+                    fontWeight: 600,
+                    fontSize: '14px',
+                    transition: 'all 0.2s',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-primary)'; e.currentTarget.style.color = 'var(--accent-primary)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                >
+                  Load More Templates
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </main>
