@@ -74,7 +74,7 @@ export default function FavouritesPage() {
   }, [workspaces]);
 
   const filtered = useMemo(() => {
-    return FAVOURITE_ITEMS.filter(item => {
+    return FAVOURITE_ITEMS.filter((item: any) => {
       if (removingId === item.id) return false;
       const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.workspace.toLowerCase().includes(searchQuery.toLowerCase());
@@ -143,13 +143,13 @@ export default function FavouritesPage() {
               <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)' }}>
                 <Zap size={16} style={{ color: 'var(--accent-primary)' }} />
               </div>
-              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{FAVOURITE_ITEMS.filter(i => i.type === 'canvas').length}</span> Canvases
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{FAVOURITE_ITEMS.filter((i: any) => i.type === 'canvas').length}</span> Canvases
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>
               <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(16,185,129,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)' }}>
                 <TrendingUp size={16} color="#10b981" />
               </div>
-              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{FAVOURITE_ITEMS.filter(i => i.type === 'template').length}</span> Templates
+              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{FAVOURITE_ITEMS.filter((i: any) => i.type === 'template').length}</span> Templates
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@ export default function FavouritesPage() {
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px', marginTop: '8px' }}
           >
             <AnimatePresence>
-              {filtered.map((item, index) => (
+              {filtered.map((item: any, index: number) => (
                 <motion.div
                   key={item.id}
                   layout
@@ -280,7 +280,7 @@ export default function FavouritesPage() {
                         <Folder size={12} /> {item.workspace}
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-                        {item.collaborators.map((c, i) => (
+                        {item.collaborators.map((c: any, i: number) => (
                           <div key={i} style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--bg-primary)', border: '2px solid var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)', marginLeft: i > 0 ? '-8px' : 0, zIndex: i }}>
                             {c}
                           </div>
@@ -315,7 +315,7 @@ export default function FavouritesPage() {
           /* List View */
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
             <AnimatePresence>
-              {filtered.map((item, index) => (
+              {filtered.map((item: any, index: number) => (
                 <motion.div
                   key={item.id}
                   layout
@@ -350,7 +350,7 @@ export default function FavouritesPage() {
 
                       {/* Collaborators */}
                       <div className="hide-on-mobile" style={{ display: 'flex', flexDirection: 'row-reverse', marginRight: '8px' }}>
-                        {item.collaborators.map((c, i) => (
+                        {item.collaborators.map((c: any, i: number) => (
                           <div key={i} style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--bg-primary)', border: '2px solid var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', marginLeft: i > 0 ? '-8px' : 0, zIndex: i }}>
                             {c}
                           </div>

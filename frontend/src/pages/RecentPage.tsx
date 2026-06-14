@@ -73,7 +73,7 @@ export default function RecentPage() {
   }, [workspaces]);
 
   const filtered = useMemo(() => {
-    return RECENT_ITEMS.filter(item => {
+    return RECENT_ITEMS.filter((item: any) => {
       if (removingId === item.id) return false;
       const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.workspace.toLowerCase().includes(searchQuery.toLowerCase());
@@ -95,7 +95,7 @@ export default function RecentPage() {
   // Group items
   const groupedItems = useMemo(() => {
     const groups: Record<string, typeof RECENT_ITEMS> = {};
-    filtered.forEach(item => {
+    filtered.forEach((item: any) => {
       if (!groups[item.group]) groups[item.group] = [];
       groups[item.group].push(item);
     });
@@ -252,7 +252,7 @@ export default function RecentPage() {
                     style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}
                   >
                     <AnimatePresence>
-                      {items.map((item, index) => (
+                      {items.map((item: any, index: number) => (
                         <motion.div
                           key={item.id}
                           layout
@@ -315,7 +315,7 @@ export default function RecentPage() {
                   /* List View */
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <AnimatePresence>
-                      {items.map((item, index) => (
+                      {items.map((item: any, index: number) => (
                         <motion.div
                           key={item.id}
                           layout
@@ -350,7 +350,7 @@ export default function RecentPage() {
 
                               {/* Collaborators */}
                               <div className="hide-on-mobile" style={{ display: 'flex', flexDirection: 'row-reverse', marginRight: '8px' }}>
-                                {item.collaborators.map((c, i) => (
+                                {item.collaborators.map((c: any, i: number) => (
                                   <div key={i} style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--bg-primary)', border: '2px solid var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', marginLeft: i > 0 ? '-8px' : 0, zIndex: i }}>
                                     {c}
                                   </div>
