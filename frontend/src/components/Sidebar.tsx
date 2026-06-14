@@ -7,6 +7,17 @@ import vignetteLogo from '@/assets/vignetteLogo.png';
 import { Home, LayoutGrid, Clock, Star, LayoutTemplate, Settings, Search, Sun, Moon, Sparkles } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useCanvasStore } from '@/store/useCanvasStore';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
+
+const GET_SIDEBAR_WORKSPACES = gql`
+  query GetSidebarWorkspaces {
+    workspaces {
+      id
+      name
+    }
+  }
+`;
 
 const NAV_ITEMS = [
   { label: 'Home', icon: Home, href: '/home' },
@@ -22,6 +33,9 @@ export default function Sidebar() {
   const pathname = location.pathname;
   const { theme, setTheme } = useCanvasStore();
   const [mounted, setMounted] = useState(false);
+  
+  const { data } = useQuery(GET_SIDEBAR_WORKSPACES);
+  const workspaces = data?.workspaces || [];
   
   useEffect(() => {
     // eslint-disable-next-line
@@ -112,21 +126,24 @@ export default function Sidebar() {
           Your Workspaces
         </div>
         
-        {/* Mock Workspaces List */}
-        <div className="sidebar-desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', borderRadius: '8px', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'background 0.2s' }}
-          onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'}
-          onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-        >
-          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#e03131' }} />
-          <span style={{ flex: 1, fontSize: '14px' }}>Design Team</span>
-        </div>
-        <div className="sidebar-desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', borderRadius: '8px', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'background 0.2s' }}
-          onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'}
-          onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-        >
-          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2f9e44' }} />
-          <span style={{ flex: 1, fontSize: '14px' }}>Engineering</span>
-        </div>
+        {workspaces.map((ws: any, index: number) => {
+          const colors = ['#e03131', '#2f9e44', '#1971c2', '#f08c00', '#9c36b5'];
+          const color = colors[index % colors.length];
+          return (
+            <div key={ws.id} className="sidebar-desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', borderRadius: '8px', color: 'var(--text-secondary)', cursor: 'pointer', transition: 'background 0.2s' }}
+              onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'}
+              onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+            >
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: color }} />
+              <span style={{ flex: 1, fontSize: '14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ws.name}</span>
+            </div>
+          );
+        })}
+        {workspaces.length === 0 && (
+          <div className="sidebar-desktop-only" style={{ padding: '0 12px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+            No workspaces yet.
+          </div>
+        )}
       </nav>
 
       {/* User Profile Footer */}
