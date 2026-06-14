@@ -67,7 +67,7 @@ export default function CanvasPage() {
   const title = (data as any)?.canvas?.title || (loading ? 'Loading...' : 'Canvas Not Found');
 
   return (
-    <main style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', flex: 1 }}>
+    <main style={{ position: 'relative', width: '100vw', height: '100dvh', overflow: 'hidden' }}>
       {/* Header/Nav overlay */}
       <div style={{
         position: 'absolute',
