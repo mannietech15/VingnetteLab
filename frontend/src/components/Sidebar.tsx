@@ -35,7 +35,7 @@ export default function Sidebar() {
   const [mounted, setMounted] = useState(false);
   
   const { data } = useQuery(GET_SIDEBAR_WORKSPACES);
-  const workspaces = data?.workspaces || [];
+  const workspaces = (data as any)?.workspaces || [];
   
   useEffect(() => {
     // eslint-disable-next-line
