@@ -9,23 +9,55 @@ import {
 } from 'lucide-react';
 import TemplatePreview from '@/components/TemplatePreview';
 
-// --- MOCK DATA FOR PREMIUM UI ---
-const RECENT_CANVASES = [
-  { id: 'c1', title: 'Q3 Product Roadmap', workspace: 'Product Strategy', editedAt: '2 hours ago', pattern: 'timeline_h', color: '#0ea5e9', users: ['M', 'S', 'J'] },
-  { id: 'c2', title: 'System Architecture v2', workspace: 'Engineering', editedAt: '5 hours ago', pattern: 'hierarchy', color: '#8b5cf6', users: ['M', 'A'] },
-  { id: 'c3', title: 'User Research Synthesis', workspace: 'Design Team', editedAt: 'Yesterday', pattern: 'sticky_notes', color: '#f59e0b', users: ['M', 'L', 'K', 'T'] },
-  { id: 'c4', title: 'Marketing Campaign Launch', workspace: 'Marketing', editedAt: '2 days ago', pattern: 'cards_grid', color: '#ec4899', users: ['M'] },
-];
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 
-const WORKSPACES = [
-  { id: 'w1', name: 'Design Team', canvasCount: 14, memberCount: 8, color: '#e03131', activityLevel: 85 },
-  { id: 'w2', name: 'Engineering', canvasCount: 23, memberCount: 12, color: '#2f9e44', activityLevel: 92 },
-  { id: 'w3', name: 'Product Strategy', canvasCount: 7, memberCount: 5, color: '#1971c2', activityLevel: 64 },
-  { id: 'w4', name: 'Personal Drafts', canvasCount: 31, memberCount: 1, color: '#495057', activityLevel: 30 },
-];
+const GET_WORKSPACES = gql`
+  query GetWorkspaces {
+    workspaces {
+      id
+      name
+      canvases {
+        id
+        title
+        updatedAt
+      }
+    }
+  }
+`;
+
+// Generate consistent colors for workspaces based on ID
+function getWorkspaceColor(id: string) {
+  const colors = ['#e03131', '#2f9e44', '#1971c2', '#f08c00', '#9c36b5'];
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
+  return colors[Math.abs(hash) % colors.length];
+}
+
+const PATTERNS = ['cards_grid', 'sticky_notes', 'timeline_h', 'hierarchy', 'flowchart', 'venn', 'columns_4', 'process_arrows', 'kanban', 'mindmap', 'radar', 'bars', 'table', 'circle_segments', 'columns_3', 'grid_2x2'];
+
+function getVisuals(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  const h = Math.abs(hash) % 360;
+  const s = 55 + (Math.abs(hash >> 8) % 30);
+  const l = 38 + (Math.abs(hash >> 16) % 22);
+  const color = `hsl(${h}, ${s}%, ${l}%)`;
+  return { pattern: PATTERNS[Math.abs(hash) % PATTERNS.length] as any, color };
+}
 
 export default function WorkspacesPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { data } = useQuery(GET_WORKSPACES);
+  const workspaces = (data as any)?.workspaces || [];
+  
+  const allCanvases = workspaces.flatMap((ws: any) => 
+    (ws.canvases || []).map((c: any) => ({ ...c, workspaceName: ws.name }))
+  );
+  
+  const recentCanvases = [...allCanvases]
+    .sort((a, b) => Number(b.updatedAt) - Number(a.updatedAt))
+    .slice(0, 4);
 
   return (
     <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
@@ -155,35 +187,34 @@ export default function WorkspacesPage() {
             <Link to="/recent" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--accent-primary)', textDecoration: 'none' }}>View all</Link>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '20px' }}>
-            {RECENT_CANVASES.map((canvas) => (
+            {recentCanvases.map((canvas: any) => {
+              const visuals = getVisuals(canvas.id);
+              return (
               <div key={canvas.id} style={{ borderRadius: '14px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column' }}
-                onMouseOver={(e) => { e.currentTarget.style.borderColor = canvas.color; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseOver={(e) => { e.currentTarget.style.borderColor = visuals.color; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
                 onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}
               >
                 <div style={{ width: '100%', height: '140px', background: '#f1f5f9', position: 'relative', overflow: 'hidden' }}>
-                  <TemplatePreview pattern={canvas.pattern as any} color={canvas.color} width={300} height={140} />
+                  <TemplatePreview pattern={visuals.pattern} color={visuals.color} width={300} height={140} />
                   <div style={{ position: 'absolute', top: '12px', right: '12px', padding: '4px 8px', borderRadius: '6px', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(4px)', fontSize: '11px', fontWeight: 600, color: '#1a1a1a', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                    {canvas.editedAt}
+                    {new Date(Number(canvas.updatedAt) || canvas.updatedAt).toLocaleDateString()}
                   </div>
                 </div>
                 <div style={{ padding: '16px' }}>
-                  <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 6px' }}>{canvas.title}</h3>
+                  <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 6px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{canvas.title}</h3>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-                      <Folder size={14} /> {canvas.workspace}
-                    </div>
-                    {/* Mock Avatar Stack */}
-                    <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-                      {canvas.users.map((u, i) => (
-                        <div key={i} style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--bg-primary)', border: '2px solid var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)', marginLeft: '-8px', zIndex: i }}>
-                          {u}
-                        </div>
-                      ))}
+                      <Folder size={14} /> {canvas.workspaceName}
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
+            )})}
+            {recentCanvases.length === 0 && (
+              <div style={{ gridColumn: '1 / -1', padding: '32px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                No recent canvases found.
+              </div>
+            )}
           </div>
         </section>
 
@@ -196,27 +227,21 @@ export default function WorkspacesPage() {
             <button style={{ background: 'transparent', border: 'none', color: 'var(--accent-primary)', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>Manage</button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {WORKSPACES.map((ws) => (
+            {workspaces.map((ws: any) => {
+              const wsColor = getWorkspaceColor(ws.id);
+              return (
               <div key={ws.id} style={{ display: 'flex', alignItems: 'center', padding: '20px', borderRadius: '16px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', cursor: 'pointer', transition: 'all 0.2s' }}
                 onMouseOver={(e) => { e.currentTarget.style.background = 'var(--bg-hover)'; }}
                 onMouseOut={(e) => { e.currentTarget.style.background = 'var(--bg-secondary)'; }}
               >
-                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: `${ws.color}15`, color: ws.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
-                  <Folder size={24} fill={`${ws.color}33`} />
+                <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: `${wsColor}15`, color: wsColor, display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '20px' }}>
+                  <Folder size={24} fill={`${wsColor}33`} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 4px' }}>{ws.name}</h3>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><FileText size={14} /> {ws.canvasCount} canvases</span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Users size={14} /> {ws.memberCount} members</span>
-                  </div>
-                </div>
-                
-                {/* Activity Bar Visualization */}
-                <div style={{ width: '120px', marginRight: '32px' }} className="hide-on-mobile">
-                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Activity</div>
-                  <div style={{ height: '6px', width: '100%', background: 'var(--bg-primary)', borderRadius: '100px', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: `${ws.activityLevel}%`, background: ws.activityLevel > 80 ? 'var(--accent-primary)' : ws.activityLevel > 50 ? '#f59e0b' : 'var(--text-secondary)', borderRadius: '100px' }} />
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><FileText size={14} /> {ws.canvases?.length || 0} canvases</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Users size={14} /> 1 members</span>
                   </div>
                 </div>
 
@@ -227,7 +252,12 @@ export default function WorkspacesPage() {
                   <MoreVertical size={18} />
                 </button>
               </div>
-            ))}
+            )})}
+            {workspaces.length === 0 && (
+              <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                You haven't created any workspaces yet.
+              </div>
+            )}
           </div>
         </section>
 
