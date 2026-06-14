@@ -9,7 +9,7 @@ const NO_SIDEBAR_ROUTES = ['/', '/login', '/register'];
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const pathname = location.pathname;
-  const showSidebar = !NO_SIDEBAR_ROUTES.includes(pathname);
+  const showSidebar = !NO_SIDEBAR_ROUTES.includes(pathname) && !pathname.startsWith('/canvas');
 
   const content = showSidebar ? (
     <div className="app-container">
