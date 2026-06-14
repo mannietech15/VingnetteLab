@@ -35,6 +35,8 @@ export default function Sidebar() {
   const [mounted, setMounted] = useState(false);
   
   const { data } = useQuery(GET_SIDEBAR_WORKSPACES);
+  const userStr = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+  const user = userStr ? JSON.parse(userStr) : { name: 'User' };
   const workspaces = (data as any)?.workspaces || [];
   
   useEffect(() => {
@@ -150,10 +152,10 @@ export default function Sidebar() {
       <div className="sidebar-desktop-only" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', borderRadius: '8px' }}>
           <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 600, fontSize: '14px' }}>
-            M
+            {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Mannie Tech</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name || 'User'}</div>
             <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Pro Plan</div>
           </div>
           <button onClick={toggleTheme} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '6px', cursor: 'pointer', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px', transition: 'all 0.2s' }}

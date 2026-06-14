@@ -48,6 +48,11 @@ function getVisuals(str: string) {
 
 export default function WorkspacesPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const userStr = localStorage.getItem('user');
+  const user = userStr ? JSON.parse(userStr) : { name: 'User' };
+  
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
   const { data } = useQuery(GET_WORKSPACES);
   const workspaces = (data as any)?.workspaces || [];
   
@@ -67,7 +72,7 @@ export default function WorkspacesPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '24px' }}>
             <div>
               <h1 style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px', margin: '0 0 8px' }}>
-                Good evening, Mannie
+                {greeting}, {user.name}
               </h1>
               <p style={{ fontSize: '16px', color: 'var(--text-secondary)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Sparkles size={16} style={{ color: 'var(--accent-primary)' }} />
