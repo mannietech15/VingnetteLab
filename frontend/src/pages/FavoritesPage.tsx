@@ -10,17 +10,34 @@ import {
 import TemplatePreview from '@/components/TemplatePreview';
 import TiltedCard from '@/components/TiltedCard';
 
-// --- MOCK FAVOURITES DATA ---
-const FAVOURITE_ITEMS = [
-  { id: 'fav-1', title: 'Q3 Product Roadmap', type: 'canvas', workspace: 'Product Strategy', pattern: 'timeline_h', color: '#0ea5e9', favoritedAt: '2026-06-07', editedAt: '2 hours ago', collaborators: ['M', 'S', 'J'] },
-  { id: 'fav-2', title: 'System Architecture v2', type: 'canvas', workspace: 'Engineering', pattern: 'hierarchy', color: '#8b5cf6', favoritedAt: '2026-06-06', editedAt: '5 hours ago', collaborators: ['M', 'A'] },
-  { id: 'fav-3', title: 'User Research Synthesis', type: 'canvas', workspace: 'Design Team', pattern: 'sticky_notes', color: '#f59e0b', favoritedAt: '2026-06-05', editedAt: 'Yesterday', collaborators: ['M', 'L', 'K'] },
-  { id: 'fav-4', title: 'Marketing Campaign Flow', type: 'canvas', workspace: 'Marketing', pattern: 'flowchart', color: '#ec4899', favoritedAt: '2026-06-04', editedAt: '2 days ago', collaborators: ['M'] },
-  { id: 'fav-5', title: 'Brand Guidelines 2026', type: 'template', workspace: 'Design Team', pattern: 'cards_grid', color: '#14b8a6', favoritedAt: '2026-06-03', editedAt: '3 days ago', collaborators: ['M', 'T'] },
-  { id: 'fav-6', title: 'Sprint Retrospective', type: 'template', workspace: 'Engineering', pattern: 'columns_3', color: '#e03131', favoritedAt: '2026-06-02', editedAt: '4 days ago', collaborators: ['M', 'R', 'D'] },
-  { id: 'fav-7', title: 'Revenue Dashboard', type: 'canvas', workspace: 'Analytics', pattern: 'bars', color: '#2f9e44', favoritedAt: '2026-06-01', editedAt: '5 days ago', collaborators: ['M'] },
-  { id: 'fav-8', title: 'Customer Journey Map', type: 'canvas', workspace: 'Product Strategy', pattern: 'process_arrows', color: '#9c36b5', favoritedAt: '2026-05-30', editedAt: '1 week ago', collaborators: ['M', 'S'] },
-];
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
+
+const GET_WORKSPACES = gql`
+  query GetWorkspaces {
+    workspaces {
+      id
+      name
+      canvases {
+        id
+        title
+        updatedAt
+      }
+    }
+  }
+`;
+
+const PATTERNS = ['cards_grid', 'sticky_notes', 'timeline_h', 'hierarchy', 'flowchart', 'venn', 'columns_4', 'process_arrows', 'kanban', 'mindmap', 'radar', 'bars', 'table', 'circle_segments', 'columns_3', 'grid_2x2'];
+
+function getVisuals(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  const h = Math.abs(hash) % 360;
+  const s = 55 + (Math.abs(hash >> 8) % 30);
+  const l = 38 + (Math.abs(hash >> 16) % 22);
+  const color = `hsl(${h}, ${s}%, ${l}%)`;
+  return { pattern: PATTERNS[Math.abs(hash) % PATTERNS.length] as any, color };
+}
 
 type FilterType = 'all' | 'canvas' | 'template';
 type ViewMode = 'grid' | 'list';
@@ -32,6 +49,30 @@ export default function FavouritesPage() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
 
+  const { data } = useQuery(GET_WORKSPACES);
+  const workspaces = (data as any)?.workspaces || [];
+  
+  const FAVOURITE_ITEMS = useMemo(() => {
+    const allCanvases = workspaces.flatMap((ws: any) => 
+      (ws.canvases || []).map((c: any) => {
+        const visuals = getVisuals(c.id);
+        const dateStr = new Date(Number(c.updatedAt) || c.updatedAt).toLocaleDateString();
+        return {
+          id: c.id,
+          title: c.title,
+          type: 'canvas',
+          workspace: ws.name,
+          pattern: visuals.pattern,
+          color: visuals.color,
+          editedAt: dateStr,
+          favoritedAt: dateStr,
+          collaborators: ['M']
+        };
+      })
+    );
+    return allCanvases;
+  }, [workspaces]);
+
   const filtered = useMemo(() => {
     return FAVOURITE_ITEMS.filter(item => {
       if (removingId === item.id) return false;
@@ -40,7 +81,7 @@ export default function FavouritesPage() {
       const matchesFilter = activeFilter === 'all' || item.type === activeFilter;
       return matchesSearch && matchesFilter;
     });
-  }, [searchQuery, activeFilter, removingId]);
+  }, [searchQuery, activeFilter, removingId, FAVOURITE_ITEMS]);
 
   const handleRemoveFavourite = (id: string) => {
     setRemovingId(id);

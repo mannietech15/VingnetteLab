@@ -9,16 +9,34 @@ import {
 } from 'lucide-react';
 import TemplatePreview from '@/components/TemplatePreview';
 
-// --- MOCK RECENT DATA ---
-const RECENT_ITEMS = [
-  { id: 'rec-1', title: 'Q3 Product Roadmap', type: 'canvas', workspace: 'Product Strategy', pattern: 'timeline_h', color: '#0ea5e9', viewedAt: 'Just now', group: 'Today', collaborators: ['M', 'S', 'J'] },
-  { id: 'rec-2', title: 'Homepage Redesign wireframes', type: 'canvas', workspace: 'Design Team', pattern: 'wireframe', color: '#8b5cf6', viewedAt: '2 hours ago', group: 'Today', collaborators: ['M', 'A'] },
-  { id: 'rec-3', title: 'User Research Synthesis', type: 'canvas', workspace: 'Design Team', pattern: 'sticky_notes', color: '#f59e0b', viewedAt: 'Yesterday at 4:30 PM', group: 'Yesterday', collaborators: ['M', 'L', 'K'] },
-  { id: 'rec-4', title: 'Marketing Campaign Flow', type: 'canvas', workspace: 'Marketing', pattern: 'flowchart', color: '#ec4899', viewedAt: 'Yesterday at 11:15 AM', group: 'Yesterday', collaborators: ['M'] },
-  { id: 'rec-5', title: 'Brand Guidelines 2026', type: 'template', workspace: 'Design Team', pattern: 'cards_grid', color: '#14b8a6', viewedAt: 'Last Tuesday', group: 'Last Week', collaborators: ['M', 'T'] },
-  { id: 'rec-6', title: 'Sprint Retrospective', type: 'template', workspace: 'Engineering', pattern: 'columns_3', color: '#e03131', viewedAt: 'Last Monday', group: 'Last Week', collaborators: ['M', 'R', 'D'] },
-  { id: 'rec-7', title: 'Revenue Dashboard', type: 'canvas', workspace: 'Analytics', pattern: 'bars', color: '#2f9e44', viewedAt: '2 weeks ago', group: 'Older', collaborators: ['M'] },
-];
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
+
+const GET_WORKSPACES = gql`
+  query GetWorkspaces {
+    workspaces {
+      id
+      name
+      canvases {
+        id
+        title
+        updatedAt
+      }
+    }
+  }
+`;
+
+const PATTERNS = ['cards_grid', 'sticky_notes', 'timeline_h', 'hierarchy', 'flowchart', 'venn', 'columns_4', 'process_arrows', 'kanban', 'mindmap', 'radar', 'bars', 'table', 'circle_segments', 'columns_3', 'grid_2x2'];
+
+function getVisuals(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  const h = Math.abs(hash) % 360;
+  const s = 55 + (Math.abs(hash >> 8) % 30);
+  const l = 38 + (Math.abs(hash >> 16) % 22);
+  const color = `hsl(${h}, ${s}%, ${l}%)`;
+  return { pattern: PATTERNS[Math.abs(hash) % PATTERNS.length] as any, color };
+}
 
 type FilterType = 'all' | 'canvas' | 'template';
 type ViewMode = 'grid' | 'list';
@@ -30,6 +48,30 @@ export default function RecentPage() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
 
+  const { data } = useQuery(GET_WORKSPACES);
+  const workspaces = (data as any)?.workspaces || [];
+  
+  const RECENT_ITEMS = useMemo(() => {
+    const allCanvases = workspaces.flatMap((ws: any) => 
+      (ws.canvases || []).map((c: any) => {
+        const visuals = getVisuals(c.id);
+        const dateStr = new Date(Number(c.updatedAt) || c.updatedAt).toLocaleDateString();
+        return {
+          id: c.id,
+          title: c.title,
+          type: 'canvas',
+          workspace: ws.name,
+          pattern: visuals.pattern,
+          color: visuals.color,
+          viewedAt: dateStr,
+          group: 'Recent',
+          collaborators: ['M']
+        };
+      })
+    );
+    return allCanvases;
+  }, [workspaces]);
+
   const filtered = useMemo(() => {
     return RECENT_ITEMS.filter(item => {
       if (removingId === item.id) return false;
@@ -38,7 +80,7 @@ export default function RecentPage() {
       const matchesFilter = activeFilter === 'all' || item.type === activeFilter;
       return matchesSearch && matchesFilter;
     });
-  }, [searchQuery, activeFilter, removingId]);
+  }, [searchQuery, activeFilter, removingId, RECENT_ITEMS]);
 
   const handleRemoveRecent = (id: string) => {
     setRemovingId(id);
