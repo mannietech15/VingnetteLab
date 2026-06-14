@@ -8,6 +8,9 @@ import { Plus, Folder, FileText, ArrowRight, Sparkles, LayoutTemplate, Settings,
 import { motion, AnimatePresence } from 'motion/react';
 import TemplatePreview from '@/components/TemplatePreview';
 import TiltedCard from '@/components/TiltedCard';
+import vignetteLogo from '@/assets/vignetteLogo.png';
+
+const Image = ({ src, alt, width, height, className, fill, ...props }: any) => <img src={src} alt={alt} width={width} height={height} className={className} style={fill ? { width: '100%', height: '100%', objectFit: 'cover' } : {}} {...props} />;
 
 const GET_WORKSPACES = gql`
   query GetWorkspaces {
@@ -167,9 +170,12 @@ export default function Dashboard() {
         </div>
         
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 600, marginBottom: '12px', boxShadow: 'var(--shadow-sm)' }}>
-            <Sparkles size={14} style={{ color: 'var(--accent-primary)' }} /> Welcome to VignetteLab
-          </span>
+          <div className="sidebar-mobile-only" style={{ alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <Image src={vignetteLogo} alt="VignetteLab Logo" width={36} height={36} style={{ borderRadius: '10px', objectFit: 'cover' }} />
+            <span style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
+              VignetteLab
+            </span>
+          </div>
           <h1 style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px', margin: '0 0 12px' }}>
             Home
           </h1>
