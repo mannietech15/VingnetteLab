@@ -98,11 +98,12 @@ async function startApolloServer() {
     expressMiddleware(server, {
       context: async ({ req }) => {
         const token = req.headers.authorization || req.headers.token || '';
+        const tokenStr = Array.isArray(token) ? token[0] : token;
         let user = null;
-        if (token) {
+        if (tokenStr) {
           try {
             const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-for-dev';
-            user = jwt.verify(token.replace('Bearer ', ''), JWT_SECRET);
+            user = jwt.verify(tokenStr.replace('Bearer ', ''), JWT_SECRET);
           } catch (e) {
             console.error("JWT verification failed:", e);
           }
