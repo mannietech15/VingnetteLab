@@ -21,11 +21,12 @@ const Canvas = lazy(() => import('@/components/Canvas'));
 const Toolbar = lazy(() => import('@/components/Toolbar'));
 const ZoomControls = lazy(() => import('@/components/ZoomControls'));
 
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 
 export default function CanvasPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const templateId = searchParams.get('template');
   
@@ -81,19 +82,21 @@ export default function CanvasPage() {
         pointerEvents: 'none' // Let clicks pass through except on children
       }}>
         <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Link to="/home" title="Back to Home" className="glass-panel" style={{
+          <button onClick={() => navigate(-1)} title="Go Back" className="glass-panel" style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             width: '36px',
             height: '36px',
             color: 'var(--text-primary)',
-            textDecoration: 'none',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
             borderRadius: '8px',
             transition: 'background 0.2s'
           }} onMouseOver={e => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
             <ChevronLeft size={20} />
-          </Link>
+          </button>
           <div style={{
             width: '32px',
             height: '32px',
