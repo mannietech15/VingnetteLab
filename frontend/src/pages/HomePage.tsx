@@ -122,7 +122,53 @@ export default function Dashboard() {
   return (
     <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
       {/* Hero Banner */}
-      <div className="home-hero" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div className="home-hero">
+        
+        {/* Animated Infinite Canvas Dot Grid */}
+        <div style={{
+          position: 'absolute',
+          inset: '-100%',
+          opacity: 0.15,
+          pointerEvents: 'none',
+          backgroundImage: 'radial-gradient(circle at 2px 2px, var(--accent-primary) 2px, transparent 0)',
+          backgroundSize: '48px 48px',
+          animation: 'pan-canvas 40s linear infinite',
+          zIndex: 0
+        }} />
+        <style>{`
+          @keyframes pan-canvas {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-48px, -48px); }
+          }
+          @keyframes float-shape-1 {
+            0% { transform: translateY(0) rotate(-5deg) scale(1); }
+            50% { transform: translateY(-25px) rotate(5deg) scale(1.05); }
+            100% { transform: translateY(0) rotate(-5deg) scale(1); }
+          }
+          @keyframes float-shape-2 {
+            0% { transform: translateY(0) translateX(0) rotate(10deg); }
+            50% { transform: translateY(20px) translateX(15px) rotate(-5deg); }
+            100% { transform: translateY(0) translateX(0) rotate(10deg); }
+          }
+          @keyframes pulse-glow {
+            0% { opacity: 0.15; filter: blur(40px); transform: scale(1); }
+            50% { opacity: 0.3; filter: blur(50px); transform: scale(1.2); }
+            100% { opacity: 0.15; filter: blur(40px); transform: scale(1); }
+          }
+        `}</style>
+
+        {/* Ambient Glowing Orbs */}
+        <div style={{ position: 'absolute', right: '10%', top: '-20%', width: '400px', height: '400px', background: 'var(--accent-primary)', borderRadius: '50%', animation: 'pulse-glow 12s ease-in-out infinite', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', left: '-5%', bottom: '-50%', width: '300px', height: '300px', background: '#10b981', borderRadius: '50%', animation: 'pulse-glow 15s ease-in-out infinite', pointerEvents: 'none', zIndex: 0 }} />
+
+        {/* Floating Glassmorphic "Canvas Elements" */}
+        <div style={{ position: 'absolute', right: '15%', top: '25%', width: '120px', height: '80px', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', animation: 'float-shape-1 14s ease-in-out infinite', pointerEvents: 'none', zIndex: 0, boxShadow: 'var(--shadow-md)' }} />
+        <div style={{ position: 'absolute', right: '5%', bottom: '-10%', width: '160px', height: '110px', background: 'var(--accent-light)', opacity: 0.3, backdropFilter: 'blur(8px)', border: '1px solid var(--accent-primary)', borderRadius: '16px', animation: 'float-shape-2 18s ease-in-out infinite', pointerEvents: 'none', zIndex: 0, boxShadow: 'var(--shadow-sm)' }} />
+
+        <div style={{ position: 'absolute', right: '2%', top: '-15%', opacity: 0.05, transform: 'rotate(15deg)', pointerEvents: 'none', zIndex: 0 }}>
+          <LayoutTemplate size={280} />
+        </div>
+        
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div className="sidebar-mobile-only" style={{ alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', width: '100%' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
