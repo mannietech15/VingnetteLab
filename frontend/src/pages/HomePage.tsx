@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { Plus, Folder, FileText, ArrowRight, Sparkles, LayoutTemplate, Settings, Clock, Users, Check } from 'lucide-react';
+import { Plus, Folder, FileText, ArrowRight, Sparkles, LayoutTemplate, Settings, Clock, Users, Check, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import TemplatePreview from '@/components/TemplatePreview';
 import TiltedCard from '@/components/TiltedCard';
@@ -170,12 +170,20 @@ export default function Dashboard() {
         </div>
         
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div className="sidebar-mobile-only" style={{ alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-            <Image src={vignetteLogo} alt="VignetteLab Logo" width={36} height={36} style={{ borderRadius: '10px', objectFit: 'cover' }} />
-            <span style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
-              VignetteLab
-            </span>
+          <div className="sidebar-mobile-only" style={{ alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Image src={vignetteLogo} alt="VignetteLab Logo" width={36} height={36} style={{ borderRadius: '10px', objectFit: 'cover' }} />
+              <span style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
+                VignetteLab
+              </span>
+            </div>
+            <button style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Menu size={24} />
+            </button>
           </div>
+          <h1 className="desktop-only" style={{ fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px', margin: '0 0 12px' }}>
+            Home
+          </h1>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '14px' }}>
