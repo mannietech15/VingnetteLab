@@ -23,6 +23,28 @@ export class WorkspaceRepository {
     }));
   }
 
+  public async findByOwnerId(ownerId: string): Promise<Workspace[]> {
+    const workspaces = await prisma.workspace.findMany({
+      where: { ownerId },
+      include: { canvases: true }
+    });
+    return workspaces.map(w => ({
+      id: w.id,
+      name: w.name,
+      createdAt: w.createdAt.toISOString(),
+      updatedAt: w.updatedAt.toISOString(),
+      ownerId: w.ownerId,
+      canvases: w.canvases.map(c => ({
+        id: c.id,
+        title: c.title,
+        workspaceId: c.workspaceId,
+        createdAt: c.createdAt.toISOString(),
+        updatedAt: c.updatedAt.toISOString(),
+        thumbnailUrl: c.thumbnailUrl || undefined,
+      }))
+    }));
+  }
+
   public async findById(id: string): Promise<Workspace | undefined> {
     const workspace = await prisma.workspace.findUnique({
       where: { id },

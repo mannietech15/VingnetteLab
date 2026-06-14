@@ -10,6 +10,7 @@ import rateLimit from 'express-rate-limit';
 import hpp from 'hpp';
 import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
+import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import './auth';
 import { generateOAuthToken } from './auth';
@@ -95,7 +96,19 @@ async function startApolloServer() {
     },
     // @ts-ignore - Bypass type conflict between Apollo and Express versions
     expressMiddleware(server, {
-      context: async ({ req }) => ({ token: req.headers.token }),
+      context: async ({ req }) => {
+        const token = req.headers.authorization || req.headers.token || '';
+        let user = null;
+        if (token) {
+          try {
+            const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-for-dev';
+            user = jwt.verify(token.replace('Bearer ', ''), JWT_SECRET);
+          } catch (e) {
+            console.error("JWT verification failed:", e);
+          }
+        }
+        return { user, token };
+      },
     }) as express.RequestHandler,
   );
 

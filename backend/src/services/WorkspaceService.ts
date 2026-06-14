@@ -8,6 +8,10 @@ export class WorkspaceService {
     return this.repository.findAll();
   }
 
+  public async getWorkspacesByOwner(ownerId: string): Promise<Workspace[]> {
+    return this.repository.findByOwnerId(ownerId);
+  }
+
   public async getWorkspaceById(id: string): Promise<Workspace | undefined> {
     return this.repository.findById(id);
   }
