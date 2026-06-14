@@ -89,12 +89,10 @@ export default function CanvasPage() {
             width: '36px',
             height: '36px',
             color: 'var(--text-primary)',
-            background: 'transparent',
-            border: 'none',
             cursor: 'pointer',
             borderRadius: '8px',
-            transition: 'background 0.2s'
-          }} onMouseOver={e => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
+            transition: 'background 0.2s, opacity 0.2s'
+          }} onMouseOver={e => e.currentTarget.style.opacity = '0.8'} onMouseOut={e => e.currentTarget.style.opacity = '1'}>
             <ChevronLeft size={20} />
           </button>
           <div style={{
