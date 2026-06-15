@@ -54,9 +54,11 @@ const yElements = ydoc.getMap<CanvasElement>('elements');
 
 // Optional: Initialize Supabase provider if supabase is available
 let provider: SupabaseProvider | null = null;
+/* 
 if (supabase) {
   provider = new SupabaseProvider(ydoc, supabase, 'global-canvas-room');
 }
+*/
 export const supabaseProvider = provider;
 
 // Yjs Undo Manager

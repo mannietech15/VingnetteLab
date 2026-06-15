@@ -157,7 +157,7 @@ export default function CanvasPage() {
           }} onMouseOver={e => e.currentTarget.style.opacity = '0.8'} onMouseOut={e => e.currentTarget.style.opacity = '1'}>
             <ChevronLeft size={20} />
           </button>
-          <div style={{
+          <div className="mobile-hidden" style={{
             width: '32px',
             height: '32px',
             borderRadius: '8px',

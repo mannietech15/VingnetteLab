@@ -696,5 +696,9 @@ body.canvas-mode .main-content {
     top: 80px !important;
     right: 24px !important;
   }
+
+  .mobile-hidden {
+    display: none !important;
+  }
 }
 
