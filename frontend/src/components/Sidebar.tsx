@@ -70,22 +70,41 @@ export default function Sidebar() {
       </div>
 
       {/* Search Bar (Mock) */}
-      <div className="sidebar-desktop-only" style={{ marginBottom: '24px', position: 'relative' }}>
-        <Search size={16} style={{ position: 'absolute', left: '24px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
-        <input 
-          type="text" 
-          placeholder="Search..." 
-          style={{
-            width: '100%',
-            padding: '8px 12px 8px 36px',
-            borderRadius: '8px',
-            border: '1px solid var(--border-color)',
-            background: 'var(--bg-primary)',
-            color: 'var(--text-primary)',
-            fontSize: '14px',
-            outline: 'none'
-          }}
-        />
+      <div 
+        className="sidebar-desktop-only" 
+        style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          background: 'var(--bg-secondary)', 
+          padding: '8px 12px', 
+          borderRadius: '10px',
+          cursor: 'pointer',
+          border: '1px solid transparent',
+          transition: 'all 0.2s',
+          margin: '0 8px 24px 8px'
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.border = '1px solid var(--border-color)';
+          e.currentTarget.style.background = 'var(--bg-hover)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.border = '1px solid transparent';
+          e.currentTarget.style.background = 'var(--bg-secondary)';
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Search size={18} color="var(--text-secondary)" />
+            <Sparkles size={10} color="var(--text-secondary)" style={{ position: 'absolute', top: -3, right: -3 }} />
+          </div>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Search</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)' }}>
+          <kbd style={{ background: 'transparent', border: '1px solid var(--border-color)', borderRadius: '6px', padding: '2px 6px', fontFamily: 'inherit', fontSize: '12px' }}>Ctrl</kbd>
+          <span style={{ fontSize: '12px' }}>+</span>
+          <kbd style={{ background: 'transparent', border: '1px solid var(--border-color)', borderRadius: '6px', padding: '2px 6px', fontFamily: 'inherit', fontSize: '12px' }}>K</kbd>
+        </div>
       </div>
 
       {/* Navigation */}
