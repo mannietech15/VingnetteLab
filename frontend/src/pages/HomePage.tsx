@@ -74,6 +74,8 @@ export default function Dashboard() {
   const [isCreating, setIsCreating] = useState(false);
   const [notification, setNotification] = useState<{ message: string, id: number } | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const userStr = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+  const user = userStr ? JSON.parse(userStr) : { name: 'User' };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -96,8 +98,14 @@ export default function Dashboard() {
           transition={{ duration: 0.15 }}
           style={{ position: 'absolute', top: 'calc(100% + 8px)', right: '0', width: '220px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', boxShadow: 'var(--shadow-lg)', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '8px', zIndex: 101 }}
         >
-          <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
-            <User size={16} /> Profile
+          <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 600, fontSize: '14px', flexShrink: 0 }}>
+              {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              <span style={{ fontSize: '14px', fontWeight: 600 }}>Profile</span>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name || 'User'}</span>
+            </div>
           </button>
           <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
             <Settings size={16} /> Settings
