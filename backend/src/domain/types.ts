@@ -14,6 +14,7 @@ export interface CanvasMetadata {
   createdAt: string;
   updatedAt: string;
   thumbnailUrl?: string;
+  data?: string;
 }
 
 export interface Workspace {

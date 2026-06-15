@@ -27,6 +27,7 @@ export const typeDefs = `#graphql
     createdAt: String!
     updatedAt: String!
     thumbnailUrl: String
+    data: String
   }
 
   type Query {
@@ -41,6 +42,7 @@ export const typeDefs = `#graphql
     createCanvas(workspaceId: ID!, title: String!): CanvasMetadata!
     updateCanvasThumbnail(id: ID!, thumbnailUrl: String!): CanvasMetadata!
     updateCanvasTitle(id: ID!, title: String!): CanvasMetadata!
+    saveCanvas(id: ID!, data: String!): CanvasMetadata!
     deleteCanvas(id: ID!): Boolean!
     signup(email: String!, password: String!, name: String, ipAddress: String): AuthPayload!
     login(email: String!, password: String!): AuthPayload!

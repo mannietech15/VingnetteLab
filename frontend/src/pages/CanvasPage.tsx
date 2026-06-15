@@ -12,6 +12,7 @@ const GET_CANVAS = gql`
       id
       title
       workspaceId
+      data
     }
   }
 `;
@@ -28,6 +29,15 @@ const UPDATE_CANVAS_TITLE = gql`
 const DELETE_CANVAS = gql`
   mutation DeleteCanvas($id: ID!) {
     deleteCanvas(id: $id)
+  }
+`;
+
+const SAVE_CANVAS = gql`
+  mutation SaveCanvas($id: ID!, $data: String!) {
+    saveCanvas(id: $id, data: $data) {
+      id
+      data
+    }
   }
 `;
 
@@ -52,9 +62,28 @@ export default function CanvasPage() {
 
   const [updateCanvasTitle] = useMutation(UPDATE_CANVAS_TITLE);
   const [deleteCanvas] = useMutation(DELETE_CANVAS);
+  const [saveCanvas] = useMutation(SAVE_CANVAS);
+  const loadElements = useCanvasStore(state => state.loadElements);
 
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hasLoadedInitialData, setHasLoadedInitialData] = useState(false);
+
+  useEffect(() => {
+    if (data?.canvas?.data && !hasLoadedInitialData) {
+      try {
+        const elements = JSON.parse(data.canvas.data);
+        if (Array.isArray(elements)) {
+          loadElements(elements);
+        }
+      } catch (e) {
+        console.error("Failed to parse canvas data", e);
+      }
+      setHasLoadedInitialData(true);
+    } else if (data?.canvas && !data.canvas.data && !hasLoadedInitialData) {
+      setHasLoadedInitialData(true);
+    }
+  }, [data, hasLoadedInitialData, loadElements]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -178,7 +207,10 @@ export default function CanvasPage() {
                 style={{ position: 'absolute', top: 'calc(100% + 8px)', right: '0', width: '200px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', boxShadow: 'var(--shadow-lg)', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '8px', zIndex: 101 }}
               >
                 <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => {
-                  alert('All changes are saved automatically to the cloud!');
+                  const elements = useCanvasStore.getState().elements;
+                  saveCanvas({ variables: { id, data: JSON.stringify(elements) } })
+                    .then(() => alert('Canvas saved successfully!'))
+                    .catch((e) => alert('Failed to save canvas: ' + e.message));
                   setIsMenuOpen(false);
                 }}>
                   <Save size={16} /> Save

@@ -123,6 +123,7 @@ export class WorkspaceRepository {
       createdAt: canvas.createdAt.toISOString(),
       updatedAt: canvas.updatedAt.toISOString(),
       thumbnailUrl: canvas.thumbnailUrl || undefined,
+      data: canvas.data || undefined,
     };
   }
 
@@ -167,5 +168,22 @@ export class WorkspaceRepository {
     } catch (e) {
       return false;
     }
+  }
+
+  public async saveCanvas(canvasId: string, data: string): Promise<CanvasMetadata | null> {
+    const updated = await prisma.canvasMetadata.update({
+      where: { id: canvasId },
+      data: { data }
+    });
+    if (!updated) return null;
+    return {
+      id: updated.id,
+      title: updated.title,
+      workspaceId: updated.workspaceId,
+      createdAt: updated.createdAt.toISOString(),
+      updatedAt: updated.updatedAt.toISOString(),
+      thumbnailUrl: updated.thumbnailUrl || undefined,
+      data: updated.data || undefined,
+    };
   }
 }

@@ -70,4 +70,12 @@ export class WorkspaceService {
     }
     return true;
   }
+
+  public async saveCanvas(id: string, data: string): Promise<CanvasMetadata> {
+    const updated = await this.repository.saveCanvas(id, data);
+    if (!updated) {
+      throw new Error('Canvas not found');
+    }
+    return updated;
+  }
 }

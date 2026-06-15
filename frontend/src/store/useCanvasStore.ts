@@ -92,6 +92,7 @@ interface CanvasState {
   updateElement: (id: string, updater: (el: CanvasElement) => CanvasElement) => void;
   removeElement: (id: string) => void;
   clearElements: () => void;
+  loadElements: (elements: CanvasElement[]) => void;
 
   undo: () => void;
   redo: () => void;
@@ -183,6 +184,15 @@ export const useCanvasStore = create<CanvasState>((set, get) => {
 
     clearElements: () => {
       yElements.clear();
+    },
+    
+    loadElements: (elements) => {
+      ydoc.transact(() => {
+        yElements.clear();
+        elements.forEach(el => {
+          yElements.set(el.id, el);
+        });
+      });
     },
 
     undo: () => undoManager.undo(),

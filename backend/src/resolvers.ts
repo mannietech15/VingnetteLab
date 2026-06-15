@@ -34,6 +34,9 @@ export const resolvers = {
     deleteCanvas: (_: any, { id }: { id: string }) => {
       return workspaceService.deleteCanvas(id);
     },
+    saveCanvas: (_: any, { id, data }: { id: string, data: string }) => {
+      return workspaceService.saveCanvas(id, data);
+    },
     signup: (_: any, { email, password, name, ipAddress }: { email: string, password: string, name?: string, ipAddress?: string }) => {
       return userService.signup(email, password, name, ipAddress);
     },
