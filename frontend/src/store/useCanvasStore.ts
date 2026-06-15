@@ -91,6 +91,7 @@ interface CanvasState {
   addElement: (element: CanvasElement) => void;
   updateElement: (id: string, updater: (el: CanvasElement) => CanvasElement) => void;
   removeElement: (id: string) => void;
+  clearElements: () => void;
 
   undo: () => void;
   redo: () => void;
@@ -178,6 +179,10 @@ export const useCanvasStore = create<CanvasState>((set, get) => {
     
     removeElement: (id) => {
       yElements.delete(id);
+    },
+
+    clearElements: () => {
+      yElements.clear();
     },
 
     undo: () => undoManager.undo(),
