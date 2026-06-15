@@ -22,15 +22,7 @@ export default function ZoomControls() {
   };
 
   return (
-    <div style={{
-      position: 'absolute',
-      bottom: '24px',
-      right: '24px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      zIndex: 10,
-    }} className="glass-panel">
+    <div className="glass-panel zoom-controls">
       <button 
         className="icon-btn" 
         onClick={handleZoomOut} 
