@@ -70,9 +70,10 @@ export default function CanvasPage() {
   const [hasLoadedInitialData, setHasLoadedInitialData] = useState(false);
 
   useEffect(() => {
-    if (data?.canvas?.data && !hasLoadedInitialData) {
+    const canvasData = (data as any)?.canvas;
+    if (canvasData?.data && !hasLoadedInitialData) {
       try {
-        const elements = JSON.parse(data.canvas.data);
+        const elements = JSON.parse(canvasData.data);
         if (Array.isArray(elements)) {
           loadElements(elements);
         }
@@ -80,7 +81,7 @@ export default function CanvasPage() {
         console.error("Failed to parse canvas data", e);
       }
       setHasLoadedInitialData(true);
-    } else if (data?.canvas && !data.canvas.data && !hasLoadedInitialData) {
+    } else if (canvasData && !canvasData.data && !hasLoadedInitialData) {
       setHasLoadedInitialData(true);
     }
   }, [data, hasLoadedInitialData, loadElements]);
