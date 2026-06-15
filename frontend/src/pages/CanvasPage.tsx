@@ -2,8 +2,8 @@
 
 import { lazy, Suspense } from 'react';
 import { useCanvasStore } from '@/store/useCanvasStore';
-import { gql, useMutation } from '@apollo/client';
-import { useQuery } from '@apollo/client/react';
+import { gql } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client/react';
 import { use, useState, useEffect } from 'react';
 
 const GET_CANVAS = gql`
@@ -37,7 +37,7 @@ const Toolbar = lazy(() => import('@/components/Toolbar'));
 const ZoomControls = lazy(() => import('@/components/ZoomControls'));
 
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, MoreVertical, Edit2, Share2, Download, Trash2, Eraser } from 'lucide-react';
+import { ChevronLeft, MoreVertical, Edit2, Share2, Download, Trash2, Eraser, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CanvasPage() {
@@ -177,6 +177,12 @@ export default function CanvasPage() {
                 transition={{ duration: 0.15 }}
                 style={{ position: 'absolute', top: 'calc(100% + 8px)', right: '0', width: '200px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', boxShadow: 'var(--shadow-lg)', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '8px', zIndex: 101 }}
               >
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => {
+                  alert('All changes are saved automatically to the cloud!');
+                  setIsMenuOpen(false);
+                }}>
+                  <Save size={16} /> Save
+                </button>
                 <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => {
                   const newTitle = window.prompt("Enter new canvas name:", title);
                   if (newTitle && newTitle !== title) {
