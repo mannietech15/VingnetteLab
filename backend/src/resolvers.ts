@@ -28,6 +28,12 @@ export const resolvers = {
     updateCanvasThumbnail: (_: any, { id, thumbnailUrl }: { id: string, thumbnailUrl: string }) => {
       return workspaceService.updateCanvasThumbnail(id, thumbnailUrl);
     },
+    updateCanvasTitle: (_: any, { id, title }: { id: string, title: string }) => {
+      return workspaceService.updateCanvasTitle(id, title);
+    },
+    deleteCanvas: (_: any, { id }: { id: string }) => {
+      return workspaceService.deleteCanvas(id);
+    },
     signup: (_: any, { email, password, name, ipAddress }: { email: string, password: string, name?: string, ipAddress?: string }) => {
       return userService.signup(email, password, name, ipAddress);
     },

@@ -141,4 +141,31 @@ export class WorkspaceRepository {
       thumbnailUrl: updated.thumbnailUrl || undefined,
     };
   }
+
+  public async updateCanvasTitle(canvasId: string, title: string): Promise<CanvasMetadata | null> {
+    const updated = await prisma.canvasMetadata.update({
+      where: { id: canvasId },
+      data: { title }
+    });
+    if (!updated) return null;
+    return {
+      id: updated.id,
+      title: updated.title,
+      workspaceId: updated.workspaceId,
+      createdAt: updated.createdAt.toISOString(),
+      updatedAt: updated.updatedAt.toISOString(),
+      thumbnailUrl: updated.thumbnailUrl || undefined,
+    };
+  }
+
+  public async deleteCanvas(canvasId: string): Promise<boolean> {
+    try {
+      await prisma.canvasMetadata.delete({
+        where: { id: canvasId }
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

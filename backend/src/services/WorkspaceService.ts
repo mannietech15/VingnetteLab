@@ -54,4 +54,20 @@ export class WorkspaceService {
     }
     return updated;
   }
+
+  public async updateCanvasTitle(id: string, title: string): Promise<CanvasMetadata> {
+    const updated = await this.repository.updateCanvasTitle(id, title);
+    if (!updated) {
+      throw new Error('Canvas not found');
+    }
+    return updated;
+  }
+
+  public async deleteCanvas(id: string): Promise<boolean> {
+    const deleted = await this.repository.deleteCanvas(id);
+    if (!deleted) {
+      throw new Error('Canvas not found');
+    }
+    return true;
+  }
 }

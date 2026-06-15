@@ -40,6 +40,8 @@ export const typeDefs = `#graphql
     createWorkspace(name: String!): Workspace!
     createCanvas(workspaceId: ID!, title: String!): CanvasMetadata!
     updateCanvasThumbnail(id: ID!, thumbnailUrl: String!): CanvasMetadata!
+    updateCanvasTitle(id: ID!, title: String!): CanvasMetadata!
+    deleteCanvas(id: ID!): Boolean!
     signup(email: String!, password: String!, name: String, ipAddress: String): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
   }
