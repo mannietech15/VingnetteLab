@@ -22,7 +22,7 @@ const Toolbar = lazy(() => import('@/components/Toolbar'));
 const ZoomControls = lazy(() => import('@/components/ZoomControls'));
 
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, MoreVertical } from 'lucide-react';
 
 export default function CanvasPage() {
   const { id } = useParams<{ id: string }>();
@@ -116,19 +116,22 @@ export default function CanvasPage() {
 
         <div style={{ pointerEvents: 'auto', display: 'flex', gap: '12px' }}>
           <button className="glass-panel" style={{ 
-            padding: '0 16px', 
-            height: '40px', 
-            border: 'none', 
-            background: 'var(--accent-primary)', 
-            color: 'white', 
-            fontWeight: 500,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '36px',
+            height: '36px',
+            border: 'none',
+            color: 'var(--text-primary)',
             cursor: 'pointer',
+            borderRadius: '8px',
             transition: 'opacity 0.2s'
           }}
-          onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
+          onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
           onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+          title="Menu"
           >
-            Share
+            <MoreVertical size={20} />
           </button>
         </div>
       </div>
