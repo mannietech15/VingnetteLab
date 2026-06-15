@@ -18,7 +18,8 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:4000/graphql', {
+      const graphqlUrl = import.meta.env.VITE_GRAPHQL_URL || 'http://localhost:4000/graphql';
+      const response = await fetch(graphqlUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +69,8 @@ export default function LoginPage() {
 
   const handleSocialLogin = (provider: string) => {
     setIsLoading(true);
-    window.location.href = `http://localhost:4000/auth/${provider.toLowerCase()}`;
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+    window.location.href = `${apiUrl}/auth/${provider.toLowerCase()}`;
   };
 
   return (
