@@ -2,7 +2,7 @@
 
 import { lazy, Suspense } from 'react';
 import { useCanvasStore } from '@/store/useCanvasStore';
-import { gql } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { use, useState, useEffect } from 'react';
 
@@ -13,6 +13,21 @@ const GET_CANVAS = gql`
       title
       workspaceId
     }
+  }
+`;
+
+const UPDATE_CANVAS_TITLE = gql`
+  mutation UpdateCanvasTitle($id: ID!, $title: String!) {
+    updateCanvasTitle(id: $id, title: $title) {
+      id
+      title
+    }
+  }
+`;
+
+const DELETE_CANVAS = gql`
+  mutation DeleteCanvas($id: ID!) {
+    deleteCanvas(id: $id)
   }
 `;
 
@@ -34,6 +49,9 @@ export default function CanvasPage() {
   const { data, loading, error } = useQuery(GET_CANVAS, {
     variables: { id }
   });
+
+  const [updateCanvasTitle] = useMutation(UPDATE_CANVAS_TITLE);
+  const [deleteCanvas] = useMutation(DELETE_CANVAS);
 
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -159,20 +177,40 @@ export default function CanvasPage() {
                 transition={{ duration: 0.15 }}
                 style={{ position: 'absolute', top: 'calc(100% + 8px)', right: '0', width: '200px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', boxShadow: 'var(--shadow-lg)', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '8px', zIndex: 101 }}
               >
-                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => setIsMenuOpen(false)}>
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => {
+                  const newTitle = window.prompt("Enter new canvas name:", title);
+                  if (newTitle && newTitle !== title) {
+                    updateCanvasTitle({ variables: { id, title: newTitle }, refetchQueries: [{ query: GET_CANVAS, variables: { id } }] });
+                  }
+                  setIsMenuOpen(false);
+                }}>
                   <Edit2 size={16} /> Rename Canvas
                 </button>
-                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => setIsMenuOpen(false)}>
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert('Link copied to clipboard!');
+                  setIsMenuOpen(false);
+                }}>
                   <Share2 size={16} /> Share...
                 </button>
-                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => setIsMenuOpen(false)}>
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => {
+                  window.dispatchEvent(new Event('export-canvas-png'));
+                  setIsMenuOpen(false);
+                }}>
                   <Download size={16} /> Export as PNG
                 </button>
                 <div style={{ height: '1px', background: 'var(--border-color)', margin: '4px 0' }} />
                 <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => { useCanvasStore.getState().clearElements(); setIsMenuOpen(false); }}>
                   <Eraser size={16} /> Clear Canvas
                 </button>
-                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => setIsMenuOpen(false)}>
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => {
+                  if (window.confirm('Are you sure you want to delete this canvas? This cannot be undone.')) {
+                    deleteCanvas({ variables: { id } }).then(() => {
+                      navigate('/home');
+                    });
+                  }
+                  setIsMenuOpen(false);
+                }}>
                   <Trash2 size={16} /> Delete Canvas
                 </button>
               </motion.div>

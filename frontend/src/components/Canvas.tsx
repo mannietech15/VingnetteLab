@@ -86,6 +86,24 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [elements.length]);
 
+  // Handle Canvas Export
+  useEffect(() => {
+    const handleExport = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      // Get the image data
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = 'vignette-canvas.png';
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+    window.addEventListener('export-canvas-png', handleExport);
+    return () => window.removeEventListener('export-canvas-png', handleExport as EventListener);
+  }, []);
+
   const getElementAtPosition = useCallback((x: number, y: number) => {
     for (let i = elements.length - 1; i >= 0; i--) {
       const el = elements[i];
