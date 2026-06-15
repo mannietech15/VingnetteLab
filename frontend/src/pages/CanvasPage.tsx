@@ -22,7 +22,8 @@ const Toolbar = lazy(() => import('@/components/Toolbar'));
 const ZoomControls = lazy(() => import('@/components/ZoomControls'));
 
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, MoreVertical } from 'lucide-react';
+import { ChevronLeft, MoreVertical, Edit2, Share2, Download, Trash2, Eraser } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CanvasPage() {
   const { id } = useParams<{ id: string }>();
@@ -35,6 +36,19 @@ export default function CanvasPage() {
   });
 
   const [mounted, setMounted] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.canvas-menu-container')) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   useEffect(() => setMounted(true), []);
 
   // Hard-lock all scrolling while on the canvas page
@@ -114,7 +128,7 @@ export default function CanvasPage() {
           </h1>
         </div>
 
-        <div style={{ pointerEvents: 'auto', display: 'flex', gap: '12px' }}>
+        <div className="canvas-menu-container" style={{ pointerEvents: 'auto', display: 'flex', gap: '12px', position: 'relative' }}>
           <button className="glass-panel" style={{ 
             display: 'flex',
             alignItems: 'center',
@@ -125,14 +139,45 @@ export default function CanvasPage() {
             color: 'var(--text-primary)',
             cursor: 'pointer',
             borderRadius: '8px',
-            transition: 'opacity 0.2s'
+            transition: 'background 0.2s, opacity 0.2s',
+            background: isMenuOpen ? 'var(--bg-hover)' : ''
           }}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
           onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
           onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
           title="Menu"
           >
             <MoreVertical size={20} />
           </button>
+
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ duration: 0.15 }}
+                style={{ position: 'absolute', top: 'calc(100% + 8px)', right: '0', width: '200px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', boxShadow: 'var(--shadow-lg)', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '8px', zIndex: 101 }}
+              >
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => setIsMenuOpen(false)}>
+                  <Edit2 size={16} /> Rename Canvas
+                </button>
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => setIsMenuOpen(false)}>
+                  <Share2 size={16} /> Share...
+                </button>
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => setIsMenuOpen(false)}>
+                  <Download size={16} /> Export as PNG
+                </button>
+                <div style={{ height: '1px', background: 'var(--border-color)', margin: '4px 0' }} />
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => { useCanvasStore.getState().setElements([]); setIsMenuOpen(false); }}>
+                  <Eraser size={16} /> Clear Canvas
+                </button>
+                <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => setIsMenuOpen(false)}>
+                  <Trash2 size={16} /> Delete Canvas
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
