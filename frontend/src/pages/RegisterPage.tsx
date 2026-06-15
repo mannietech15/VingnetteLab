@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 const Image = ({ src, alt, width, height, className, fill, ...props }: any) => <img src={src} alt={alt} width={width} height={height} className={className} style={fill ? { width: '100%', height: '100%', objectFit: 'cover' } : {}} {...props} />;
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Lock, Eye, EyeOff, User, Check, Loader2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Check, Loader2, AlertCircle } from 'lucide-react';
 import vignetteLogo from '@/assets/vignetteLogo.png';
 
 export default function RegisterPage() {
@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [ipAddress, setIpAddress] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ message: string, id: number } | null>(null);
 
   React.useEffect(() => {
     fetch('https://api.ipify.org?format=json')
@@ -60,7 +61,8 @@ export default function RegisterPage() {
       
       if (result.errors) {
         console.error('Signup error:', result.errors);
-        alert(result.errors[0].message || 'Error signing up');
+        setNotification({ message: result.errors[0].message || 'Error signing up', id: Date.now() });
+        setTimeout(() => setNotification(null), 4000);
         setIsLoading(false);
         return;
       }
@@ -77,7 +79,8 @@ export default function RegisterPage() {
       }, 1000);
     } catch (error) {
       console.error('Error during signup:', error);
-      alert('Failed to connect to the server');
+      setNotification({ message: 'Failed to connect to the server', id: Date.now() });
+      setTimeout(() => setNotification(null), 4000);
       setIsLoading(false);
     }
   };
@@ -253,6 +256,39 @@ export default function RegisterPage() {
         </p>
 
       </motion.div>
+
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            key={notification.id}
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            style={{
+              position: 'fixed',
+              bottom: '24px',
+              right: '24px',
+              background: '#ffffff',
+              border: '1px solid #ef4444',
+              boxShadow: '0 4px 14px rgba(239, 68, 68, 0.2)',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              zIndex: 100,
+            }}
+          >
+            <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#ef444420', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <AlertCircle size={14} strokeWidth={3} />
+            </div>
+            <p style={{ margin: 0, fontSize: '14px', fontWeight: 500, color: '#111827' }}>
+              {notification.message}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

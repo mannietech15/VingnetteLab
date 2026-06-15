@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 const Image = ({ src, alt, width, height, className, fill, ...props }: any) => <img src={src} alt={alt} width={width} height={height} className={className} style={fill ? { width: '100%', height: '100%', objectFit: 'cover' } : {}} {...props} />;
 import { motion } from 'motion/react';
-import { Mail, Lock, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Sparkles, AlertCircle } from 'lucide-react';
 import vignetteLogo from '@/assets/vignetteLogo.png';
 
 export default function LoginPage() {
@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState<{ message: string, id: number } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +49,8 @@ export default function LoginPage() {
       
       if (result.errors) {
         console.error('Login error:', result.errors);
-        alert(result.errors[0].message || 'Error logging in');
+        setNotification({ message: result.errors[0].message || 'Error logging in', id: Date.now() });
+        setTimeout(() => setNotification(null), 4000);
         setIsLoading(false);
         return;
       }
@@ -62,7 +64,8 @@ export default function LoginPage() {
       window.location.href = '/home';
     } catch (error) {
       console.error('Error during login:', error);
-      alert('Failed to connect to the server');
+      setNotification({ message: 'Failed to connect to the server', id: Date.now() });
+      setTimeout(() => setNotification(null), 4000);
       setIsLoading(false);
     }
   };
@@ -206,6 +209,39 @@ export default function LoginPage() {
 
         </motion.div>
       </div>
+
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            key={notification.id}
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            style={{
+              position: 'fixed',
+              bottom: '24px',
+              right: '24px',
+              background: '#18181b',
+              border: '1px solid #ef4444',
+              boxShadow: '0 4px 14px rgba(239, 68, 68, 0.2)',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              zIndex: 100,
+            }}
+          >
+            <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#ef444420', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <AlertCircle size={14} strokeWidth={3} />
+            </div>
+            <p style={{ margin: 0, fontSize: '14px', fontWeight: 500, color: '#fafafa' }}>
+              {notification.message}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
