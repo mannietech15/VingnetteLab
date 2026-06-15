@@ -114,15 +114,6 @@ export default function Sidebar() {
           );
         })}
 
-        {/* Mobile Theme Toggle (Visible only on mobile nav) */}
-        <div 
-          className="sidebar-nav-item sidebar-mobile-only"
-          onClick={toggleTheme}
-          style={{ cursor: 'pointer', color: 'var(--text-secondary)' }}
-        >
-          {mounted ? (isCurrentlyDark ? <Sun size={18} /> : <Moon size={18} />) : <div style={{width: 18, height: 18}} />}
-          <span className="sidebar-nav-label">Theme</span>
-        </div>
 
         <div className="sidebar-desktop-only" style={{ margin: '24px 0 8px 12px', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
           Your Workspaces

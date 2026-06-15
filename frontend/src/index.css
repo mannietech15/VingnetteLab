@@ -482,6 +482,28 @@ body.canvas-mode .main-content {
 
   .sidebar-mobile-only {
     display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    padding: 0 20px;
+    background: transparent;
+    z-index: 100;
+    margin-bottom: 0 !important;
+    transition: background 0.3s, backdrop-filter 0.3s, box-shadow 0.3s, border-bottom 0.3s;
+  }
+
+  .sidebar-mobile-only.scrolled {
+    background: var(--bg-panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .home-hero {
+    padding-top: 84px !important;
   }
 
   .sidebar-nav {

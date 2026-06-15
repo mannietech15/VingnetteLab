@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { Plus, Folder, FileText, ArrowRight, Sparkles, LayoutTemplate, Settings, Clock, Users, Check, Menu, User, UserPlus, CreditCard, LogOut } from 'lucide-react';
+import { Plus, Folder, FileText, ArrowRight, Sparkles, LayoutTemplate, Settings, Clock, Users, Check, Menu, User, UserPlus, CreditCard, LogOut, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import TemplatePreview from '@/components/TemplatePreview';
 import TiltedCard from '@/components/TiltedCard';
@@ -74,6 +74,20 @@ export default function Dashboard() {
   const [isCreating, setIsCreating] = useState(false);
   const [notification, setNotification] = useState<{ message: string, id: number } | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    }
+    return 'light';
+  });
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
   const userStr = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
   const user = userStr ? JSON.parse(userStr) : { name: 'User' };
 
@@ -106,6 +120,10 @@ export default function Dashboard() {
               <span style={{ fontSize: '14px', fontWeight: 600 }}>Profile</span>
               <span style={{ fontSize: '12px', color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name || 'User'}</span>
             </div>
+          </button>
+          <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'} onClick={() => { toggleTheme(); setIsMenuOpen(false); }}>
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
           </button>
           <button style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', fontSize: '14px', fontWeight: 500, transition: 'background 0.2s' }} onMouseOver={(e) => e.currentTarget.style.background = 'var(--bg-hover)'} onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}>
             <Settings size={16} /> Settings
@@ -170,8 +188,12 @@ export default function Dashboard() {
   const workspaces: any[] = (data as any)?.workspaces || [];
   const totalCanvases = workspaces.reduce((acc: number, ws: any) => acc + (ws.canvases?.length || 0), 0);
 
+  const handleScroll = (e: React.UIEvent<HTMLElement>) => {
+    setIsScrolled(e.currentTarget.scrollTop > 10);
+  };
+
   return (
-    <main className="main-content" style={{ background: 'var(--bg-primary)' }}>
+    <main className="main-content" style={{ background: 'var(--bg-primary)' }} onScroll={handleScroll}>
       {/* Hero Banner */}
       <div className="home-hero">
         
@@ -224,7 +246,7 @@ export default function Dashboard() {
         </div>
         
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div className="sidebar-mobile-only" style={{ alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', width: '100%' }}>
+          <div className={`sidebar-mobile-only ${isScrolled ? 'scrolled' : ''}`} style={{ alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', width: '100%' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Image src={vignetteLogo} alt="VignetteLab Logo" width={36} height={36} style={{ borderRadius: '10px', objectFit: 'cover' }} />
               <span style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
