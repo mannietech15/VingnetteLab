@@ -693,7 +693,7 @@ body.canvas-mode .main-content {
 
   .zoom-controls {
     bottom: auto !important;
-    top: 24px !important;
+    top: 80px !important;
     right: 24px !important;
   }
 }
