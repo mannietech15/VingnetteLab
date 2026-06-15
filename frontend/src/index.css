@@ -264,7 +264,6 @@ body.canvas-mode .main-content {
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
   position: relative;
-  overflow: hidden;
 }
 
 .home-section {
