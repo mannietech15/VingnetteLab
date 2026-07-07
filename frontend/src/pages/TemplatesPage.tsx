@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, Sparkles, Users, Briefcase, Code, Palette, TrendingUp, ArrowRight, Star, Eye, Loader2 } from 'lucide-react';
 import { TEMPLATES, Template } from '@/data/templates';
 import TemplatePreview from '@/components/TemplatePreview';
-import { motion, useSpring } from 'motion/react';
+import { motion, useSpring, useMotionValue } from 'motion/react';
 import type { SpringOptions } from 'motion/react';
 import { gql } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
@@ -65,151 +65,191 @@ function TemplateCard({ t, isFeatured, onUseTemplate, isCreating }: { t: Templat
   const height = isFeatured ? '180px' : '160px';
   const preview = t.image ? t.image : <TemplatePreview pattern={t.pattern} color={t.color} width={400} height={isFeatured ? 270 : 240} />;
 
-  const tiltRef = useRef<HTMLDivElement>(null);
+  // --- 3D Tilt Animation Physics ---
+  const TILT_AMPLITUDE = 22;
+  const cardRef = useRef<HTMLDivElement>(null);
+  const rotateX = useSpring(useMotionValue(0), tiltSpring);
+  const rotateY = useSpring(useMotionValue(0), tiltSpring);
+  const scale = useSpring(1, tiltSpring);
+  const shimmerX = useMotionValue(0);
+  const shimmerY = useMotionValue(0);
 
   function handleTiltMove(e: React.MouseEvent<HTMLDivElement>) {
-    // Disabled
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    const rx = (offsetY / (rect.height / 2)) * -TILT_AMPLITUDE;
+    const ry = (offsetX / (rect.width / 2)) * TILT_AMPLITUDE;
+    rotateX.set(rx);
+    rotateY.set(ry);
+    shimmerX.set(((e.clientX - rect.left) / rect.width) * 100);
+    shimmerY.set(((e.clientY - rect.top) / rect.height) * 100);
   }
 
   function handleTiltEnter() {
-    // Disabled
+    setIsHovered(true);
+    scale.set(1.04);
   }
 
   function handleTiltLeave() {
-    // Disabled
+    setIsHovered(false);
+    scale.set(1);
+    rotateX.set(0);
+    rotateY.set(0);
   }
   // --- End 3D Tilt Animation Physics ---
 
   return (
-    <div 
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        borderRadius: '14px',
-        border: '1px solid var(--border-color)',
-        background: 'var(--bg-secondary)',
-        cursor: isCreating ? 'wait' : 'pointer',
-        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease',
-        transform: isHovered ? 'translateY(-4px)' : 'none',
-        boxShadow: isHovered ? 'var(--shadow-lg)' : 'none',
-        borderColor: isHovered ? t.color + '66' : 'var(--border-color)',
-        opacity: isCreating ? 0.7 : 1,
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <div
+      ref={cardRef}
+      style={{ perspective: '900px', height: '100%', cursor: isCreating ? 'wait' : 'pointer' }}
+      onMouseMove={handleTiltMove}
+      onMouseEnter={handleTiltEnter}
+      onMouseLeave={handleTiltLeave}
       onClick={() => !isCreating && onUseTemplate(t)}
     >
-      {isFeatured && <div style={{ height: '6px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${t.color}, ${t.color}88)` }} />}
-      
-      <div style={{ padding: '16px', zIndex: isHovered ? 20 : 1 }}>
-        <div
-          ref={tiltRef}
-          style={{ perspective: '800px' }}
-        >
-          <div>
-            {/* === UNTOUCHED IMAGE CONTAINER BELOW === */}
-            <div style={{ 
-              position: 'relative', 
-              width: '100%', 
-              height: height, 
-              borderRadius: '20px', 
-              border: '1px solid var(--border-color)', 
-              overflow: 'hidden',
+      <motion.div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          borderRadius: '14px',
+          border: `1px solid ${isHovered ? t.color + '80' : 'var(--border-color)'}`,
+          background: 'var(--bg-secondary)',
+          boxShadow: isHovered
+            ? `0 24px 60px -12px ${t.color}55, 0 8px 20px -6px rgba(0,0,0,0.35)`
+            : 'none',
+          opacity: isCreating ? 0.7 : 1,
+          rotateX,
+          rotateY,
+          scale,
+          transformStyle: 'preserve-3d',
+          willChange: 'transform',
+          transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Shimmer highlight layer */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: '14px',
+            pointerEvents: 'none',
+            zIndex: 10,
+            opacity: isHovered ? 1 : 0,
+            background: shimmerX.get() !== 0
+              ? `radial-gradient(circle at ${shimmerX.get()}% ${shimmerY.get()}%, rgba(255,255,255,0.12) 0%, transparent 65%)`
+              : 'none',
+            transition: 'opacity 0.3s ease',
+          }}
+        />
+
+        {isFeatured && <div style={{ height: '6px', borderTopLeftRadius: '14px', borderTopRightRadius: '14px', background: `linear-gradient(90deg, ${t.color}, ${t.color}88)`, flexShrink: 0 }} />}
+
+        <div style={{ padding: '16px', zIndex: isHovered ? 20 : 1 }}>
+          <div style={{ 
+            position: 'relative', 
+            width: '100%', 
+            height: height, 
+            borderRadius: '12px', 
+            border: '1px solid var(--border-color)', 
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transformStyle: 'preserve-3d',
+          }}>
+            {typeof preview === 'string' ? (
+              <img src={preview} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              preview
+            )}
+
+            <div style={{
+              position: 'absolute',
+              inset: 0,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              gap: '12px',
+              background: `linear-gradient(135deg, ${t.color}cc, ${t.color}77)`,
+              opacity: isHovered ? 1 : 0,
+              transition: 'opacity 0.25s ease',
+              zIndex: 2
             }}>
-              {typeof preview === 'string' ? (
-                <img src={preview} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                preview
-              )}
-              
-              <div style={{
-                position: 'absolute',
-                inset: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '12px',
-                background: `linear-gradient(135deg, ${t.color}cc, ${t.color}77)`,
-                opacity: isHovered ? 1 : 0,
-                transition: 'opacity 0.25s ease',
-                zIndex: 2
-              }}>
-                <div 
-                  onClick={(e) => { e.stopPropagation(); if (!isCreating) onUseTemplate(t); }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 20px',
-                    borderRadius: '10px',
-                    background: '#ffffff',
-                    color: '#1a1a1a',
-                    fontWeight: 700,
-                    fontSize: '14px',
-                    boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
-                    transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
-                    transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                    cursor: isCreating ? 'wait' : 'pointer',
-                  }}>
-                  {isCreating ? <Loader2 size={16} className="animate-spin" /> : null}
-                  {isCreating ? 'Creating...' : 'Use Template'} {!isCreating && <ArrowRight size={16} />}
-                </div>
-                {!isFeatured && (
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '10px',
-                    background: 'rgba(255,255,255,0.25)',
-                    backdropFilter: 'blur(4px)',
-                    color: '#ffffff',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                    transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
-                    transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s',
-                  }}>
-                    <Eye size={18} />
-                  </div>
-                )}
+              <div
+                onClick={(e) => { e.stopPropagation(); if (!isCreating) onUseTemplate(t); }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '10px 20px',
+                  borderRadius: '10px',
+                  background: '#ffffff',
+                  color: '#1a1a1a',
+                  fontWeight: 700,
+                  fontSize: '14px',
+                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)',
+                  transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
+                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  cursor: isCreating ? 'wait' : 'pointer',
+                }}>
+                {isCreating ? <Loader2 size={16} className="animate-spin" /> : null}
+                {isCreating ? 'Creating...' : 'Use Template'} {!isCreating && <ArrowRight size={16} />}
               </div>
+              {!isFeatured && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.25)',
+                  backdropFilter: 'blur(4px)',
+                  color: '#ffffff',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                  transform: isHovered ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(10px)',
+                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s',
+                }}>
+                  <Eye size={18} />
+                </div>
+              )}
             </div>
-            {/* === END UNTOUCHED IMAGE CONTAINER === */}
           </div>
         </div>
-      </div>
 
-      <div style={{ padding: isFeatured ? '16px 20px 20px' : '14px 18px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-          <span style={{ padding: '2px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 600, background: `${t.color}15`, color: t.color, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t.category}</span>
-          {t.isFeatured && <Star size={14} style={{ color: '#f59e0b' }} fill="#f59e0b" />}
-          {isFeatured && !t.isFeatured && <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {formatCount(t.usageCount)} uses</span>}
+        <div style={{ padding: isFeatured ? '16px 20px 20px' : '14px 18px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <span style={{ padding: '2px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 600, background: `${t.color}15`, color: t.color, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t.category}</span>
+            {t.isFeatured && <Star size={14} style={{ color: '#f59e0b' }} fill="#f59e0b" />}
+            {isFeatured && !t.isFeatured && <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {formatCount(t.usageCount)} uses</span>}
+          </div>
+
+          <h3 style={{ fontSize: isFeatured ? '18px' : '16px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 4px' }}>{t.title}</h3>
+
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: isFeatured ? '0' : '0 0 12px', display: isFeatured ? 'block' : '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            {isFeatured ? t.description.slice(0, 100) + '...' : t.description}
+          </p>
+
+          {!isFeatured && (
+            <>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px', marginTop: 'auto' }}>
+                {t.tags.map((tag) => (
+                  <span key={tag} style={{ padding: '2px 8px', borderRadius: '100px', fontSize: '11px', background: 'var(--bg-primary)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)' }}>{tag}</span>
+                ))}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-color)', paddingTop: '10px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {formatCount(t.usageCount)} uses</span>
+                <span>by {t.author}</span>
+              </div>
+            </>
+          )}
         </div>
-        
-        <h3 style={{ fontSize: isFeatured ? '18px' : '16px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 4px' }}>{t.title}</h3>
-        
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: isFeatured ? '0' : '0 0 12px', display: isFeatured ? 'block' : '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-          {isFeatured ? t.description.slice(0, 100) + '...' : t.description}
-        </p>
-
-        {!isFeatured && (
-          <>
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px', marginTop: 'auto' }}>
-              {t.tags.map((tag) => (
-                <span key={tag} style={{ padding: '2px 8px', borderRadius: '100px', fontSize: '11px', background: 'var(--bg-primary)', color: 'var(--text-secondary)', border: '1px solid var(--border-color)' }}>{tag}</span>
-              ))}
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-color)', paddingTop: '10px', fontSize: '12px', color: 'var(--text-secondary)' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {formatCount(t.usageCount)} uses</span>
-              <span>by {t.author}</span>
-            </div>
-          </>
-        )}
-      </div>
+      </motion.div>
     </div>
   );
 }
