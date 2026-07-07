@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 const Image = ({ src, alt, width, height, className, fill, ...props }: any) => <img src={src} alt={alt} width={width} height={height} className={className} style={fill ? { width: '100%', height: '100%', objectFit: 'cover' } : {}} {...props} />;
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Lock, Eye, EyeOff, Sparkles, AlertCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Sparkles, AlertCircle, Users, Zap, Layout, GitBranch } from 'lucide-react';
 import vignetteLogo from '@/assets/vignetteLogo.png';
 
 export default function LoginPage() {
@@ -89,6 +89,40 @@ export default function LoginPage() {
         </div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ position: 'relative', zIndex: 10, maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
+
+          {/* ── Floating Feature Showcase ── */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '40px' }}>
+            {[
+              { icon: <Users size={18} color="#10b981" />, label: 'Active teams', value: '12,000+', sub: 'across 80 countries', accent: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.2)' },
+              { icon: <Zap size={18} color="#3b82f6" />, label: 'Real-time sync', value: '<50ms', sub: 'average latency', accent: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.2)' },
+              { icon: <Layout size={18} color="#a78bfa" />, label: 'Templates', value: '200+', sub: 'ready to use', accent: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.2)' },
+              { icon: <GitBranch size={18} color="#f59e0b" />, label: 'Integrations', value: '40+', sub: 'tools connected', accent: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.2)' },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.35 + i * 0.1 }}
+                style={{
+                  padding: '18px 20px',
+                  background: item.accent,
+                  border: `1px solid ${item.border}`,
+                  borderRadius: '16px',
+                  backdropFilter: 'blur(12px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#a1a1aa', fontSize: '12px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  {item.icon}{item.label}
+                </div>
+                <div style={{ fontSize: '26px', fontWeight: 800, letterSpacing: '-0.02em', color: '#fafafa', lineHeight: 1 }}>{item.value}</div>
+                <div style={{ fontSize: '12px', color: '#71717a' }}>{item.sub}</div>
+              </motion.div>
+            ))}
+          </div>
+
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '6px 16px', borderRadius: '100px', fontSize: '13px', fontWeight: 500, color: '#a1a1aa', marginBottom: '24px' }}>
             <Sparkles size={14} color="#10b981" /> The infinite canvas for teams
           </div>
@@ -193,13 +227,7 @@ export default function LoginPage() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              Google
-            </button>
-            <button type="button" onClick={() => handleSocialLogin('GitHub')} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', background: '#18181b', border: '1px solid #27272a', borderRadius: '12px', color: '#fafafa', fontSize: '14px', fontWeight: 500, cursor: 'pointer', transition: 'background 0.2s' }} onMouseOver={e => e.currentTarget.style.background = '#27272a'} onMouseOut={e => e.currentTarget.style.background = '#18181b'}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.137 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z" fill="#fafafa"/>
-              </svg>
-              GitHub
+              Continue with Google
             </button>
           </div>
 
