@@ -158,6 +158,91 @@ export default function LandingPage() {
         {/* Single tasteful background atmosphere — not floating orbs */}
         <div style={{ position: 'absolute', top: '35%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '600px', background: isDark ? 'radial-gradient(ellipse, rgba(109,40,217,0.11) 0%, rgba(59,130,246,0.04) 45%, transparent 70%)' : 'radial-gradient(ellipse, rgba(109,40,217,0.05) 0%, transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
 
+        {/* ── LEFT: Glass Pen SVG ── */}
+        <motion.div
+          className="hero-pen-left"
+          initial={{ opacity: 0, x: -60, rotate: -8 }}
+          animate={{ opacity: 1, x: 0, rotate: -14 }}
+          transition={{ duration: 1.1, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{
+            position: 'absolute',
+            left: 'clamp(-60px, -2vw, 20px)',
+            top: '50%',
+            transform: 'translateY(-55%)',
+            width: 'clamp(180px, 18vw, 280px)',
+            pointerEvents: 'none',
+            zIndex: 2,
+            filter: isDark ? 'drop-shadow(0 0 40px rgba(56,230,201,0.25)) drop-shadow(0 20px 40px rgba(0,0,0,0.4))' : 'drop-shadow(0 0 30px rgba(56,230,201,0.2)) drop-shadow(0 20px 40px rgba(0,0,0,0.15))',
+          }}
+        >
+          {/* Teal glow halo behind the SVG */}
+          <div style={{
+            position: 'absolute', top: '20%', left: '10%',
+            width: '80%', height: '60%',
+            background: 'radial-gradient(ellipse, rgba(56,230,201,0.18) 0%, transparent 70%)',
+            filter: 'blur(24px)',
+            pointerEvents: 'none',
+          }} />
+          <motion.img
+            src="/glass_pen_animated.svg"
+            alt="Glass pen illustration"
+            animate={{ y: [0, -14, 0] }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+        </motion.div>
+
+        {/* ── RIGHT: Pen Photo ── */}
+        <motion.div
+          className="hero-pen-right"
+          initial={{ opacity: 0, x: 60, rotate: 8 }}
+          animate={{ opacity: 1, x: 0, rotate: 12 }}
+          transition={{ duration: 1.1, delay: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{
+            position: 'absolute',
+            right: 'clamp(-40px, -1vw, 30px)',
+            top: '50%',
+            transform: 'translateY(-52%)',
+            width: 'clamp(160px, 17vw, 260px)',
+            pointerEvents: 'none',
+            zIndex: 2,
+          }}
+        >
+          {/* Glass card frame around the photo */}
+          <div style={{
+            position: 'relative',
+            borderRadius: '24px',
+            overflow: 'hidden',
+            border: `1px solid ${isDark ? 'rgba(124,58,237,0.35)' : 'rgba(124,58,237,0.25)'}`,
+            boxShadow: isDark
+              ? '0 0 50px rgba(124,58,237,0.2), 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)'
+              : '0 0 40px rgba(124,58,237,0.12), 0 30px 60px rgba(0,0,0,0.12)',
+            background: isDark ? 'rgba(20,10,40,0.4)' : 'rgba(255,255,255,0.6)',
+            backdropFilter: 'blur(12px)',
+          }}>
+            {/* Glossy sheen overlay */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: '50%',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 100%)',
+              borderRadius: '24px 24px 0 0',
+              zIndex: 2, pointerEvents: 'none',
+            }} />
+            <motion.img
+              src="/pen-pic.png"
+              alt="Pen"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+              style={{ width: '100%', height: 'auto', display: 'block', position: 'relative', zIndex: 1 }}
+            />
+          </div>
+          {/* Purple glow below */}
+          <div style={{
+            position: 'absolute', bottom: '-20px', left: '10%', right: '10%', height: '40px',
+            background: 'radial-gradient(ellipse, rgba(124,58,237,0.3) 0%, transparent 70%)',
+            filter: 'blur(16px)', pointerEvents: 'none',
+          }} />
+        </motion.div>
+
         {/* Hero content */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="hero-content" style={{ textAlign: 'center', maxWidth: '1100px', width: '100%', padding: '0 40px', zIndex: 10 }}>
 
@@ -438,6 +523,12 @@ export default function LandingPage() {
 
       <style dangerouslySetInnerHTML={{ __html: `
         ::-webkit-scrollbar { display: none; }
+
+        /* Hide hero pen decorations on small screens */
+        .hero-pen-left, .hero-pen-right { display: none !important; }
+        @media (min-width: 768px) {
+          .hero-pen-left, .hero-pen-right { display: block !important; }
+        }
 
         /* Marquee animation */
         @keyframes marqueeScroll {
