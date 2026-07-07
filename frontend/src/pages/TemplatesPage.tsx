@@ -62,8 +62,8 @@ function formatCount(n: number) {
 
 function TemplateCard({ t, isFeatured, onUseTemplate, isCreating }: { t: Template; isFeatured?: boolean; onUseTemplate: (t: Template) => void; isCreating: boolean }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const height = isFeatured ? '180px' : '160px';
-  const preview = t.image ? t.image : <TemplatePreview pattern={t.pattern} color={t.color} width={400} height={isFeatured ? 270 : 240} />;
 
   // --- 3D Tilt Animation Physics ---
   const TILT_AMPLITUDE = 22;
@@ -161,11 +161,41 @@ function TemplateCard({ t, isFeatured, onUseTemplate, isCreating }: { t: Templat
             alignItems: 'center',
             justifyContent: 'center',
             transformStyle: 'preserve-3d',
+            background: 'var(--bg-primary)',
           }}>
-            {typeof preview === 'string' ? (
-              <img src={preview} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              preview
+            {/* SVG preview — always visible immediately as placeholder */}
+            <div style={{ position: 'absolute', inset: 0, opacity: t.image && imgLoaded ? 0 : 1, transition: 'opacity 0.3s ease' }}>
+              <TemplatePreview pattern={t.pattern} color={t.color} width={400} height={isFeatured ? 270 : 240} />
+            </div>
+
+            {/* Shimmer skeleton shown while real image is in-flight */}
+            {t.image && !imgLoaded && (
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)',
+                backgroundSize: '200% 100%',
+                animation: 'shimmer 1.4s ease infinite',
+                zIndex: 2,
+              }} />
+            )}
+
+            {/* Real PNG — fades in once loaded */}
+            {t.image && (
+              <img
+                src={t.image}
+                alt={t.title}
+                loading={isFeatured ? 'eager' : 'lazy'}
+                decoding="async"
+                onLoad={() => setImgLoaded(true)}
+                style={{
+                  position: 'absolute', inset: 0,
+                  width: '100%', height: '100%',
+                  objectFit: 'cover',
+                  opacity: imgLoaded ? 1 : 0,
+                  transition: 'opacity 0.35s ease',
+                  zIndex: 1,
+                }}
+              />
             )}
 
             <div style={{
