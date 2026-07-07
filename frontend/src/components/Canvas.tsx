@@ -802,7 +802,10 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
   const onPointerUp = () => {
     if (currentStrokeId && SHAPE_TOOLS.includes(currentTool)) {
       updateElement(currentStrokeId, (el) => {
-        if (el.type !== 'stroke' && el.type !== 'text') {
+        // Lines are directional vectors: (x,y) → (x+width, y+height).
+        // Normalizing flips the direction, turning a left-diagonal into a right-diagonal.
+        // Only normalize bounding-box shapes (rect, ellipse, etc.), not lines.
+        if (el.type !== 'stroke' && el.type !== 'text' && el.type !== 'line') {
           return {
             ...el,
             x: Math.min(el.x, el.x + el.width),
@@ -817,7 +820,7 @@ export default function Canvas({ templateId }: { templateId?: string | null }) {
 
     if (resizingHandle && selectedId) {
       updateElement(selectedId, (el) => {
-        if (el.type !== 'stroke' && el.type !== 'text') {
+        if (el.type !== 'stroke' && el.type !== 'text' && el.type !== 'line') {
           return {
             ...el,
             x: Math.min(el.x, el.x + el.width),
