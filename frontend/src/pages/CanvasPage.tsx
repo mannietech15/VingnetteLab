@@ -64,14 +64,23 @@ export default function CanvasPage() {
   const [deleteCanvas] = useMutation(DELETE_CANVAS);
   const [saveCanvas] = useMutation(SAVE_CANVAS);
   const loadElements = useCanvasStore(state => state.loadElements);
+  const clearElements = useCanvasStore(state => state.clearElements);
 
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasLoadedInitialData, setHasLoadedInitialData] = useState(false);
 
+  // Reset the init guard whenever the canvas ID changes (navigating between canvases)
+  useEffect(() => {
+    setHasLoadedInitialData(false);
+    clearElements(); // Wipe stale elements from previous canvas immediately
+  }, [id]);
+
   useEffect(() => {
     const canvasData = (data as any)?.canvas;
-    if (canvasData?.data && !hasLoadedInitialData) {
+    if (!canvasData || hasLoadedInitialData) return;
+
+    if (canvasData.data) {
       try {
         const elements = JSON.parse(canvasData.data);
         if (Array.isArray(elements)) {
@@ -79,12 +88,14 @@ export default function CanvasPage() {
         }
       } catch (e) {
         console.error("Failed to parse canvas data", e);
+        clearElements();
       }
-      setHasLoadedInitialData(true);
-    } else if (canvasData && !canvasData.data && !hasLoadedInitialData) {
-      setHasLoadedInitialData(true);
+    } else {
+      // Brand new canvas — ensure store is empty
+      clearElements();
     }
-  }, [data, hasLoadedInitialData, loadElements]);
+    setHasLoadedInitialData(true);
+  }, [data, hasLoadedInitialData, loadElements, clearElements]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
